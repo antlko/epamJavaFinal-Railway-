@@ -1,4 +1,4 @@
-package src.com.nure.kozhukhar.railway;
+package com.nure.kozhukhar.railway;
 
 import org.apache.log4j.Logger;
 
