@@ -10,6 +10,6 @@ public class NoFoundAction extends Action {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
-        return "error_found";
+        return "WEB-INF/jsp/error.jsp";
     }
 }

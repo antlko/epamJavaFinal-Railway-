@@ -1,0 +1,37 @@
+package com.nure.kozhukhar.railway.web.action.login;
+
+import com.nure.kozhukhar.railway.web.action.Action;
+import com.nure.kozhukhar.railway.web.action.NoFoundAction;
+import org.apache.log4j.Logger;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+
+public class LoginActionFactory {
+
+    private static final Logger LOG = Logger.getLogger(LoginActionFactory.class);
+
+    private static Map<String, Action> actions = new HashMap<>();
+
+    private static Action action;
+
+    static {
+        actions.put("login", new UserLoginAction());
+        actions.put("account", new UserSignInAction());
+        actions.put("register", new UserRegisterAction());
+        actions.put("noFound", new NoFoundAction());
+    }
+
+    public static Action getAction(HttpServletRequest request) {
+        String actionName = request.getParameter("action");
+        action = actions.get(actionName);
+        if(action == null) {
+            return actions.get("login");
+        }
+        if(!actions.containsKey(actionName)) {
+            return actions.get("noFound");
+        }
+        return action;
+    }
+}

@@ -27,8 +27,7 @@ public final class DBUtil {
         try {
             Context initContext = new InitialContext();
             Context envContext = (Context) initContext.lookup("java:/comp/env");
-            // ST4DB - the name of data source
-            ds = (DataSource) envContext.lookup("jdbc/ST4DB");
+            ds = (DataSource) envContext.lookup("jdbc/ResConDB");
             LOG.trace("Data source ==> " + ds);
         } catch (NamingException ex) {
             LOG.error(Messages.ERR_CANNOT_OBTAIN_DATA_SOURCE, ex);

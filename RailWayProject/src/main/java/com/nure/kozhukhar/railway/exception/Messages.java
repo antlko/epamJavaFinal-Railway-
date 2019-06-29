@@ -1,15 +1,9 @@
 package com.nure.kozhukhar.railway.exception;
 
-/**
- * Holder for messages of exceptions.
- * 
- * @author Dmytro_Kolesnikov
- *
- */
 public class Messages {
 
 	private Messages() {
-		// no op
+
 	}
 	
 	public static final String ERR_CANNOT_OBTAIN_USER_ORDER_BEANS = "Cannot obtain user order beans";
