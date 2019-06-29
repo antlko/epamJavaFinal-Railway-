@@ -1,4 +1,4 @@
-package com.nure.kozhukhar.railway.web.action.login;
+package com.nure.kozhukhar.railway.web.action.booking;
 
 import com.nure.kozhukhar.railway.web.action.Action;
 import com.nure.kozhukhar.railway.web.action.NoFoundAction;
@@ -8,27 +8,27 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginActionFactory {
+public class BookingActionFactory {
 
-    private static final Logger LOG = Logger.getLogger(LoginActionFactory.class);
+    private static final Logger LOG = Logger.getLogger(BookingActionFactory.class);
 
     private static Map<String, Action> actions = new HashMap<>();
 
     private static Action action;
 
     static {
-        actions.put("login", new UserLoginAction());
-        actions.put("account", new UserSignInAction());
-        actions.put("register", new UserRegisterAction());
-        actions.put("createUser", new UserCreateAction());
+        actions.put("bookingMain", new BookingStartPageAction());
+        actions.put("order", new NoFoundAction());
+        actions.put("findTickets", new FindTicketsAction());
         actions.put("noFound", new NoFoundAction());
     }
 
     public static Action getAction(HttpServletRequest request) {
         String actionName = request.getParameter("action");
+        LOG.debug("Action name auth : " + actionName);
         action = actions.get(actionName);
         if(action == null) {
-            return actions.get("login");
+            return actions.get("bookingMain");
         }
         if(!actions.containsKey(actionName)) {
             return actions.get("noFound");

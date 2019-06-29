@@ -15,7 +15,11 @@
         <%--<dib class="close">+</dib>--%>
         <img src="style/img/new_logo.svg" height="80" width="80" alt="">
         <form action="login" method="POST">
+            <%--=================================================
+                Action : 'account' will trying get account for user
+            ==================================================--%>
             <input type="hidden" name="action" value="account">
+
             ${requestScope.errorMessage}
             <input type="text" name="login" placeholder="Login">
             <input type="password" name="password" placeholder="Password">

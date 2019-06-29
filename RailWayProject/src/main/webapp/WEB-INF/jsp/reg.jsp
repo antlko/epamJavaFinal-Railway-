@@ -12,17 +12,19 @@
 
 <div class="login-panel-bg">
     <div class="login-panel-content">
-        <%--<dib class="close">+</dib>--%>
         <img src="style/img/new_logo.svg" height="80" width="80" alt="">
         <form action="login" method="POST">
-            <input type="hidden" name="action" value="login">
+            <%--=================================================
+                Action : 'createUser' will create new user
+            ==================================================--%>
+            <input type="hidden" name="action" value="createUser">
 
             <input type="text" name="login" placeholder="Login">
             <input type="password" name="password" placeholder="Password">
             <input type="email" name="email" placeholder="Email">
             <input type="submit" value="Submit"/>
         </form>
-        <a href="login?action=register">Have account? Login!</a>
+        <a href="login?action=login">Have account? Login!</a>
     </div>
 </div>
 

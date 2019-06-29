@@ -9,11 +9,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class UserRegisterAction extends Action {
+public class UserCreateAction extends Action {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
-        return "WEB-INF/jsp/reg.jsp";
+        User newUser = new User();
+        newUser.setLogin(request.getParameter("login"));
+        newUser.setPassword(request.getParameter("password"));
+        newUser.setEmail(request.getParameter("email"));
+
+        UserDao userTempDao = new UserDao();
+        userTempDao.save(newUser);
+
+
+        return "/login";
     }
 }

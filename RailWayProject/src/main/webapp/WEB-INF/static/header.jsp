@@ -6,7 +6,7 @@
     <nav>
         <ul class="nav-links">
             <li><a class="nav-link" href="index.jsp">Home</a></li>
-            <li><a class="nav-link" href="lib">Tickets</a></li>
+            <li><a class="nav-link" href="booking">Tickets</a></li>
             <li><a class="nav-link" href="contact">Contact</a></li>
         </ul>
     </nav>

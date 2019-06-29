@@ -19,7 +19,7 @@ public class ServletProcessUtil {
     private static final List<String> controllers = new ArrayList<>();
 
     static {
-        controllers.addAll(asList("/account", "/login"));
+        controllers.addAll(asList("/account", "/login", "/booking"));
     }
 
     public static void process(HttpServletRequest request,

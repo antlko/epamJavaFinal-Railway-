@@ -61,7 +61,23 @@ public class UserDao implements Dao<User> {
 
     @Override
     public void save(User user) {
-
+        PreparedStatement pstmt = null;
+        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();) {
+            pstmt = conn.prepareStatement("INSERT INTO users(login,password,email,name,surname) VALUES(?,?,?,null,null)");
+            int atr = 1;
+            pstmt.setString(atr++, user.getLogin());
+            pstmt.setString(atr++, user.getPassword());
+            pstmt.setString(atr, user.getEmail());
+            pstmt.executeUpdate();
+            atr = 1;
+            pstmt = conn.prepareStatement("INSERT INTO user_roles(id,role) VALUES(?,?)");
+            pstmt.setInt(atr++, getByLogin(user.getLogin()).getId());
+            pstmt.setString(atr, Role.USER.getName());
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
