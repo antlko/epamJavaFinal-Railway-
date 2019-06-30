@@ -1,2 +1,2 @@
 <hr>
-<p>© Kozhukhar Anatol</p>
+<p>© 2019 Kozhukhar Anatol</p>

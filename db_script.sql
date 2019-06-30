@@ -189,5 +189,15 @@ INSERT INTO seats(id_train, num_carriage,num_seat) VALUES(1,3,5);
 INSERT INTO routes(id, id_train) VALUES(1,1);
 
 INSERT INTO routes_station(id_train, id_route, id_station, time_start, time_end, price) VALUES(1,1,1, '2019-7-18 17:34:00', '2019-7-18 17:34:00', 20);
-INSERT INTO routes_station(id_train, id_route, id_station, time_start, time_end, price) VALUES(1,1,2, '2019-8-18 06:30:00', '2019-8-18 06:34:00', 70);
-INSERT INTO routes_station(id_train, id_route, id_station, time_start, time_end, price) VALUES(1,1,3, '2019-8-18 08:22:00', '2019-8-18 08:22:00',30);
+INSERT INTO routes_station(id_train, id_route, id_station, time_start, time_end, price) VALUES(1,1,2, '2019-7-18 17:50:00', '2019-7-18 17:56:00', 70);
+INSERT INTO routes_station(id_train, id_route, id_station, time_start, time_end, price) VALUES(1,1,3, '2019-7-19 5:57:00', '2019-8-19 6:05:00',30);
+INSERT INTO routes_station(id_train, id_route, id_station, time_start, time_end, price) VALUES(1,1,4, '2019-7-19 8:22:00', '2019-8-19 8:22:00',30);
+
+INSERT INTO routes_on_date(date_start, id_train, id_route, id_station, time_date_start, time_date_end) 
+VALUES('2019-9-18 17:34:00',1,1,1, '2019-9-18 17:34:00', '2019-9-18 17:34:00');
+INSERT INTO routes_on_date(date_start, id_train, id_route, id_station, time_date_start, time_date_end) 
+VALUES('2019-9-18 17:56:00',1,1,2, '2019-9-18 17:50:00', '2019-9-18 17:34:00');
+INSERT INTO routes_on_date(date_start, id_train, id_route, id_station, time_date_start, time_date_end) 
+VALUES('2019-9-19 6:05:00',1,1,3, '2019-9-19 5:57:00', '2019-9-19 6:05:00');
+INSERT INTO routes_on_date(date_start, id_train, id_route, id_station, time_date_start, time_date_end) 
+VALUES('2019-9-19 8:22:00',1,1,4, '2019-9-19 8:22:00', '2019-9-19 8:22:00');

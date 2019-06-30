@@ -1,6 +1,6 @@
 package com.nure.kozhukhar.railway.db.entity;
 
-public class UserRoles extends Entity {
+public class UserRole extends Entity {
 
     private Integer id;
 
@@ -24,7 +24,7 @@ public class UserRoles extends Entity {
 
     @Override
     public String toString() {
-        return "UserRoles{" +
+        return "UserRole{" +
                 "id=" + id +
                 ", role='" + role + '\'' +
                 '}';

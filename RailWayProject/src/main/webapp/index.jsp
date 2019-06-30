@@ -11,38 +11,37 @@
 <%@ include file="/WEB-INF/static/header.jsp" %>
 
 <main>
-    <main>
-        <section class="presentation">
-            <div class="introduction">
-                <div class="intro-text">
-                    <h1>Facilities and services</h1>
-                    <p>
-                        Book a group study room. Print, copy, scan and pay.
-                        Technology and wifi access.
-                        Disability services and adaptive technology
-                    </p>
-                </div>
-                <div class="cta">
-                    <form action="login" method="get">
-                        <input type="hidden" name="action" value="register">
-                        <button class="cta-reg login-js">
-                            Create Account
-                        </button>
-                    </form>
-                    <form action="login" method="get">
-                        <input type="hidden" name="action" value="login">
-                        <button class="cta-login login-js">
-                            Login
-                        </button>
-                    </form>
-                </div>
+    <section class="presentation">
+        <div class="introduction">
+            <div class="intro-text">
+                <h1>Facilities and services</h1>
+                <p>
+                    Book a group study room. Print, copy, scan and pay.
+                    Technology and wifi access.
+                    Disability services and adaptive technology
+                </p>
             </div>
-            <div class="cover">
-                <img src="style/img/tr_main.jpg" width="650"/>
+            <div class="cta">
+                <form action="login" method="get">
+                    <input type="hidden" name="action" value="register">
+                    <button class="cta-reg login-js">
+                        Create Account
+                    </button>
+                </form>
+                <form action="login" method="get">
+                    <input type="hidden" name="action" value="login">
+                    <button class="cta-login login-js">
+                        Login
+                    </button>
+                </form>
             </div>
-        </section>
-    </main>
+        </div>
+        <div class="cover">
+            <img src="style/img/tr_main.jpg" width="650"/>
+        </div>
+    </section>
+</main>
 
-    <%@ include file="/WEB-INF/static/footer.jsp" %>
+<%@ include file="/WEB-INF/static/footer.jsp" %>
 </body>
 </html>
