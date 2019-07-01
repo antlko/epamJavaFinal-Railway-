@@ -46,6 +46,7 @@
                 <th>From</th>
                 <th>Destination</th>
                 <th>Date</th>
+                <th>Time</th>
                 <th>Your route</th>
                 <th>Travel time</th>
                 <th></th>
@@ -54,7 +55,8 @@
                         <td>${route.train.number}</td>
                         <td>${sessionScope.cityStart}</td>
                         <td>${sessionScope.cityEnd}</td>
-                        <td>${sessionScope.date}</td>
+                        <td>${route.dateFrom}</td>
+                        <td>${route.timeFrom}</td>
                         <td>
                             <c:forEach var="stat" items="${route.stationList}">
                                 ${stat.name}

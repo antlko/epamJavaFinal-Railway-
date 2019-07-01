@@ -4,16 +4,27 @@ import com.nure.kozhukhar.railway.db.Queries;
 import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
 import com.nure.kozhukhar.railway.db.entity.Station;
 import com.nure.kozhukhar.railway.util.DBUtil;
+import com.nure.kozhukhar.railway.util.TimeUtil;
+import org.apache.log4j.Logger;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class StationDao implements Dao<Station> {
+
+    private static final Logger LOG = Logger.getLogger(StationDao.class);
 
     public static List<RouteStation> getAllStationByRoute(String cityStart, String cityEnd, Date date, Integer id) {
         List<RouteStation> stations = new ArrayList<>();
         RouteStation stationTemp = null;
+
         try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
              PreparedStatement stmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_BY_ROUTE_ID);
         ) {
@@ -29,10 +40,15 @@ public class StationDao implements Dao<Station> {
                 stationTemp.setName(rs.getString("name"));
                 stationTemp.setIdCity(rs.getInt("id_city"));
                 stationTemp.setDateEnd(rs.getDate("date_end"));
-                stationTemp.setTimeStart(rs.getTimestamp("time_date_start").toLocalDateTime());
-                stationTemp.setTimeEnd(rs.getTimestamp("time_date_end").toLocalDateTime());
+                stationTemp.setTimeStart(TimeUtil.getDateTimeWithTimeZone(
+                        rs.getTimestamp("time_date_start").toLocalDateTime()));
+                stationTemp.setTimeEnd(TimeUtil.getDateTimeWithTimeZone(
+                        rs.getTimestamp("time_date_end").toLocalDateTime()));
                 stationTemp.setIdTrain(rs.getInt("id_train"));
                 stations.add(stationTemp);
+
+                LOG.trace("Time Start : " + LocalDateTime.ofInstant(
+                        stationTemp.getTimeStart().toInstant(ZoneOffset.MIN), ZoneId.of(TimeUtil.getTimeZone())));
             }
         } catch (SQLException e) {
             e.printStackTrace();

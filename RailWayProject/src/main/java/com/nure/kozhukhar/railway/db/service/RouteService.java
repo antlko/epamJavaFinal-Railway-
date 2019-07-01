@@ -6,8 +6,8 @@ import com.nure.kozhukhar.railway.db.dao.StationDao;
 import com.nure.kozhukhar.railway.db.entity.route.Route;
 
 import java.sql.Date;
-import java.time.Duration;
-import java.time.LocalDate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -19,6 +19,7 @@ public class RouteService {
     public static List<RouteSearchBean> getRouteInfoByCityDate(String cityStart, String cityEnd, Date date) {
         List<Route> routes = RouteDao.getIdRouteOnDate(cityStart, cityEnd, date);
         List<RouteSearchBean> routesBean = new ArrayList<>();
+
         for (Route rt : routes) {
             RouteSearchBean routeInfo = new RouteSearchBean();
             routeInfo.setIdRoute(rt.getId());
@@ -29,13 +30,26 @@ public class RouteService {
             String to = String.valueOf(routeInfo.getStationList().get(
                     routeInfo.getStationList().size() - 1).getTimeEnd()
             );
-            try {
-                long diff = ChronoUnit.SECONDS.between(LocalDateTime.parse(from), LocalDateTime.parse(to));
-                routeInfo.setTravelTime(formatterToHours(diff));
-                routesBean.add(routeInfo);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            routeInfo.setDateFrom(String.valueOf(
+                    routeInfo.getStationList().get(0).getTimeEnd().format(formatter))
+            );
+//            SimpleDateFormat formatter = new SimpleDateFormat(
+//                    "dd/MM/yyyy");
+//            try {
+//                routeInfo.setDateFrom(String.valueOf(
+//                        formatter.parse(formatter.format(routeInfo.getStationList().get(0).getTimeEnd())))
+//                );
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+
+            routeInfo.setTimeFrom(routeInfo.getStationList().get(0).getTimeEnd().getHour()
+                    + " : " + routeInfo.getStationList().get(0).getTimeEnd().getMinute());
+            long diff = ChronoUnit.SECONDS.between(LocalDateTime.parse(from), LocalDateTime.parse(to));
+            routeInfo.setTravelTime(formatterToHours(diff));
+            routesBean.add(routeInfo);
         }
         return routesBean;
     }

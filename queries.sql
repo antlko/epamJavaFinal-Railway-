@@ -1,4 +1,4 @@
-SELECT DISTINCT RD3.id_route, T.number, T.id FROM routes_on_date RD3, stations S3, trains T, routes R
+SELECT * FROM routes_on_date RD3, stations S3, trains T, routes R
 	WHERE RD3.id_station = S3.id 
 		AND RD3.id_route = R.id 
 		AND R.id_train = T.id

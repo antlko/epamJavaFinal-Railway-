@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
+import java.text.ParseException;
 import java.util.List;
 
 public class FindTicketsAction extends Action {
@@ -29,7 +30,8 @@ public class FindTicketsAction extends Action {
 
         LOG.trace("Booking Date : " + date);
 
-        List<RouteSearchBean> routes = RouteService.getRouteInfoByCityDate(cityStart, cityEnd, date);
+        List<RouteSearchBean> routes = null;
+        routes = RouteService.getRouteInfoByCityDate(cityStart, cityEnd, date);
 
         LOG.trace("Booking Route : " + routes);
 

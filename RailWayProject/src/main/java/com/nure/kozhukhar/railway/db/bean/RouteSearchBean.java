@@ -4,8 +4,6 @@ import com.nure.kozhukhar.railway.db.entity.Entity;
 import com.nure.kozhukhar.railway.db.entity.Train;
 import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.util.List;
 
 public class RouteSearchBean extends Entity {
@@ -17,6 +15,26 @@ public class RouteSearchBean extends Entity {
     private List<RouteStation> stationList;
 
     private String travelTime;
+
+    private String timeFrom;
+
+    private String dateFrom;
+
+    public String getDateFrom() {
+        return dateFrom;
+    }
+
+    public void setDateFrom(String dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public String getTimeFrom() {
+        return timeFrom;
+    }
+
+    public void setTimeFrom(String timeFrom) {
+        this.timeFrom = timeFrom;
+    }
 
     public String getTravelTime() {
         return travelTime;
@@ -51,7 +69,7 @@ public class RouteSearchBean extends Entity {
     }
 
     @Override
-public String toString() {
+    public String toString() {
         return "RouteSearchBean{" +
                 "idRoute=" + idRoute +
                 ", train=" + train +
