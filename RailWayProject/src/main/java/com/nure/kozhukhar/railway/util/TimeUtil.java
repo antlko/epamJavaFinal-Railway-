@@ -31,7 +31,15 @@ public final class TimeUtil {
         return LocalDateTime.ofInstant(
                 dateTime.toInstant(ZoneOffset.MIN),
                 ZoneId.of(timeZone)
-        );
+        ).minusDays(1);
+    }
+
+    public static String formatterToHours(long seconds) {
+
+        long hours = seconds / 3600;
+        long minutes = (seconds % 3600) / 60;
+
+        return hours + " : " + minutes;
     }
 
 }

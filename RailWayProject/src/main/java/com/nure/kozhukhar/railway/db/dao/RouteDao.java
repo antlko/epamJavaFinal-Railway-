@@ -30,9 +30,10 @@ public class RouteDao implements Dao<RouteStation> {
             PreparedStatement pstmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_AND_CITIES);
             int atr = 1;
             LOG.trace("Booking [date, cityStart, cityEnd] in DAO : " + date + ", " + cityStart + " <-> " + cityEnd);
-            LOG.trace("Date in string : " + String.valueOf(date));
-            pstmt.setString(atr++, String.valueOf(date));
+            LOG.trace("Date in string : " + date);
+
             pstmt.setString(atr++, cityStart);
+            pstmt.setString(atr++, String.valueOf(date));
             pstmt.setString(atr, cityEnd);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -64,8 +65,8 @@ public class RouteDao implements Dao<RouteStation> {
         ) {
             PreparedStatement pstmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_ID);
             int atr = 1;
-            pstmt.setString(atr++, String.valueOf(date));
             pstmt.setString(atr++, cityStart);
+            pstmt.setString(atr++, String.valueOf(date));
             pstmt.setString(atr, cityEnd);
             ResultSet rs = pstmt.executeQuery();
 

@@ -49,7 +49,8 @@
                 <th>Time</th>
                 <th>Your route</th>
                 <th>Travel time</th>
-                <th></th>
+                <th>Coach type</th>
+                <th>Free seats</th>
                 <c:forEach var="route" items="${sessionScope.infoRoutes}">
                     <tr>
                         <td>${route.train.number}</td>
@@ -63,7 +64,17 @@
                             </c:forEach>
                         </td>
                         <td>${route.travelTime}</td>
-                        <td><a href="#">Buy</a></td>
+
+                        <td>
+                            <c:forEach var="seat" items="${route.seatList}">
+                                <p>${seat.seatType}</p>
+                            </c:forEach>
+                        </td>
+                        <td>
+                            <c:forEach var="seat" items="${route.seatList}">
+                                <p><a href="#">${seat.free}</a></p>
+                            </c:forEach>
+                        </td>
                     </tr>
                 </c:forEach>
             </table>

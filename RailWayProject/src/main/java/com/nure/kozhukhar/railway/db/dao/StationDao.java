@@ -29,8 +29,8 @@ public class StationDao implements Dao<Station> {
              PreparedStatement stmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_BY_ROUTE_ID);
         ) {
             int atr = 1;
-            stmt.setString(atr++, String.valueOf(date));
             stmt.setString(atr++, cityStart);
+            stmt.setString(atr++, String.valueOf(date));
             stmt.setString(atr++, cityEnd);
             stmt.setInt(atr, id);
             ResultSet rs = stmt.executeQuery();

@@ -1,6 +1,7 @@
 package com.nure.kozhukhar.railway.db.bean;
 
 import com.nure.kozhukhar.railway.db.entity.Entity;
+import com.nure.kozhukhar.railway.db.entity.Seat;
 import com.nure.kozhukhar.railway.db.entity.Train;
 import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
 
@@ -14,6 +15,8 @@ public class RouteSearchBean extends Entity {
 
     private List<RouteStation> stationList;
 
+    private List<SeatSearchBean> seatList;
+
     private String travelTime;
 
     private String timeFrom;
@@ -22,6 +25,14 @@ public class RouteSearchBean extends Entity {
 
     public String getDateFrom() {
         return dateFrom;
+    }
+
+    public List<SeatSearchBean> getSeatList() {
+        return seatList;
+    }
+
+    public void setSeatList(List<SeatSearchBean> seatList) {
+        this.seatList = seatList;
     }
 
     public void setDateFrom(String dateFrom) {

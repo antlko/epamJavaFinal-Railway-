@@ -1,9 +1,13 @@
 package com.nure.kozhukhar.railway.db.service;
 
 import com.nure.kozhukhar.railway.db.bean.RouteSearchBean;
+import com.nure.kozhukhar.railway.db.bean.SeatSearchBean;
 import com.nure.kozhukhar.railway.db.dao.RouteDao;
+import com.nure.kozhukhar.railway.db.dao.SeatDao;
 import com.nure.kozhukhar.railway.db.dao.StationDao;
 import com.nure.kozhukhar.railway.db.entity.route.Route;
+import com.nure.kozhukhar.railway.util.TimeUtil;
+import org.apache.log4j.Logger;
 
 import java.sql.Date;
 import java.text.ParseException;
@@ -15,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RouteService {
+
+    private static final Logger LOG = Logger.getLogger(RouteService.class);
 
     public static List<RouteSearchBean> getRouteInfoByCityDate(String cityStart, String cityEnd, Date date) {
         List<Route> routes = RouteDao.getIdRouteOnDate(cityStart, cityEnd, date);
@@ -32,34 +38,19 @@ public class RouteService {
             );
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            routeInfo.setDateFrom(String.valueOf(
-                    routeInfo.getStationList().get(0).getTimeEnd().format(formatter))
-            );
-//            SimpleDateFormat formatter = new SimpleDateFormat(
-//                    "dd/MM/yyyy");
-//            try {
-//                routeInfo.setDateFrom(String.valueOf(
-//                        formatter.parse(formatter.format(routeInfo.getStationList().get(0).getTimeEnd())))
-//                );
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
+            routeInfo.setDateFrom(routeInfo.getStationList().get(0).getTimeEnd().format(formatter));
+
+            LOG.trace("Date depart : " + routeInfo.getStationList().get(0).getTimeEnd());
 
             routeInfo.setTimeFrom(routeInfo.getStationList().get(0).getTimeEnd().getHour()
                     + " : " + routeInfo.getStationList().get(0).getTimeEnd().getMinute());
             long diff = ChronoUnit.SECONDS.between(LocalDateTime.parse(from), LocalDateTime.parse(to));
-            routeInfo.setTravelTime(formatterToHours(diff));
+            routeInfo.setTravelTime(TimeUtil.formatterToHours(diff));
             routesBean.add(routeInfo);
+
+            routeInfo.setSeatList(SeatDao.getSeatCountInfo(cityStart, cityEnd, date, rt.getId()));
         }
         return routesBean;
-    }
-
-    private static String formatterToHours(long seconds) {
-
-        long hours = seconds / 3600;
-        long minutes = (seconds % 3600) / 60;
-
-        return hours + " : " + minutes;
     }
 
 }
