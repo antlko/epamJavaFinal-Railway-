@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 public class RouteService {
@@ -51,6 +53,21 @@ public class RouteService {
             routeInfo.setSeatList(SeatDao.getSeatCountInfo(cityStart, cityEnd, date, rt.getId()));
         }
         return routesBean;
+    }
+
+    public static List<SeatSearchBean> getSeatInfoByCarriageType(
+            String cityStart, String cityEnd, Date date, String type, Integer idTrain
+    ) {
+        List<SeatSearchBean> seatSearchBeans = SeatDao.getAllSeatsByCarriageType(
+                cityStart, cityEnd, type, date, idTrain);
+        for (SeatSearchBean searchBean : seatSearchBeans) {
+            searchBean.setListSeat(SeatDao.getAllSeatsByCarriageTypeAndNum(
+                    cityStart, cityEnd, type, date, idTrain, searchBean.getNumCarriage())
+            );
+        }
+
+        LOG.trace("Service Seats : " + seatSearchBeans);
+        return seatSearchBeans;
     }
 
 }

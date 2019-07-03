@@ -10,6 +10,30 @@ public class SeatSearchBean {
 
     private Integer free;
 
+    private Integer numSeat;
+
+    private List<Integer> listSeat;
+
+    private Integer numTrain;
+
+    private Integer numCarriage;
+
+    public Integer getNumCarriage() {
+        return numCarriage;
+    }
+
+    public List<Integer> getListSeat() {
+        return listSeat;
+    }
+
+    public void setListSeat(List<Integer> listSeat) {
+        this.listSeat = listSeat;
+    }
+
+    public void setNumCarriage(Integer numCarriage) {
+        this.numCarriage = numCarriage;
+    }
+
     public String getSeatType() {
         return seatType;
     }
@@ -26,11 +50,30 @@ public class SeatSearchBean {
         this.free = free;
     }
 
+    public Integer getNumSeat() {
+        return numSeat;
+    }
+
+    public void setNumSeat(Integer numSeat) {
+        this.numSeat = numSeat;
+    }
+
+    public Integer getNumTrain() {
+        return numTrain;
+    }
+
+    public void setNumTrain(Integer numTrain) {
+        this.numTrain = numTrain;
+    }
+
     @Override
     public String toString() {
         return "SeatSearchBean{" +
-                "seatType=" + seatType +
+                "seatType='" + seatType + '\'' +
                 ", free=" + free +
+                ", numSeat=" + numSeat +
+                ", numTrain=" + numTrain +
+                ", numCarriage=" + numCarriage +
                 '}';
     }
 }

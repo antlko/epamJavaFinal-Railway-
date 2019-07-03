@@ -18,9 +18,10 @@ public class BookingActionFactory {
 
     static {
         actions.put("bookingMain", new BookingStartPageAction());
-        actions.put("order", new NoFoundAction());
+        actions.put("toOrdering", new BookingSeatsAction());
         actions.put("findTickets", new FindTicketsAction());
         actions.put("noFound", new NoFoundAction());
+        actions.put("seatInCarriage", new FindCarriageContentAction());
     }
 
     public static Action getAction(HttpServletRequest request) {

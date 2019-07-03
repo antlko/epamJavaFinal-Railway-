@@ -72,7 +72,16 @@
                         </td>
                         <td>
                             <c:forEach var="seat" items="${route.seatList}">
-                                <p><a href="#">${seat.free}</a></p>
+                                <p>
+                                <form action="booking" method="POST">
+                                        ${seat.free}
+                                    <input type="hidden" name="action" value="toOrdering">
+                                    <input type="hidden" name="idTrain" value="${route.train.number}"/>
+                                    <input type="hidden" name="seatCheckType" value="${seat.seatType}"/>
+                                    <input type="hidden" name="dateFrom" value="${route.dateFrom}">
+                                    <button type="submit">Select</button>
+                                </form>
+                                </p>
                             </c:forEach>
                         </td>
                     </tr>
