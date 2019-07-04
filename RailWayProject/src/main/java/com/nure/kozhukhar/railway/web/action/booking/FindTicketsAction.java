@@ -22,7 +22,6 @@ public class FindTicketsAction extends Action {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         request.setAttribute("infoBookingMessage", "");
-        request.removeAttribute("infoRoutes");
 
         Date date = Date.valueOf(request.getParameter("date"));
         String cityStart = request.getParameter("cityStart");

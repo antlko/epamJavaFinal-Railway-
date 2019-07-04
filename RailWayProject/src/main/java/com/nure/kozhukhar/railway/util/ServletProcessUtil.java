@@ -7,8 +7,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 import static java.util.Arrays.asList;
 
@@ -19,7 +22,15 @@ public class ServletProcessUtil {
     private static final List<String> controllers = new ArrayList<>();
 
     static {
-        controllers.addAll(asList("/account", "/login", "/booking"));
+        Properties appProps = new Properties();
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        InputStream input = classLoader.getResourceAsStream("application.properties");
+        try {
+            appProps.load(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        controllers.addAll(asList(appProps.getProperty("pages").split(",")));
     }
 
     public static void process(HttpServletRequest request,

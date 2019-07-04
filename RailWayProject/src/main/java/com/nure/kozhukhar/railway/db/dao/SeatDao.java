@@ -63,6 +63,7 @@ public class SeatDao implements Dao<Seat> {
                 seatTemp.setNumCarriage(rs.getInt("numCarr"));
                 seatTemp.setNumTrain(rs.getInt("idTrain"));
                 seatTemp.setSeatType(rs.getString("nameType"));
+                seatTemp.setPriceSeat(rs.getInt("tpPrice"));
                 seatsInfo.add(seatTemp);
                 LOG.trace("seat Temp :" + seatTemp);
             }
@@ -96,6 +97,24 @@ public class SeatDao implements Dao<Seat> {
             e.printStackTrace();
         }
         return seats;
+    }
+
+    public static Integer getTypePriceByTypeName(String name) {
+        int price = 0;
+
+        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(Queries.SQL_SELECT_TYPE_PRICE);
+        ) {
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                price = rs.getInt("price");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return price;
     }
 
     @Override

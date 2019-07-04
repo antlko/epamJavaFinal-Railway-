@@ -12,8 +12,20 @@ public class Station extends Entity{
 
     private Date dateStart;
 
+    private Integer price;
+
     private Date dateEnd;
 
+
+
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
 
     public Integer getId() {
         return id;

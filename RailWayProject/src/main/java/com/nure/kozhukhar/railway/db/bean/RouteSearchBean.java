@@ -23,6 +23,16 @@ public class RouteSearchBean extends Entity {
 
     private String dateFrom;
 
+    private Integer priceRoute;
+
+    public Integer getPriceRoute() {
+        return priceRoute;
+    }
+
+    public void setPriceRoute(Integer priceRoute) {
+        this.priceRoute = priceRoute;
+    }
+
     public String getDateFrom() {
         return dateFrom;
     }

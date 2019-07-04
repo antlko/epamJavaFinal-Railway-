@@ -39,7 +39,7 @@
     <div class="block-centered-content">
         <p>${sessionScope.infoBookingMessage}</p>
     </div>
-    <c:if test="${not empty sessionScope.infoRoutes}">
+    <c:if test="${not empty sessionScope.userRoute}">
         <div class="block-centered-content">
             <table border="1">
                 <th>Train</th>
@@ -51,20 +51,20 @@
                 <th>Travel time</th>
                 <th>Coach type</th>
                 <tr>
-                    <td>${sessionScope.numTrain}</td>
+                    <td>${sessionScope.userRoute.train.number}</td>
                     <td>${sessionScope.cityStart}</td>
                     <td>${sessionScope.cityEnd}</td>
-                    <td>${sessionScope.dateFrom}</td>
-                    <td>${route.timeFrom}</td>
+                    <td>${sessionScope.userRoute.dateFrom}</td>
+                    <td>${sessionScope.userRoute.timeFrom}</td>
                     <td>
-                        <c:forEach var="stat" items="${route.stationList}">
+                        <c:forEach var="stat" items="${sessionScope.userRoute.stationList}">
                             ${stat.name}
                         </c:forEach>
                     </td>
-                    <td>${route.travelTime}</td>
+                    <td>${sessionScope.userRoute.travelTime}</td>
 
                     <td>
-                            <%--${sessionScope.seatCheckType}--%>
+                            ${sessionScope.seatCheckType}
                     </td>
                 </tr>
             </table>
@@ -75,7 +75,7 @@
         </div>
         <div class="block-centered-content">
             <c:forEach var="carriage" items="${sessionScope.serviceCarriage}">
-                <form action="booking" method="POST">
+                <form action="booking" method="GET">
                     <input type="hidden" name="action" value="seatInCarriage">
                     <input type="hidden" name="carrNum" value="${carriage.numCarriage}">
                     <input type="hidden" name="serviceCarriage" value="${sessionScope.serviceCarriage}">
@@ -91,6 +91,7 @@
             </ul>
         </div>
         <div class="block-centered-content">
+            <input id="rtPrice" type="hidden" value="${sessionScope.routePrice}">
             <div id="holder">
                 <ul id="place">
                         <%--=================================================
@@ -101,7 +102,11 @@
             </div>
         </div>
         <div class="block-centered-content">
-            <form action="booking" method="post">
+            <h3>Total price :</h3>
+            <input id="totalPrice" type="text" value="0" readonly>
+        </div>
+        <div class="block-centered-content">
+            <form action="ordering" method="post">
                 <input type="hidden" name="action" value="orderTickets">
                     <%--=================================================
                                 There will be dynamic <input> method

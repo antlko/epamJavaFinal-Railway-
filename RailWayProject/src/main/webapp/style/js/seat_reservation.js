@@ -46,6 +46,7 @@ $('.' + settings.seatCss).click(function () {
         //alert('This seat is already reserved');
         $(this).toggleClass(settings.selectingSeatCss);
     }
+    var totalPrice = 0;
     var listNums = [];
     var classList = document.getElementsByClassName(settings.seatCss);
     for (var i = 0; i < classList.length; i++) {
@@ -54,10 +55,13 @@ $('.' + settings.seatCss).click(function () {
             if (nm === settings.selectingSeatCss) {
                 console.log(classList[i].title);
                 listNums.push(classList[i].title);
+                totalPrice += parseInt(document.getElementById("rtPrice").value);
             }
         });
     }
+    console.log("Total price " + totalPrice);
     $("#chSeat").val(listNums.join(' '));
+    $("#totalPrice").val(totalPrice);
     console.log('~~~');
 });
 

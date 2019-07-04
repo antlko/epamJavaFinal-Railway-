@@ -1,6 +1,8 @@
 package com.nure.kozhukhar.railway.web.action.booking;
 
+import com.nure.kozhukhar.railway.db.bean.RouteSearchBean;
 import com.nure.kozhukhar.railway.db.bean.SeatSearchBean;
+import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
 import com.nure.kozhukhar.railway.db.service.RouteService;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BookingSeatsAction extends Action {
@@ -23,30 +26,37 @@ public class BookingSeatsAction extends Action {
 
         HttpSession session = request.getSession();
 
-        LOG.debug("Post parameters: [" + request.getParameter("idTrain") + " " +
-                request.getParameter("seatCheckType") + " " +
-                session.getAttribute("cityStart") + " " +
-                session.getAttribute("cityEnd") + " " +
-                request.getParameter("dateFrom") + "]");
 
-        session.setAttribute("idTrain", request.getParameter("idTrain"));
-        session.setAttribute("seatCheckType", request.getParameter("seatCheckType"));
-        session.setAttribute("dateFrom", request.getParameter("dateFrom"));
+        Integer indRoute = Integer.valueOf(request.getParameter("checkedRouteForUser"));
+        List<RouteSearchBean> listRsb = (ArrayList<RouteSearchBean>) session.getAttribute("infoRoutes");
+        RouteSearchBean rsb = listRsb.get(indRoute);
+        LOG.trace("Ind Route :" + indRoute + " \n|Routes : " + listRsb + "\n| Route :" + rsb);
+
 
         String cityStart = (String) session.getAttribute("cityStart");
         String cityEnd = (String) session.getAttribute("cityEnd");
-        Date date = Date.valueOf(request.getParameter("dateFrom"));
+        Date date = Date.valueOf(rsb.getDateFrom());
         String type = request.getParameter("seatCheckType");
-        Integer idTrain = Integer.valueOf(request.getParameter("idTrain"));
+        Integer idTrain = rsb.getTrain().getNumber();
 
         List<SeatSearchBean> seatBeanList = RouteService.getSeatInfoByCarriageType(
-            cityStart, cityEnd,date,type,idTrain
+                cityStart, cityEnd, date, type, idTrain
         );
 
-        session.setAttribute("serviceCarriage", seatBeanList);
-        session.setAttribute("serviceSeats", seatBeanList.get(0).getListSeat());
+        // TODO: get Carriage type price
 
-        return "WEB-INF/jsp/booking/order.jsp";
+        Integer totalRoutePrice = 0;
+        for(RouteStation rs: rsb.getStationList()) {
+            totalRoutePrice += rs.getPrice();
+        }
+
+        session.setAttribute("seatCheckType", type);
+        session.setAttribute("serviceCarriage", seatBeanList);
+        session.setAttribute("routePrice", totalRoutePrice + seatBeanList.get(0).getPriceSeat());
+        session.setAttribute("serviceSeats", seatBeanList.get(0).getListSeat());
+        session.setAttribute("userRoute", rsb);
+
+        return "WEB-INF/jsp/booking/seat_info.jsp";
     }
 
 }

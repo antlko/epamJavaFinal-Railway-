@@ -72,6 +72,7 @@ public class RouteDao implements Dao<RouteStation> {
 
             Route routeTemp = null;
             Train trainTemp = null;
+            Integer commonPrice = 0;
             while (rs.next()) {
                 routeTemp = new Route();
                 trainTemp = new Train();
@@ -80,6 +81,7 @@ public class RouteDao implements Dao<RouteStation> {
                 trainTemp.setNumber(rs.getInt("number"));
                 routeTemp.setId(rs.getInt("id_route"));
                 routeTemp.setTrain(trainTemp);
+//                commonPrice+=rs.getInt("price");
                 routes.add(routeTemp);
             }
             pstmt.close();

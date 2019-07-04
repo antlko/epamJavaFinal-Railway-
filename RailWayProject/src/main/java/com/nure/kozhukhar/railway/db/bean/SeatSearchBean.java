@@ -16,7 +16,17 @@ public class SeatSearchBean {
 
     private Integer numTrain;
 
+    private Integer priceSeat;
+
     private Integer numCarriage;
+
+    public Integer getPriceSeat() {
+        return priceSeat;
+    }
+
+    public void setPriceSeat(Integer priceSeat) {
+        this.priceSeat = priceSeat;
+    }
 
     public Integer getNumCarriage() {
         return numCarriage;

@@ -64,7 +64,9 @@ public class RouteService {
             searchBean.setListSeat(SeatDao.getAllSeatsByCarriageTypeAndNum(
                     cityStart, cityEnd, type, date, idTrain, searchBean.getNumCarriage())
             );
+//            searchBean.setPriceSeat(SeatDao.getTypePriceByTypeName(type));
         }
+
 
         LOG.trace("Service Seats : " + seatSearchBeans);
         return seatSearchBeans;

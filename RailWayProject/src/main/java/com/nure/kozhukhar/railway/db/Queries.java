@@ -17,8 +17,11 @@ public class Queries {
             "                    ) \n" +
             "ORDER BY date_end;";
 
-    public static final String SQL_FIND_ROUTE_ON_DATE_BY_ROUTE_ID = "SELECT * FROM routes_on_date RD3, stations S3\n" +
+    public static final String SQL_FIND_ROUTE_ON_DATE_BY_ROUTE_ID = "SELECT * FROM routes_on_date RD3, stations S3, routes_station RS\n" +
             "\tWHERE RD3.id_station = S3.id\n" +
+            "\t\t\tAND RS.id_station = RD3.id_station\n" +
+            "            AND RS.id_route = RD3.id_route\n" +
+            "            AND RS.id_train = RD3.id_train\n" +
             "            AND RD3.date_end >= (\n" +
             "            SELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
             "                        WHERE RD2.id_station = S2.id\n" +
@@ -83,7 +86,7 @@ public class Queries {
             "           ORDER BY RD3.date_end\n" +
             "            ) as H\n" +
             "WHERE H.nameStation = ?;";
-    public static final String SQL_FIND_FREE_SEATS_BY_TRAIN = "SELECT * FROM (SELECT DISTINCT TP.name as nameType, S3.name as nameStation, T.id as idTrain, CR.num_carriage as numCarr\n" +
+    public static final String SQL_FIND_FREE_SEATS_BY_TRAIN = "SELECT * FROM (SELECT DISTINCT TP.price as tpPrice, TP.name as nameType, S3.name as nameStation, T.id as idTrain, CR.num_carriage as numCarr\n" +
             "            FROM routes_on_date RD3, stations S3, trains T, routes R, seats ST, Types TP, carriages CR\n" +
             "            WHERE RD3.id_station = S3.id\n" +
             "            AND RD3.id_route = R.id \n" +
@@ -155,4 +158,6 @@ public class Queries {
             ") H\n" +
             "WHERE H.nameStation = ?\n" +
             "ORDER BY idTrain,numCarr,numSeat";
+    public static final String SQL_SELECT_TYPE_PRICE = "SELECT price FROM Types\n" +
+            "WHERE name = ?";
 }

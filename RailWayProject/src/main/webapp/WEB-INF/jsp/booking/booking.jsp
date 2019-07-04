@@ -51,7 +51,7 @@
                 <th>Travel time</th>
                 <th>Coach type</th>
                 <th>Free seats</th>
-                <c:forEach var="route" items="${sessionScope.infoRoutes}">
+                <c:forEach var="route" items="${sessionScope.infoRoutes}" varStatus="loop">
                     <tr>
                         <td>${route.train.number}</td>
                         <td>${sessionScope.cityStart}</td>
@@ -73,12 +73,13 @@
                         <td>
                             <c:forEach var="seat" items="${route.seatList}">
                                 <p>
-                                <form action="booking" method="POST">
+                                <form action="booking" method="GET">
                                         ${seat.free}
                                     <input type="hidden" name="action" value="toOrdering">
-                                    <input type="hidden" name="idTrain" value="${route.train.number}"/>
+                                    <input type="hidden" name="checkedRouteForUser" value="${loop.index}"/>
                                     <input type="hidden" name="seatCheckType" value="${seat.seatType}"/>
                                     <input type="hidden" name="dateFrom" value="${route.dateFrom}">
+                                    <input type="hidden" name="timeFrom" value="${route.timeFrom}">
                                     <button type="submit">Select</button>
                                 </form>
                                 </p>

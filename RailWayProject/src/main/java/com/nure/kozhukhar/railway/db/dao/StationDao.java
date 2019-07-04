@@ -45,6 +45,7 @@ public class StationDao implements Dao<Station> {
                 stationTemp.setTimeEnd(TimeUtil.getDateTimeWithTimeZone(
                         rs.getTimestamp("time_date_end").toLocalDateTime()));
                 stationTemp.setIdTrain(rs.getInt("id_train"));
+                stationTemp.setPrice(rs.getInt("price"));
                 stations.add(stationTemp);
 
                 LOG.trace("Time Start : " + LocalDateTime.ofInstant(

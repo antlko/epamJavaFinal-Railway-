@@ -36,6 +36,6 @@ public class FindCarriageContentAction extends Action {
         LOG.trace("Seat Bean list :  " + seatBeanList);
         session.setAttribute("serviceSeats", seatBeanList.get(indCarrNum).getListSeat());
 
-        return "WEB-INF/jsp/booking/order.jsp";
+        return "WEB-INF/jsp/booking/seat_info.jsp";
     }
 }

@@ -23,6 +23,17 @@ public class RouteStation extends Entity {
 
     private Integer idCity;
 
+    private Integer price;
+
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
     public Integer getIdCity() {
         return idCity;
     }

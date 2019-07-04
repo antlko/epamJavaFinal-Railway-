@@ -21,10 +21,14 @@ public class RouteOnDate extends Entity {
 
     private Date timeDateEnd;
 
-    private List<Station> stations;
+    private Integer price;
 
-    public void setStations(List<Station> stations) {
-        this.stations = stations;
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
     public Station getStation() {
@@ -74,7 +78,6 @@ public class RouteOnDate extends Entity {
     public void setTimeDateEnd(Date timeDateEnd) {
         this.timeDateEnd = timeDateEnd;
     }
-
 
 
     @Override
