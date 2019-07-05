@@ -10,8 +10,61 @@
 <body>
 <%@ include file="/WEB-INF/static/header.jsp" %>
 
-<h3>Hello ${sessionScope.user.login}</h3>
+<div class="tabs-content">
+    <div class="tabs">
+        <input type="radio" name="tabs" id="tabone" checked="checked">
+        <label for="tabone">History</label>
+        <div class="tab">
+            <table border="1">
+                <th>Date</th>
+                <th>Full name</th>
+                <th>Train</th>
+                <th>Carriage</th>
+                <th>Seat</th>
+                <th>From</th>
+                <th>Destination</th>
+                <th>Document</th>
+                <c:forEach items="${sessionScope.userChecks}" var="check">
+                    <tr>
+                        <td>${check.dateEnd}</td>
+                        <td>${check.userInitial}</td>
+                        <td>${check.numTrain}</td>
+                        <td>${check.numCarriage}</td>
+                        <td>${check.numSeat}</td>
+                        <td>${check.cityStart}</td>
+                        <td>${check.cityEnd}</td>
+                        <td>
+                            <form action="account" method="get">
+                                <input type="submit" value="Doc">
+                            </form>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </table>
+        </div>
 
+        <input type="radio" name="tabs" id="tabtwo">
+        <label for="tabtwo">Profile</label>
+        <div class="tab">
+            <div class="login-panel-bg">
+                <div class="login-panel-content">
+                    <h3>Hello, ${sessionScope.user.login}!</h3>
+                    <form action="account" method="post">
+                        <input type="hidden" name="action" value="updatePersonal">
+
+                        <div class="edit-tag">Surname :</div>
+                        <input type="text" name="Surname" value="${sessionScope.user.surname}">
+                        <div class="edit-tag">Name :</div>
+                        <input type="text" name="Name" value="${sessionScope.user.name}">
+                        <div class="edit-tag">Email :</div>
+                        <input type="text" name="Email" value="${sessionScope.user.email}">
+                        <input type="submit" value="Save Info">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <%@ include file="/WEB-INF/static/footer.jsp" %>
 </body>
 </html>

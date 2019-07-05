@@ -113,6 +113,7 @@
                                 which should contains information
                                 about checked seats
                      ==================================================--%>
+                <input type="hidden" name="checkedCarriage" value="${sessionScope.checkedCarriage}">
                 <input id="chSeat" type="hidden" name="checkedSeats" value="">
                 <input type="submit" value="Buy"/>
             </form>

@@ -57,10 +57,12 @@ button {
     min-height: 20%;
     align-items: center;
 }
-.block-content h1{
+
+.block-content h1 {
     font-size: 40px;
     font-weight: 500;
 }
+
 .block-centered-content {
     padding: 15px 0 15px 0;
     width: 100%;
@@ -128,6 +130,12 @@ nav {
     background-color: white;
     border-radius: 8px;
     position: relative;
+}
+.login-panel-content .edit-tag {
+    text-align: left;
+    display: flex;
+    width: 50%;
+    margin: 15px auto;
 }
 
 .login-panel-bg form input {
@@ -221,6 +229,68 @@ nav {
     100% {
         opacity: 1;
         transform: translateX(0px);
+    }
+}
+
+/**
+ * Tabs
+ */
+.tabs-content {
+    min-height: 100vh;
+    box-sizing: border-box;
+    max-width: 60rem;
+    margin: 0 auto;
+}
+
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+/ / make sure it wraps
+}
+
+.tabs label {
+    order: 1;
+/ / Put the labels first display: block;
+    padding: 1rem 2rem;
+    margin-right: 0.2rem;
+    cursor: pointer;
+    background: #90CAF9;
+    font-weight: bold;
+    transition: background ease 0.2s;
+}
+
+.tabs .tab {
+    order: 99;
+/ / Put the tabs last flex-grow: 1;
+    width: 80%;
+    margin: auto;
+    display: none;
+    padding: 1rem;
+    background: #fff;
+}
+
+.tabs input[type="radio"] {
+    display: none;
+}
+
+.tabs input[type="radio"]:checked + label {
+    background: #d6d7ff;
+}
+
+.tabs input[type="radio"]:checked + label + .tab {
+    display: block;
+}
+
+@media (max-width: 45em) {
+    .tabs .tab,
+    .tabs label {
+        order: initial;
+    }
+
+    .tabs label {
+        width: 100%;
+        margin-right: 0;
+        margin-top: 0.2rem;
     }
 }
 

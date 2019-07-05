@@ -1,8 +1,9 @@
 package com.nure.kozhukhar.railway.db.entity;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
-public class Station extends Entity{
+public class Station extends Entity {
 
     private Integer id;
 
@@ -10,13 +11,11 @@ public class Station extends Entity{
 
     private String name;
 
-    private Date dateStart;
+    private LocalDateTime dateStart;
 
     private Integer price;
 
-    private Date dateEnd;
-
-
+    private LocalDateTime dateEnd;
 
 
     public Integer getPrice() {
@@ -51,28 +50,31 @@ public class Station extends Entity{
         this.name = name;
     }
 
-    public Date getDateStart() {
+    public LocalDateTime getDateStart() {
         return dateStart;
     }
 
-    public void setDateStart(Date dateStart) {
+    public void setDateStart(LocalDateTime dateStart) {
         this.dateStart = dateStart;
     }
 
-    public Date getDateEnd() {
+    public LocalDateTime getDateEnd() {
         return dateEnd;
     }
 
-    public void setDateEnd(Date dateEnd) {
+    public void setDateEnd(LocalDateTime dateEnd) {
         this.dateEnd = dateEnd;
     }
 
     @Override
-public String toString() {
+    public String toString() {
         return "Station{" +
                 "id=" + id +
                 ", idCity=" + idCity +
                 ", name='" + name + '\'' +
+                ", dateStart=" + dateStart +
+                ", price=" + price +
+                ", dateEnd=" + dateEnd +
                 '}';
     }
 }

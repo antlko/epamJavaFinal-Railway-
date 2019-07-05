@@ -21,6 +21,7 @@ public class AccountActionFactory {
 
     static {
         actions.put("account", new UserAccountPage());
+        actions.put("updatePersonal", new UserUpdatePersonal());
         actions.put("logout", new UserLoginAction());
         actions.put("register", new UserRegisterAction());
         actions.put("noFound", new NoFoundAction());

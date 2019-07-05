@@ -48,8 +48,7 @@ public class StationDao implements Dao<Station> {
                 stationTemp.setPrice(rs.getInt("price"));
                 stations.add(stationTemp);
 
-                LOG.trace("Time Start : " + LocalDateTime.ofInstant(
-                        stationTemp.getTimeStart().toInstant(ZoneOffset.MIN), ZoneId.of(TimeUtil.getTimeZone())));
+                LOG.trace("Checking station : " + stationTemp.getIdStation() + ", " + stationTemp.getTimeEnd());
             }
         } catch (SQLException e) {
             e.printStackTrace();

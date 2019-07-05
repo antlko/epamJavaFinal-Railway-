@@ -22,7 +22,6 @@ public class UserCreateAction extends Action {
         UserDao userTempDao = new UserDao();
         userTempDao.save(newUser);
 
-
         return "/login";
     }
 }

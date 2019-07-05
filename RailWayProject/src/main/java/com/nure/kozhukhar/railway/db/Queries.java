@@ -160,4 +160,23 @@ public class Queries {
             "ORDER BY idTrain,numCarr,numSeat";
     public static final String SQL_SELECT_TYPE_PRICE = "SELECT price FROM Types\n" +
             "WHERE name = ?";
+
+    public static final String SQL_SELECT_ALL_CHECK_FOR_USER = "SELECT  DISTINCT initials, id_train, number, num_carriage, num_seat\n" +
+            "from user_check UCH, stations S, trains T\n" +
+            "WHERE UCH.id_station = S.id \n" +
+            "\tAND T.id = UCH.id_train\n" +
+            "    AND id_user = ?\n" +
+            "ORDER BY id_train, num_carriage, num_seat, date_end ";
+    public static final String SQL_SELECT_ALL_STATION_INFO_FOR_CHECK =
+            "SELECT  id_train, number, num_carriage, num_seat, date_end, name, (\n" +
+            "\t\tSELECT S2.name FROM stations S2\n" +
+            "        WHERE S2.id = S.id + 1\n" +
+            "\t) as dest  from user_check UCH, stations S, trains T\n" +
+            "WHERE UCH.id_station = S.id \n" +
+            "\tAND T.id = UCH.id_train\n" +
+            "    AND id_user = ?\n" +
+            "    AND id_train = ?\n" +
+            "    AND num_carriage = ?\n" +
+            "    AND num_seat = ?\n" +
+            "ORDER BY id_train, num_carriage, num_seat, date_end ";
 }

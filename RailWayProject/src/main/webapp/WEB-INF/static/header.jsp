@@ -10,7 +10,11 @@
             <li><a class="nav-link" href="contact">Contact</a></li>
         </ul>
     </nav>
+
     <div class="cart login-js">
-        <img src="style/img/login.svg" height="30" width="30"/>
+        <a href="account">
+            <img src="style/img/login.svg" height="30" width="30"/>
+        </a>
     </div>
+
 </header>
