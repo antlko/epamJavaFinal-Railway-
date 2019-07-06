@@ -1,8 +1,8 @@
 package com.nure.kozhukhar.railway.web.action.admin;
 
-import com.nure.kozhukhar.railway.db.dao.CityDao;
-import com.nure.kozhukhar.railway.db.dao.CountryDao;
+import com.nure.kozhukhar.railway.db.dao.*;
 import com.nure.kozhukhar.railway.db.entity.City;
+import com.nure.kozhukhar.railway.db.entity.Train;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
 
@@ -24,10 +24,18 @@ public class AdminAccountPage extends Action {
             return "/login";
         }
 
+
         CityDao cityDao = new CityDao();
         CountryDao countryDao = new CountryDao();
+        StationDao stationDao = new StationDao();
+        TrainDao trainDao = new TrainDao();
+        TypeDao typeDao = new TypeDao();
+
         request.setAttribute("allCityInfo", cityDao.getAll());
         request.setAttribute("allCountryInfo", countryDao.getAll());
+        request.setAttribute("allStationInfo", stationDao.getAll());
+        request.setAttribute("allTrainInfo", trainDao.getAll());
+        request.setAttribute("allTypeInfo", typeDao.getAll());
 
         LOG.trace("'Station' attributes for admin panel --> " + cityDao.getAll() + ", " + countryDao.getAll());
 

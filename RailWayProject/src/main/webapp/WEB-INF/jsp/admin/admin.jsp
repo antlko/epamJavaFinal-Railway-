@@ -19,7 +19,9 @@
     </div>
     <div class="tabs-content">
         <div class="tabs">
-            <input type="radio" name="tabs" id="tab_1" checked="checked">
+            <input type="radio" name="tabs" id="tab_1" value=1
+                   <c:if test="${sessionScope.tab == 1 or empty sessionScope.tab}">checked</c:if>
+            />
             <label for="tab_1">Personal</label>
             <div class="tab">
                 <div class="login-panel-bg">
@@ -27,6 +29,7 @@
                         <h3>Change user role:</h3>
                         <form action="admin">
                             <input type="hidden" name="action" value="changeUser">
+                            <input type="hidden" name="checkVal" value="1">
 
                             <div class="edit-tag">User login :</div>
                             <input type="text" name="loginUser">
@@ -43,16 +46,19 @@
                 </div>
             </div>
 
-            <input type="radio" name="tabs" id="tab_2">
+            <input type="radio" name="tabs" id="tab_2" value=2
+                   <c:if test="${sessionScope.tab == 2}">checked</c:if>
+            />
             <label for="tab_2">Stations</label>
             <div class="tab">
                 <%--=================================================
-                               County Settings
+                               Country Settings
                     ==================================================--%>
                 <h3>Country info</h3>
                 <hr>
                 <form action="admin" method="post">
                     <input type="hidden" name="action" value="changeCountry">
+                    <input type="hidden" name="checkVal" value="2">
 
                     <div class="edit-tag">Country :</div>
                     <input type="text" name="countryName">
@@ -74,6 +80,7 @@
                 <hr>
                 <form action="admin" method="post">
                     <input type="hidden" name="action" value="changeCity">
+                    <input type="hidden" name="checkVal" value="2">
 
                     <div class="edit-tag">City :</div>
                     <input type="text" name="cityName">
@@ -100,16 +107,135 @@
                 ==================================================--%>
                 <h3>Stations info</h3>
                 <hr>
+                <form action="admin" method="post">
+                    <input type="hidden" name="action" value="changeStation">
+                    <input type="hidden" name="checkVal" value="2">
+
+                    <div class="edit-tag">Station :</div>
+                    <input type="text" name="stationName">
+
+                    <div class="edit-tag">City :</div>
+                    <select name="tagCities">
+                        <c:forEach items="${requestScope.allCityInfo}" var="city">
+                            <option value="${city.name}">${city.name}</option>
+                        </c:forEach>
+                    </select>
+                    <input class="normal" type="submit" name="changeStationInfo" value="Save">
+                    <input class="danger" type="submit" name="changeStationInfo" value="Delete">
+                </form>
+                <input class="middle sidebar-station" type="submit" name="showStation" value="Show All">
+                <br>
+                <div id="sidebar-station" class="sidebar">
+                    <h3>All available station</h3>
+                    <c:forEach items="${requestScope.allStationInfo}" var="station">
+                        <li>${station.name}</li>
+                    </c:forEach>
+                </div>
             </div>
 
-            <input type="radio" name="tabs" id="tab_3">
-            <label for="tab_3">Routes</label>
+            <input type="radio" name="tabs" id="tab_3" value=3
+                   <c:if test="${sessionScope.tab == 3}">checked</c:if>
+            />
+            <label for="tab_3">Trains</label>
             <div class="tab">
+                <%--=================================================
+                           Train settings
+                ==================================================--%>
+                <h3>Train info</h3>
+                <hr>
+                <form action="admin" method="post">
+                    <input type="hidden" name="action" value="changeTrain">
+                    <input type="hidden" name="checkVal" value="3">
 
+                    <div class="edit-tag">Train number :</div>
+                    <input type="text" name="trainNumber">
+
+                    <input class="normal" type="submit" name="changeTrainInfo" value="Save">
+                    <input class="danger" type="submit" name="changeTrainInfo" value="Delete">
+                </form>
+                <input class="middle sidebar-train" type="submit" name="showTrain" value="Show All">
+                <br>
+                <div id="sidebar-train" class="sidebar">
+                    <h3>All available train</h3>
+                    <c:forEach items="${requestScope.allTrainInfo}" var="train">
+                        <li>${train.number}</li>
+                    </c:forEach>
+                </div>
+                <%--=================================================
+                   Carriage-type settings
+                 ==================================================--%>
+                <h3>Carriage-type info</h3>
+                <hr>
+                <form action="admin" method="post">
+                    <input type="hidden" name="action" value="changeType">
+                    <input type="hidden" name="checkVal" value="3">
+
+                    <div class="edit-tag">Type name :</div>
+                    <input type="text" name="typeName">
+
+                    <div class="edit-tag">Type price :</div>
+                    <input type="text" name="typePrice">
+
+                    <input class="normal" type="submit" name="changeTypeInfo" value="Save">
+                    <input class="danger" type="submit" name="changeTypeInfo" value="Delete">
+                </form>
+                <input class="middle sidebar-type" type="submit" name="showType" value="Show All">
+                <br>
+                <div id="sidebar-type" class="sidebar">
+                    <h3>All available train</h3>
+                    <c:forEach items="${requestScope.allTypeInfo}" var="type">
+                        <li>${type.name}</li>
+                    </c:forEach>
+                </div>
+                <%--=================================================
+                           Carriage settings
+                ==================================================--%>
+                <h3>Inside transport information</h3>
+                <hr>
+                <form action="admin" method="post">
+                    <input type="hidden" name="action" value="changeTrain">
+                    <input type="hidden" name="checkVal" value="3">
+
+                    <div class="edit-tag">Train number :</div>
+                    <select name="tagTypes">
+                        <c:forEach items="${requestScope.allTrainInfo}" var="train">
+                            <option value="${train.number}">${train.number}</option>
+                        </c:forEach>
+                    </select>
+
+                    <div class="edit-tag">Number of carriage :</div>
+                    <input id="rangeCarr" class="slider" type="range" min="1" max="20" name="carriageCount">
+                    <output for="rangeCarr" class="countRangeCarr">10</output>
+
+                    <div class="edit-tag">Number of seats :</div>
+                    <input id="rangeSeat" class="slider" type="range" min="1" max="45" name="seatCount">
+                    <output for="rangeCarr" class="countRangeSeat">45</output>
+
+
+                    <div class="edit-tag">Carriage type :</div>
+                    <select name="tagTypes">
+                        <c:forEach items="${requestScope.allTypeInfo}" var="city">
+                            <option value="${type.name}">${type.name}</option>
+                        </c:forEach>
+                    </select>
+
+                    <input class="normal" type="submit" name="changeTrainInfo" value="Save">
+                    <input class="danger" type="submit" name="changeTrainInfo" value="Delete">
+                </form>
+                <input class="middle sidebar-station" type="submit" name="showStation" value="Show All">
+                <br>
+                <div id="sidebar-train" class="sidebar">
+                    <h3>All available train</h3>
+                    <c:forEach items="${requestScope.allStationInfo}" var="station">
+                        <li>${station.name}</li>
+                    </c:forEach>
+                </div>
             </div>
 
-            <input type="radio" name="tabs" id="tab_4">
-            <label for="tab_4">Trains</label>
+            <input type="radio" name="tabs" id="tab_4" value=4
+                   <c:if test="${sessionScope.tab == 4}">checked</c:if>
+            />
+            <label for="tab_4">Routes</label>
             <div class="tab">
 
             </div>
@@ -119,4 +245,5 @@
 <%@ include file="/WEB-INF/static/footer.jsp" %>
 </body>
 <script src="style/js/show_button.js" type="text/javascript"></script>
+<script src="style/js/range_slider.js" type="text/javascript"></script>
 </html>

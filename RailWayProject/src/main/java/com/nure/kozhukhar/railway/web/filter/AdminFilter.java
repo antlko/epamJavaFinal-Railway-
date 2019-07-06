@@ -28,14 +28,20 @@ public class AdminFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        String roles = (String) session.getAttribute("userRoles");
-        LOG.trace("User id : " + user.getId() + ", Roles : " + roles);
-        if(roles.contains(Role.ADMIN.getName())) {
-            chain.doFilter(req, resp);
+        if (user != null) {
+            String roles = (String) session.getAttribute("userRoles");
+            LOG.trace("User id : " + user.getId() + ", Roles : " + roles);
+            if (roles.contains(Role.ADMIN.getName())) {
+                chain.doFilter(req, resp);
+            } else {
+                LOG.debug("User is not admin");
+                HttpServletResponse response = (HttpServletResponse) resp;
+                response.sendRedirect(request.getContextPath() + "/account");
+            }
         } else {
-            LOG.debug("User is not admin");
+            LOG.debug("Account not in session.");
             HttpServletResponse response = (HttpServletResponse) resp;
-            response.sendRedirect(request.getContextPath() + "/account");
+            response.sendRedirect(request.getContextPath() + "/login");
         }
     }
 

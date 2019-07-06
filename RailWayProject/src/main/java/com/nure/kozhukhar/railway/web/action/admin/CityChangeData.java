@@ -39,6 +39,8 @@ public class CityChangeData extends Action {
             cityDao.delete(city);
         }
 
+        String checkedVal = request.getParameter("checkVal");
+        request.getSession().setAttribute("tab", checkedVal);
         return "/admin";
     }
 }

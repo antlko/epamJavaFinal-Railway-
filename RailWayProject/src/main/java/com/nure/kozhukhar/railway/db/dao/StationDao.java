@@ -84,7 +84,15 @@ public class StationDao implements Dao<Station> {
 
     @Override
     public void save(Station station) {
-
+        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();) {
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO stations(name,id_city) VALUES(?,?)");
+            int atr = 1;
+            pstmt.setString(atr++, station.getName());
+            pstmt.setInt(atr, station.getIdCity());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -94,6 +102,13 @@ public class StationDao implements Dao<Station> {
 
     @Override
     public void delete(Station station) {
-
+        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("DELETE FROM stations WHERE name = ?");
+        ) {
+            pstmt.setString(1, station.getName());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

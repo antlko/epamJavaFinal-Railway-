@@ -12,6 +12,24 @@ import java.util.List;
 
 public class CityDao implements Dao<City> {
 
+    public static Integer getIdCityByName(String name) {
+        Integer idCity = null;
+        try(Connection conn = DBUtil.getInstance().getDataSource().getConnection();
+            PreparedStatement pstmt = conn.prepareStatement("SELECT id FROM cities WHERE name = ?");
+        ) {
+            pstmt.setString(1, name);
+
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()) {
+                idCity = rs.getInt("id");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return idCity;
+    }
+
     @Override
     public City get(long id) {
         return null;

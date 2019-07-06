@@ -27,6 +27,8 @@ public class UserChangeData extends Action {
 
         }
 
+        String checkedVal = request.getParameter("checkVal");
+        request.getSession().setAttribute("tab", checkedVal);
         return "/admin";
     }
 }

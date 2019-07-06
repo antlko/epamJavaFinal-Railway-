@@ -26,11 +26,15 @@ public class AdminActionFactory {
         actions.put("changeUser", new UserChangeData());
         actions.put("changeCity", new CityChangeData());
         actions.put("changeCountry" , new CountryChangeData());
+        actions.put("changeStation" , new StationChangeData());
+        actions.put("changeTrain" , new TrainChangeData());
+        actions.put("changeType" , new TypeChangeData());
         actions.put("noFound", new NoFoundAction());
     }
 
     public static Action getAction(HttpServletRequest request) {
         String actionName = request.getParameter("action");
+
         LOG.debug("Action name auth : " + actionName);
         action = actions.get(actionName);
 

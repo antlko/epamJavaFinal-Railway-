@@ -32,6 +32,8 @@ public class CountryChangeData extends Action {
             countryDao.delete(country);
         }
 
+        String checkedVal = request.getParameter("checkVal");
+        request.getSession().setAttribute("tab", checkedVal);
         return "/admin";
     }
 }
