@@ -28,7 +28,7 @@
             <input type="date" name="date" required
                    value="${sessionScope.date}" style="width: 200px">
 
-            <input type="submit" value="Submit"/>
+            <input class="normal" type="submit" value="Submit"/>
         </form>
         <datalist id="cities">
             <c:forEach var="c" items="${requestScope.listStation}">

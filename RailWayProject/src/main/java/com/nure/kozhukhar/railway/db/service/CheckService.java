@@ -25,12 +25,12 @@ public class CheckService {
                     userCheck.getNumSeat()
                     );
             check.setNumTrain(userCheck.getNumTrain());
-
             check.setUserInitial(userCheck.getInitials());
-
             check.setDateEnd(check.getStationList().get(0).getDateEnd());
             check.setNumSeat(userCheck.getNumSeat());
             check.setNumCarriage(userCheck.getNumCarriage());
+            check.setIdTrain(userCheck.getIdTrain());
+            check.setIdUser(idUser);
             checksInfo.add(check);
         }
 

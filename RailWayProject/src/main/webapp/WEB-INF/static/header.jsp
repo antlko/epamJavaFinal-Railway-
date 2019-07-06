@@ -12,9 +12,19 @@
     </nav>
 
     <div class="cart login-js">
-        <a href="account">
-            <img src="style/img/login.svg" height="30" width="30"/>
-        </a>
+        <c:if test="${not empty sessionScope.user}">
+            <a href="account">
+                ${sessionScope.user.login}
+            </a>
+            <a href="account?action=logout">
+                <img src="style/img/exit.svg" height="30" width="30"/>
+            </a>
+        </c:if>
+        <c:if test="${empty sessionScope.user}">
+            <a href="account">
+                <img src="style/img/login.svg" height="30" width="30"/>
+            </a>
+        </c:if>
     </div>
 
 </header>

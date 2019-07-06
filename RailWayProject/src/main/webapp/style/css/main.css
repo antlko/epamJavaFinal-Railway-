@@ -14,13 +14,38 @@ body {
 
 input[type=submit] {
     border: none;
-    background: #84b9dd;;
     color: white;
     width: 150px;
     height: 50px;
     cursor: pointer;
     font-size: 16px;
     margin-left: 10px;
+}
+.normal {
+    background-color: #84b9dd;
+}
+
+.danger {
+    background-color: #ff6161;
+}
+
+.middle {
+    background-color: #91c190;
+}
+
+.sidebar {
+    text-align: center;
+}
+
+select {
+    border: 1px solid #cccccc;
+    color: #5F5F79;
+    padding: 5px;
+    border-radius: 3px;
+    outline: none;
+    height: 50px;
+    width: 120px;
+    font-size: 16px;
 }
 
 input {
@@ -131,6 +156,7 @@ nav {
     border-radius: 8px;
     position: relative;
 }
+
 .login-panel-content .edit-tag {
     text-align: left;
     display: flex;

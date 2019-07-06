@@ -118,6 +118,21 @@ public class CheckDao implements Dao {
 
     @Override
     public void delete(Object o) {
-
+        if(o == null) return;
+        if (o instanceof UserCheckBean) {
+            UserCheckBean userCheckBean = (UserCheckBean) o;
+            try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
+                 PreparedStatement pstmt = conn.prepareStatement(Queries.SQL_DELETE_USER_CHECK);
+            ) {
+                int atr = 1;
+                pstmt.setInt(atr++, userCheckBean.getIdUser());
+                pstmt.setInt(atr++, userCheckBean.getIdTrain());
+                pstmt.setInt(atr++, userCheckBean.getNumCarriage());
+                pstmt.setInt(atr, userCheckBean.getNumSeat());
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

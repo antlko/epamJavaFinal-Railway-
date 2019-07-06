@@ -28,7 +28,7 @@
             <input type="date" name="date" required
                    value="${sessionScope.date}" style="width: 200px">
 
-            <input type="submit" value="Submit"/>
+            <input class="normal" type="submit" value="Submit"/>
         </form>
         <datalist id="cities">
             <c:forEach var="c" items="${requestScope.listStation}">
@@ -79,7 +79,7 @@
                     <input type="hidden" name="action" value="seatInCarriage">
                     <input type="hidden" name="carrNum" value="${carriage.numCarriage}">
                     <input type="hidden" name="serviceCarriage" value="${sessionScope.serviceCarriage}">
-                    <input type="submit" value="${carriage.numCarriage}">
+                    <input class="normal" type="submit" value="${carriage.numCarriage}">
                 </form>
             </c:forEach>
         </div>
@@ -115,7 +115,7 @@
                      ==================================================--%>
                 <input type="hidden" name="checkedCarriage" value="${sessionScope.checkedCarriage}">
                 <input id="chSeat" type="hidden" name="checkedSeats" value="">
-                <input type="submit" value="Buy"/>
+                <input class="normal" type="submit" value="Buy"/>
             </form>
         </div>
     </c:if>

@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="au" uri="/WEB-INF/tld/auth_secure.tld" %>
 
 <html>
 
@@ -8,6 +9,7 @@
 <%@ include file="/WEB-INF/static/head.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <body>
+<au:AuthSecure/>
 <%@ include file="/WEB-INF/static/header.jsp" %>
 
 <div class="tabs-content">
@@ -24,7 +26,8 @@
                 <th>From</th>
                 <th>Destination</th>
                 <th>Document</th>
-                <c:forEach items="${sessionScope.userChecks}" var="check">
+                <th>Refuse</th>
+                <c:forEach items="${sessionScope.userChecks}" var="check" varStatus="loop">
                     <tr>
                         <td>${check.dateEnd}</td>
                         <td>${check.userInitial}</td>
@@ -35,7 +38,14 @@
                         <td>${check.cityEnd}</td>
                         <td>
                             <form action="account" method="get">
-                                <input type="submit" value="Doc">
+                                <input class="normal" type="submit" value="Doc">
+                            </form>
+                        </td>
+                        <td>
+                            <form action="account" method="post">
+                                <input type="hidden" name="action" value="deleteCheck">
+                                <input type="hidden" name="checkInd" value="${loop.index}">
+                                <input class="danger" type="submit" value="X" style="width: 40px;">
                             </form>
                         </td>
                     </tr>
@@ -58,7 +68,7 @@
                         <input type="text" name="Name" value="${sessionScope.user.name}">
                         <div class="edit-tag">Email :</div>
                         <input type="text" name="Email" value="${sessionScope.user.email}">
-                        <input type="submit" value="Save Info">
+                        <input class="normal" type="submit" value="Save Info">
                     </form>
                 </div>
             </div>

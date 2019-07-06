@@ -10,6 +10,10 @@ public class UserCheckBean {
 
     private String userInitial;
 
+    private Integer idUser;
+
+    private Integer idTrain;
+
     private Integer numTrain;
 
     private Integer numSeat;
@@ -24,8 +28,24 @@ public class UserCheckBean {
 
     private LocalDateTime dateEnd;
 
+    public Integer getIdTrain() {
+        return idTrain;
+    }
+
+    public void setIdTrain(Integer idTrain) {
+        this.idTrain = idTrain;
+    }
+
     public Integer getNumCarriage() {
         return numCarriage;
+    }
+
+    public Integer getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(Integer idUser) {
+        this.idUser = idUser;
     }
 
     public void setNumCarriage(Integer numCarriage) {
@@ -91,7 +111,12 @@ public class UserCheckBean {
     @Override
     public String toString() {
         return "UserCheckBean{" +
-                "numTrain=" + numTrain +
+                "userInitial='" + userInitial + '\'' +
+                ", idUser=" + idUser +
+                ", idTrain=" + idTrain +
+                ", numTrain=" + numTrain +
+                ", numSeat=" + numSeat +
+                ", numCarriage=" + numCarriage +
                 ", cityStart='" + cityStart + '\'' +
                 ", cityEnd='" + cityEnd + '\'' +
                 ", stationList=" + stationList +

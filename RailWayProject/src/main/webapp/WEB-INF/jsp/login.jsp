@@ -23,7 +23,7 @@
             ${requestScope.errorMessage}
             <input type="text" name="login" placeholder="Login">
             <input type="password" name="password" placeholder="Password">
-            <input type="submit" value="Submit"/>
+            <input class="normal" type="submit" value="Submit"/>
         </form>
         <a href="login?action=register">Haven't account? Create!</a>
     </div>

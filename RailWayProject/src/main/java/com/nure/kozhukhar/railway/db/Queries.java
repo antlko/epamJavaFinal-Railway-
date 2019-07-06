@@ -179,4 +179,9 @@ public class Queries {
             "    AND num_carriage = ?\n" +
             "    AND num_seat = ?\n" +
             "ORDER BY id_train, num_carriage, num_seat, date_end ";
+    public static final String SQL_DELETE_USER_CHECK = "DELETE FROM user_check \n" +
+            "WHERE id_user = ?\n" +
+            "    AND id_train = ?\n" +
+            "    AND num_carriage = ?\n" +
+            "    AND num_seat = ?";
 }

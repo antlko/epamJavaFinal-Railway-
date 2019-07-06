@@ -35,6 +35,7 @@ public class UserSignInAction extends Action {
 
         String role  = Role.USER.getName();
         if(UserDao.getUserRolesByLogin(user.getLogin()).contains(Role.ADMIN.getName())) {
+            LOG.trace("Show available roles : " + UserDao.getUserRolesByLogin(user.getLogin()));
             role = Role.ADMIN.getName();
         }
         session.setAttribute("userRoles",

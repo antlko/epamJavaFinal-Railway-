@@ -22,7 +22,7 @@
             <input type="text" name="login" placeholder="Login">
             <input type="password" name="password" placeholder="Password">
             <input type="email" name="email" placeholder="Email">
-            <input type="submit" value="Submit"/>
+            <input class="normal" type="submit" value="Submit"/>
         </form>
         <a href="login?action=login">Have account? Login!</a>
     </div>
