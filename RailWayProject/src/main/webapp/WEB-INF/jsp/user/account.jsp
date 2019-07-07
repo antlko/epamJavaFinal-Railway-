@@ -17,7 +17,7 @@
         <input type="radio" name="tabs" id="tabone" checked="checked">
         <label for="tabone">History</label>
         <div class="tab">
-            <table border="1">
+            <table>
                 <th>Date</th>
                 <th>Full name</th>
                 <th>Train</th>

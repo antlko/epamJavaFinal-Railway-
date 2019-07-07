@@ -183,7 +183,7 @@
                 <br>
                 <div id="sidebar-type" class="sidebar">
                     <h3>All available types</h3>
-                    <table border="1" style="margin: auto">
+                    <table style="margin: auto">
                         <th>Type</th>
                         <th>Price</th>
                         <c:forEach items="${requestScope.allTypeInfo}" var="type">
@@ -235,7 +235,7 @@
                 <br>
                 <div id="sidebar-train-stat" class="sidebar">
                     <h3>All available trains statistic</h3>
-                    <table border="1" style="margin: auto">
+                    <table style="margin: auto">
                         <th>Train</th>
                         <th>Numbers of carriages</th>
                         <th>Numbers of seats</th>

@@ -41,7 +41,7 @@
     </div>
     <c:if test="${not empty sessionScope.infoRoutes}">
         <div class="block-centered-content">
-            <table border="1">
+            <table>
                 <th>Train</th>
                 <th>From</th>
                 <th>Destination</th>
@@ -58,10 +58,13 @@
                         <td>${sessionScope.cityEnd}</td>
                         <td>${route.dateFrom}</td>
                         <td>${route.timeFrom}</td>
-                        <td>
+                        <td data-tooltip="
+                            <ol>
                             <c:forEach var="stat" items="${route.stationList}">
-                                ${stat.name}
+                                <li>${stat.name}</li>
                             </c:forEach>
+                             </ol>">
+                            Show route
                         </td>
                         <td>${route.travelTime}</td>
 
@@ -74,13 +77,13 @@
                             <c:forEach var="seat" items="${route.seatList}">
                                 <p>
                                 <form action="booking" method="GET">
-                                        ${seat.free}
+
                                     <input type="hidden" name="action" value="toOrdering">
                                     <input type="hidden" name="checkedRouteForUser" value="${loop.index}"/>
                                     <input type="hidden" name="seatCheckType" value="${seat.seatType}"/>
                                     <input type="hidden" name="dateFrom" value="${route.dateFrom}">
                                     <input type="hidden" name="timeFrom" value="${route.timeFrom}">
-                                    <button type="submit">Select</button>
+                                    <input class="checkButton" type="submit" value="${seat.free}">
                                 </form>
                                 </p>
                             </c:forEach>
@@ -93,4 +96,5 @@
 </section>
 <%@ include file="/WEB-INF/static/footer.jsp" %>
 </body>
+<script src="style/js/tooltip.js" type="text/javascript"></script>
 </html>
