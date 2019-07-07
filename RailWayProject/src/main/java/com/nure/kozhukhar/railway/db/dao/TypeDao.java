@@ -1,5 +1,7 @@
 package com.nure.kozhukhar.railway.db.dao;
 
+import com.nure.kozhukhar.railway.db.Queries;
+import com.nure.kozhukhar.railway.db.bean.TrainStatisticBean;
 import com.nure.kozhukhar.railway.db.entity.Train;
 import com.nure.kozhukhar.railway.db.entity.Type;
 import com.nure.kozhukhar.railway.util.DBUtil;
@@ -9,6 +11,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TypeDao implements Dao<Type> {
+
+    public static Integer getIDTypeByName(String name){
+        Integer typeId = null;
+        try(Connection conn = DBUtil.getInstance().getDataSource().getConnection();
+            PreparedStatement  pstmt = conn.prepareStatement("SELECT id FROM Types WHERE name = ?");
+        ) {
+            pstmt.setString(1, name);
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()) {
+                typeId = rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return typeId;
+    }
+
     @Override
     public Type get(long id) {
         return null;
@@ -21,7 +40,7 @@ public class TypeDao implements Dao<Type> {
         try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
              Statement stmt = conn.createStatement();
         ) {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM types;");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM types ORDER BY price;");
             while (rs.next()) {
                 typeTemp = new Type();
                 typeTemp.setId(rs.getInt("id"));

@@ -184,4 +184,14 @@ public class Queries {
             "    AND id_train = ?\n" +
             "    AND num_carriage = ?\n" +
             "    AND num_seat = ?";
+    public static final String SQL_SELECT_COUNT_CARRIAGES_AND_SEATS = "" +
+            "SELECT distinct number, (\n" +
+            "\tSELECT Count(*) FROM carriages \n" +
+            "    WHERE id_train = CR.id_train\n" +
+            ") as carriages,\n" +
+            " (\n" +
+            "\tSELECT Count(*) FROM seats \n" +
+            "    WHERE id_train = CR.id_train\n" +
+            ") as seats FROM carriages CR, trains T\n" +
+            "WHERE CR.id_train = T.id";
 }

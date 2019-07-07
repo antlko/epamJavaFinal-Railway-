@@ -27,3 +27,9 @@ $('div#sidebar-type').hide();
 $('.sidebar-type').on("click", function () {
     $('div#sidebar-type').slideToggle();
 });
+
+// Train Statistic
+$('div#sidebar-train-stat').hide();
+$('.sidebar-train-stat').on("click", function () {
+    $('div#sidebar-train-stat').slideToggle();
+});

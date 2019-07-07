@@ -182,10 +182,17 @@
                 <input class="middle sidebar-type" type="submit" name="showType" value="Show All">
                 <br>
                 <div id="sidebar-type" class="sidebar">
-                    <h3>All available train</h3>
-                    <c:forEach items="${requestScope.allTypeInfo}" var="type">
-                        <li>${type.name}</li>
-                    </c:forEach>
+                    <h3>All available types</h3>
+                    <table border="1" style="margin: auto">
+                        <th>Type</th>
+                        <th>Price</th>
+                        <c:forEach items="${requestScope.allTypeInfo}" var="type">
+                            <tr>
+                                <td>${type.name}</td>
+                                <td>${type.price}</td>
+                            </tr>
+                        </c:forEach>
+                    </table>
                 </div>
                 <%--=================================================
                            Carriage settings
@@ -193,28 +200,30 @@
                 <h3>Inside transport information</h3>
                 <hr>
                 <form action="admin" method="post">
-                    <input type="hidden" name="action" value="changeTrain">
+                    <input type="hidden" name="action" value="changeCarrSeat">
                     <input type="hidden" name="checkVal" value="3">
 
                     <div class="edit-tag">Train number :</div>
-                    <select name="tagTypes">
+                    <select name="tagTrains">
                         <c:forEach items="${requestScope.allTrainInfo}" var="train">
                             <option value="${train.number}">${train.number}</option>
                         </c:forEach>
                     </select>
 
                     <div class="edit-tag">Number of carriage :</div>
-                    <input id="rangeCarr" class="slider" type="range" min="1" max="20" name="carriageCount">
-                    <output for="rangeCarr" class="countRangeCarr">10</output>
+                    <input id="rangeCarr" class="slider" type="range" min="1" max="20"
+                           value="5" name="carriageCount">
+                    <output for="rangeCarr" class="countRangeCarr">5</output>
 
                     <div class="edit-tag">Number of seats :</div>
-                    <input id="rangeSeat" class="slider" type="range" min="1" max="45" name="seatCount">
+                    <input id="rangeSeat" class="slider" type="range" min="1" max="45"
+                           value="45" name="seatCount">
                     <output for="rangeCarr" class="countRangeSeat">45</output>
 
 
                     <div class="edit-tag">Carriage type :</div>
                     <select name="tagTypes">
-                        <c:forEach items="${requestScope.allTypeInfo}" var="city">
+                        <c:forEach items="${requestScope.allTypeInfo}" var="type">
                             <option value="${type.name}">${type.name}</option>
                         </c:forEach>
                     </select>
@@ -222,13 +231,22 @@
                     <input class="normal" type="submit" name="changeTrainInfo" value="Save">
                     <input class="danger" type="submit" name="changeTrainInfo" value="Delete">
                 </form>
-                <input class="middle sidebar-station" type="submit" name="showStation" value="Show All">
+                <input class="middle sidebar-train-stat" type="submit" name="showTrainStatistic" value="Show All">
                 <br>
-                <div id="sidebar-train" class="sidebar">
-                    <h3>All available train</h3>
-                    <c:forEach items="${requestScope.allStationInfo}" var="station">
-                        <li>${station.name}</li>
-                    </c:forEach>
+                <div id="sidebar-train-stat" class="sidebar">
+                    <h3>All available trains statistic</h3>
+                    <table border="1" style="margin: auto">
+                        <th>Train</th>
+                        <th>Numbers of carriages</th>
+                        <th>Numbers of seats</th>
+                        <c:forEach items="${requestScope.allTrainStatInfo}" var="trStat">
+                            <tr>
+                                <td>${trStat.trainNumber}</td>
+                                <td>${trStat.countCarriages}</td>
+                                <td>${trStat.countSeats}</td>
+                            </tr>
+                        </c:forEach>
+                    </table>
                 </div>
             </div>
 
