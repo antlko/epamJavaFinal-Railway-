@@ -250,13 +250,79 @@
                 </div>
             </div>
 
+
             <input type="radio" name="tabs" id="tab_4" value=4
                    <c:if test="${sessionScope.tab == 4}">checked</c:if>
             />
             <label for="tab_4">Routes</label>
             <div class="tab">
+                <%--=================================================
+                             Route Settings
+                ==================================================--%>
+                <h3>Route info</h3>
+                <hr>
+                <form action="admin" method="post">
+                    <input type="hidden" name="action" value="changeRoute">
+                    <input type="hidden" name="checkVal" value="4">
 
+                    <div id="myDIV" class="header">
+                        <h2>Add stations to new route :</h2>
+                        <%--<input type="" id="myInput" placeholder="Title...">--%>
+                        <select name="tagTypes" id="myInput">
+                            <c:forEach items="${requestScope.allStationInfo}" var="station">
+                                <option>${station.name}</option>
+                            </c:forEach>
+                        </select>
+                        <input type="time" id="time-station" name="time-station" required
+                               style="width: 150px">
+                        <input type="time" id="time-station-end" name="time-station-end" required
+                               style="width: 150px">
+
+                        <input type="text" id="price-value" name="price-value" placeholder="Price" value="">
+
+                        <span onclick="removeAllElement()" class="addBtn">Remove</span>
+                        <span onclick="newElement()" class="addBtn">Add</span>
+                    </div>
+
+                    <ul id="myUL" class=".checker">
+
+                    </ul>
+
+                    <input type="hidden" id="listInfoStation" name="listInfoStation" value="">
+
+                    <div class="edit-tag">Train number for route :</div>
+                    <select name="tagTrains">
+                        <c:forEach items="${requestScope.allTrainInfo}" var="train">
+                            <option value="${train.number}">${train.number}</option>
+                        </c:forEach>
+                    </select>
+
+                    <input class="normal" type="submit" name="changeRouteInfo" value="Save">
+                    <input class="danger" type="submit" name="changeRouteInfo" value="Delete">
+                </form>
+                <input class="middle sidebar-route-stat" type="submit" name="showRoute" value="Show All">
+                <br>
+                <div id="sidebar-route-stat" class="sidebar">
+                    <h3>All Routes</h3>
+                    <table>
+                        <th>Route ID</th>
+                        <th>Station list</th>
+                        <c:forEach items="${requestScope.allRouteInfo}" var="route">
+                            <tr>
+                                <td>${route.idRoute}</td>
+                                <td>
+                                    <ul>
+                                        <c:forEach items="${route.stationList}" var="station">
+                                            <li>${station.name}</li>
+                                        </c:forEach>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                </div>
             </div>
+
         </div>
     </div>
 </section>
@@ -264,4 +330,5 @@
 </body>
 <script src="style/js/show_button.js" type="text/javascript"></script>
 <script src="style/js/range_slider.js" type="text/javascript"></script>
+<script src="style/js/check_stations.js" type="text/javascript"></script>
 </html>

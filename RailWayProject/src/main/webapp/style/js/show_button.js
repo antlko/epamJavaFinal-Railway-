@@ -33,3 +33,9 @@ $('div#sidebar-train-stat').hide();
 $('.sidebar-train-stat').on("click", function () {
     $('div#sidebar-train-stat').slideToggle();
 });
+
+// Route Statistic
+$('div#sidebar-route-stat').hide();
+$('.sidebar-route-stat').on("click", function () {
+    $('div#sidebar-route-stat').slideToggle();
+});

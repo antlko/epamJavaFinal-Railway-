@@ -106,6 +106,10 @@ public class RouteStation extends Entity {
                 ", idTrain=" + idTrain +
                 ", timeStart=" + timeStart +
                 ", timeEnd=" + timeEnd +
+                ", dateEnd=" + dateEnd +
+                ", name='" + name + '\'' +
+                ", idCity=" + idCity +
+                ", price=" + price +
                 '}';
     }
 }

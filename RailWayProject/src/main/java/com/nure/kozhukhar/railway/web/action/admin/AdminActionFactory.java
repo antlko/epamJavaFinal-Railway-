@@ -25,6 +25,7 @@ public class AdminActionFactory {
         actions.put("changeTrain", new TrainChangeData());
         actions.put("changeType", new TypeChangeData());
         actions.put("changeCarrSeat", new CarrSeatChangeData());
+        actions.put("changeRoute", new RouteChangeData());
         actions.put("noFound", new NoFoundAction());
     }
 

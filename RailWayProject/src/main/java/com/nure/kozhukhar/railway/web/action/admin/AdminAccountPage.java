@@ -4,6 +4,8 @@ import com.nure.kozhukhar.railway.db.bean.TrainStatisticBean;
 import com.nure.kozhukhar.railway.db.dao.*;
 import com.nure.kozhukhar.railway.db.entity.City;
 import com.nure.kozhukhar.railway.db.entity.Train;
+import com.nure.kozhukhar.railway.db.entity.route.Route;
+import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
 
@@ -41,6 +43,7 @@ public class AdminAccountPage extends Action {
         request.setAttribute("allTrainInfo", trainDao.getAll());
         request.setAttribute("allTypeInfo", typeDao.getAll());
         request.setAttribute("allTrainStatInfo", trainsStat);
+        request.setAttribute("allRouteInfo", RouteDao.getAllRoute());
 
         LOG.trace("'Station' attributes for admin panel --> " + cityDao.getAll() + ", " + countryDao.getAll());
 
