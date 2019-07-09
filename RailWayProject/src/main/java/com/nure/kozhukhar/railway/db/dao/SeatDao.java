@@ -24,6 +24,10 @@ public class SeatDao implements Dao<Seat> {
             stmt.setString(atr++, cityStart);
             stmt.setString(atr++, String.valueOf(date));
             stmt.setString(atr++, cityEnd);
+            stmt.setString(atr++, cityStart);
+            stmt.setString(atr++, String.valueOf(date));
+            stmt.setString(atr++, cityEnd);
+            stmt.setInt(atr++, id);
             stmt.setInt(atr++, id);
             stmt.setString(atr, cityStart);
             ResultSet rs = stmt.executeQuery();
@@ -51,6 +55,9 @@ public class SeatDao implements Dao<Seat> {
             int atr = 1;
             LOG.trace("Info to query : " + cityStart
                     + ", " + cityEnd + ", " + date + ", " + idTrain + ", " + type + "; ");
+            stmt.setString(atr++, cityStart);
+            stmt.setString(atr++, String.valueOf(date));
+            stmt.setString(atr++, cityEnd);
             stmt.setString(atr++, cityStart);
             stmt.setString(atr++, String.valueOf(date));
             stmt.setString(atr++, cityEnd);
@@ -82,6 +89,7 @@ public class SeatDao implements Dao<Seat> {
              PreparedStatement stmt = conn.prepareStatement(Queries.SQL_FIND_FREE_SEATS_BY_TRAIN_AND_CARRIAGE);
         ) {
             int atr = 1;
+            stmt.setString(atr++, cityEnd);
             stmt.setString(atr++, cityStart);
             stmt.setString(atr++, String.valueOf(date));
             stmt.setString(atr++, cityEnd);

@@ -36,6 +36,7 @@
 .addBtn {
     padding: 10px;
     width: 15%;
+    height: 50px;
     background: #7671ff;
     color: #ececec;
     float: right;
@@ -63,3 +64,4 @@
 .new_li.checked::before {
     transform: rotate(45deg);
 }
+

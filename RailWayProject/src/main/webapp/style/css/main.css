@@ -22,6 +22,17 @@ input[type=submit] {
     margin-left: 10px;
 }
 
+.input-sbt {
+    border: none;
+    color: white;
+    width: 150px;
+    height: 50px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+    background-color: #84b9dd;
+}
+
 .normal {
     background-color: #84b9dd;
 }

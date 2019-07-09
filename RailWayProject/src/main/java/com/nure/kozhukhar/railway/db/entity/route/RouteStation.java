@@ -99,7 +99,7 @@ public class RouteStation extends Entity {
     }
 
     @Override
-    public String toString() {
+    public String   toString() {
         return "RouteStation{" +
                 "idStation=" + idStation +
                 ", idRoute=" + idRoute +

@@ -17,6 +17,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RouteChangeData extends Action {
 
@@ -30,47 +32,68 @@ public class RouteChangeData extends Action {
 
         if ("Save".equals(request.getParameter("changeRouteInfo"))) {
             List<RouteStation> routeStation = new ArrayList<>();
-
-            List<String> infoStation = Arrays.asList(request.getParameter("listInfoStation").split(";"));
-            LOG.trace(infoStation);
             RouteDao.saveOneRoute(Integer.valueOf(request.getParameter("tagTrains")));
 
+            List<String> infoStation = Arrays.asList(request.getParameter("listInfoStation").split(";"));
+            Pattern pattern = Pattern.compile("((.*?), (((.*?) (.*?))-((.*?) (.*?)))\\.( Price: (.*?)$))");
+
+            LOG.trace(infoStation);
+
             for (String stationPrice : infoStation) {
-                Integer price = Integer.valueOf(
-                        stationPrice.replace(" ", "").split("\\.Price:")[1]
-                );
-                String stationFull = stationPrice.replace(" ", "").split("\\.")[0];
+                Matcher matcher = pattern.matcher(stationPrice);
+                if (matcher.find()) {
+                    LOG.trace("Group(2) = " + matcher.group(2)); //station Name
+                    LOG.trace("Group(4) = " + matcher.group(4));//Date start
+                    LOG.trace("Group(7) = " + matcher.group(7));// Date End
+                    LOG.trace("Group(11) = " + matcher.group(11)); //Price
 
-                String station = stationFull.split(",")[0];
-                String time = stationFull.split(",")[1];
+                    Integer price = Integer.valueOf(matcher.group(11));
+                    String stationName = matcher.group(2);
+                    String timeStart = matcher.group(4);
+                    String timeEnd = matcher.group(7);
 
-                String timeStart = time.split("-")[0];
-                String timeEnd = time.split("-")[1];
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                    LocalDateTime dateTimeStart = LocalDateTime.parse(timeStart, formatter);
+                    LocalDateTime dateTimeEnd = LocalDateTime.parse(timeEnd, formatter);
 
-                LOG.trace("Route adding information : station -> " + station + ", time -> " + time);
+                    RouteStation stationTemp = new RouteStation();
+                    stationTemp.setTimeStart(dateTimeStart);
+                    stationTemp.setTimeEnd(dateTimeEnd);
+                    stationTemp.setName(stationName);
+                    stationTemp.setIdTrain(Integer.valueOf(request.getParameter("tagTrains")));
+                    stationTemp.setPrice(price);
 
-                String dateStart = "2000-01-01 " + timeStart;
-                String dateEnd = "2000-01-01 " + timeEnd;
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-                LocalDateTime dateTimeStart = LocalDateTime.parse(dateStart, formatter);
-                LocalDateTime dateTimeEnd = LocalDateTime.parse(dateEnd, formatter);
-
-                RouteStation stationTemp = new RouteStation();
-                stationTemp.setTimeStart(dateTimeStart);
-                stationTemp.setTimeEnd(dateTimeEnd);
-                stationTemp.setName(station);
-                stationTemp.setIdTrain(Integer.valueOf(request.getParameter("tagTrains")));
-                stationTemp.setPrice(price);
-
-                LOG.trace("Station Temp admin panel : " + stationTemp);
-
-                routeDao.save(stationTemp);
-//                routeStation.add(stationTemp);
+                    LOG.trace("Station Temp admin panel : " + stationTemp);
+                    routeDao.save(stationTemp);
+                }
             }
 
         }
-        if ("Delete".equals(request.getParameter("changeRouteInfo"))) {
+        if ("SaveRoutesDate".equals(request.getParameter("changeRouteInfo"))) {
+            LOG.debug("Save route on date part.");
+            String dateStart = request.getParameter("date-station") + " 00:00";
+            LOG.trace("1 test");
+            String dateEnd = request.getParameter("date-station-end") + " 00:00";
+            LOG.trace("2 test");
 
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LOG.trace("3 test");
+            LocalDateTime dateTimeStart = LocalDateTime.parse(dateStart, formatter);
+            LOG.trace("4 test");
+            LocalDateTime dateTimeEnd = LocalDateTime.parse(dateEnd, formatter);
+
+            LOG.trace("Dates from form --> " + dateTimeStart + " - " + dateTimeEnd);
+
+            RouteDao.saveStationByRouteId(Integer.valueOf(
+                    request.getParameter("routeId")),
+                    dateTimeStart, dateTimeEnd
+            );
+        }
+        if ("Delete".equals(request.getParameter("changeRouteInfo"))) {
+            LOG.debug("Delete route was pressed!");
+            RouteStation routeStation = new RouteStation();
+            routeStation.setIdRoute(Integer.valueOf(request.getParameter("routeId")));
+            routeDao.delete(routeStation);
         }
 
         String checkedVal = request.getParameter("checkVal");

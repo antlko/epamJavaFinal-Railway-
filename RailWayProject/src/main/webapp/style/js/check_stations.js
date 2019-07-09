@@ -6,7 +6,11 @@ function newElement() {
     var timeValue = document.getElementById("time-station").value;
     var timeValueEnd = document.getElementById("time-station-end").value;
     var priceValue = document.getElementById("price-value").value;
-    var t = document.createTextNode(inputValue + ", " + timeValue + "-" + timeValueEnd + ". Price: " + priceValue + ";");
+    var t = document.createTextNode(inputValue + ", "
+        + timeValue.replace("T", " ")
+        + "-" + timeValueEnd.replace("T", " ")
+        + ". Price: "
+        + priceValue + ";");
     var myNodelist = $(".new_li").text();
 
     console.log(myNodelist + ", " + inputValue);

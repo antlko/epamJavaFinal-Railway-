@@ -32,6 +32,10 @@ public class StationDao implements Dao<Station> {
             stmt.setString(atr++, cityStart);
             stmt.setString(atr++, String.valueOf(date));
             stmt.setString(atr++, cityEnd);
+            stmt.setString(atr++, cityStart);
+            stmt.setString(atr++, String.valueOf(date));
+            stmt.setString(atr++, cityEnd);
+            stmt.setInt(atr++, id);
             stmt.setInt(atr, id);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {

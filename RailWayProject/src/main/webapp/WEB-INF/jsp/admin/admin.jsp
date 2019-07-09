@@ -273,15 +273,15 @@
                                 <option>${station.name}</option>
                             </c:forEach>
                         </select>
-                        <input type="time" id="time-station" name="time-station" required
-                               style="width: 150px">
-                        <input type="time" id="time-station-end" name="time-station-end" required
-                               style="width: 150px">
+                        <input type="datetime-local" id="time-station" name="time-station" required
+                               style="width: 210px">
+                        <input type="datetime-local" id="time-station-end" name="time-station-end" required
+                               style="width: 210px">
 
-                        <input type="text" id="price-value" name="price-value" placeholder="Price" value="">
+                        <input type="text" id="price-value" name="price-value" placeholder="Price" required value="">
 
-                        <span onclick="removeAllElement()" class="addBtn">Remove</span>
                         <span onclick="newElement()" class="addBtn">Add</span>
+                        <span onclick="removeAllElement()" class="addBtn">Remove</span>
                     </div>
 
                     <ul id="myUL" class=".checker">
@@ -298,8 +298,29 @@
                     </select>
 
                     <input class="normal" type="submit" name="changeRouteInfo" value="Save">
+                </form>
+                <hr>
+                <h3>Route on date</h3>
+                <form action="admin" method="post">
+                    <input type="hidden" name="action" value="changeRoute">
+                    <input type="hidden" name="checkVal" value="4">
+
+                    <div class="edit-tag">Route ID :</div>
+                    <input type="text" name="routeId" value="">
+
+                    <div class="edit-tag">Date Start :</div>
+                    <input type="date" name="date-station"
+                           style="width: 150px">
+
+                    <div class="edit-tag">Date End :</div>
+                    <input type="date" name="date-station-end"
+                           style="width: 150px">
+
+                    <button class="input-sbt" type="submit" name="changeRouteInfo" value="SaveRoutesDate">Save</button>
                     <input class="danger" type="submit" name="changeRouteInfo" value="Delete">
                 </form>
+
+
                 <input class="middle sidebar-route-stat" type="submit" name="showRoute" value="Show All">
                 <br>
                 <div id="sidebar-route-stat" class="sidebar">
