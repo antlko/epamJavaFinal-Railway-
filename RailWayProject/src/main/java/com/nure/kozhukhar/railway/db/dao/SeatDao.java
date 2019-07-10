@@ -21,15 +21,25 @@ public class SeatDao implements Dao<Seat> {
              PreparedStatement stmt = conn.prepareStatement(Queries.SQL_FIND_SEAT_FREE_INFO);
         ) {
             int atr = 1;
+            stmt.setString(atr++, String.valueOf(date));
             stmt.setString(atr++, cityStart);
             stmt.setString(atr++, String.valueOf(date));
-            stmt.setString(atr++, cityEnd);
-            stmt.setString(atr++, cityStart);
-            stmt.setString(atr++, String.valueOf(date));
+            stmt.setInt(atr++, id);
             stmt.setString(atr++, cityEnd);
             stmt.setInt(atr++, id);
             stmt.setInt(atr++, id);
-            stmt.setString(atr, cityStart);
+            stmt.setString(atr, cityEnd);
+
+//            stmt.setString(atr++, cityStart);
+//            stmt.setString(atr++, String.valueOf(date));
+//            stmt.setInt(atr++, id);
+//            stmt.setString(atr++, cityEnd);
+//            stmt.setString(atr++, cityStart);
+//            stmt.setString(atr++, String.valueOf(date));
+//            stmt.setString(atr++, cityEnd);
+//            stmt.setInt(atr++, id);
+//            stmt.setInt(atr++, id);
+//            stmt.setString(atr, cityEnd);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 SeatSearchBean seatTemp = new SeatSearchBean();
@@ -89,7 +99,11 @@ public class SeatDao implements Dao<Seat> {
              PreparedStatement stmt = conn.prepareStatement(Queries.SQL_FIND_FREE_SEATS_BY_TRAIN_AND_CARRIAGE);
         ) {
             int atr = 1;
+            stmt.setString(atr++, String.valueOf(date));
+            stmt.setString(atr++, cityStart);
+            stmt.setString(atr++, String.valueOf(date));
             stmt.setString(atr++, cityEnd);
+            stmt.setString(atr++, String.valueOf(date));
             stmt.setString(atr++, cityStart);
             stmt.setString(atr++, String.valueOf(date));
             stmt.setString(atr++, cityEnd);

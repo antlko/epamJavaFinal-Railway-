@@ -41,7 +41,7 @@
     </div>
     <c:if test="${not empty sessionScope.userRoute}">
         <div class="block-centered-content">
-            <table border="1">
+            <table>
                 <th>Train</th>
                 <th>From</th>
                 <th>Destination</th>

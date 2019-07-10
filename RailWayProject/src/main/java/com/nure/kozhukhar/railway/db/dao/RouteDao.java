@@ -64,15 +64,13 @@ public class RouteDao implements Dao<RouteStation> {
                 date = rs.getObject("time_end").toString().split("\\.")[0];
                 formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 dateTime = LocalDateTime.parse(date, formatter);
-                routeStationTemp.setTimeEnd(TimeUtil.getDateTimeWithTimeZone(
-                        rs.getTimestamp("time_end").toLocalDateTime())
-                );
                 routeStationTemp.setTimeEnd(dateTime.minusHours(2));
+
                 stationList.add(routeStationTemp);
 
-                LOG.trace("Time with time zone for adding new route -> " + routeStationTemp.getTimeStart());
+                LOG.trace("Time with time zone for adding new route -> " + routeStationTemp.getTimeEnd());
                 LOG.trace("Time without time zone for adding new route -> "
-                        + rs.getTimestamp("time_start").toLocalDateTime());
+                        + rs.getTimestamp("time_end").toLocalDateTime());
             }
 
             pstmt = conn.prepareStatement("" +
@@ -249,6 +247,23 @@ public class RouteDao implements Dao<RouteStation> {
         return routes;
     }
 
+    public static List<String> getAllStationsByRouteId(Integer idRoute) {
+        List<String> stations = new ArrayList<>();
+
+        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM routes_station RS INNER JOIN stations S ON RS.id_station = S.id WHERE id_route = ? ORDER BY time_end");
+        ) {
+            pstmt.setInt(1, idRoute);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                stations.add(rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        LOG.trace("List stations by Id -> " + stations);
+        return stations;
+    }
 
     @Override
     public RouteStation get(long id) {
@@ -303,12 +318,12 @@ public class RouteDao implements Dao<RouteStation> {
                     "INSERT INTO routes_station(id_train, id_route, id_station, time_start, time_end, price) " +
                     "VALUES(?,?,?, ?, ?, ?);");
 
-            LOG.trace("Before timestamp date : " + routeStation.getTimeStart());
+            LOG.trace("Before timestamp date : " + routeStation.getTimeEnd());
             String dateStart = Timestamp.valueOf(routeStation.getTimeStart()).toString().split("\\.")[0];
             dateStart = dateStart.substring(0, dateStart.length() - 3);
             String dateEnd = Timestamp.valueOf(routeStation.getTimeEnd()).toString().split("\\.")[0];
-            dateEnd = dateEnd.substring(0, dateStart.length() - 3);
-            LOG.trace("After timestamp date : " + dateStart);
+            dateEnd = dateEnd.substring(0, dateEnd.length() - 3);
+            LOG.trace("After timestamp date : " + dateEnd);
 
             pstmt.setInt(atr++, idTrain);
             pstmt.setInt(atr++, idRoute);

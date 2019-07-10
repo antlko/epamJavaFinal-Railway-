@@ -6,6 +6,7 @@ import com.nure.kozhukhar.railway.db.dao.RouteDao;
 import com.nure.kozhukhar.railway.db.dao.SeatDao;
 import com.nure.kozhukhar.railway.db.dao.StationDao;
 import com.nure.kozhukhar.railway.db.entity.route.Route;
+import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
 import com.nure.kozhukhar.railway.util.TimeUtil;
 import org.apache.log4j.Logger;
 
@@ -32,12 +33,24 @@ public class RouteService {
             RouteSearchBean routeInfo = new RouteSearchBean();
             routeInfo.setIdRoute(rt.getId());
             routeInfo.setTrain(rt.getTrain());
-            routeInfo.setStationList(StationDao.getAllStationByRoute(cityStart, cityEnd, date, rt.getId()));
+            routeInfo.setStationList(StationDao.getAllStationByRoute(
+                    cityStart, cityEnd, date, rt.getId()));
+
+            List<String> routeStations = RouteDao.getAllStationsByRouteId(routeInfo.getIdRoute());
+            List<String> routeStatByQuery = new ArrayList<>();
+            for (RouteStation rts : routeInfo.getStationList()) {
+                routeStatByQuery.add(rts.getName());
+            }
+
+            LOG.debug("Route stations list is -> " + routeStations);
+            LOG.debug("List stations in routeInfo -> " + routeInfo.getStationList());
+            if(routeInfo.getStationList().size() == 0) {
+                continue;
+            }
 
 
-            if (cityStart.equals(routeInfo.getStationList().get(0).getName()) &&
-                    cityEnd.equals(routeInfo.getStationList().get(routeInfo.getStationList().size() - 1).getName())
-            ) {
+            if (containsInList(routeStations, routeStatByQuery)) {
+                LOG.debug("List is true. Done!");
                 String from = String.valueOf(routeInfo.getStationList().get(0).getTimeEnd());
                 String to = String.valueOf(routeInfo.getStationList().get(
                         routeInfo.getStationList().size() - 1).getTimeEnd()
@@ -74,6 +87,25 @@ public class RouteService {
 
         LOG.trace("Service Seats : " + seatSearchBeans);
         return seatSearchBeans;
+    }
+
+    public static boolean containsInList(List<String> str, List<String> check) {
+        String main = "";
+        String query = "";
+        main = appendStringList(str);
+        query = appendStringList(check);
+        if (main.contains(query)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static String appendStringList(List<String> str) {
+        StringBuilder elem = new StringBuilder();
+        for (String st : str) {
+            elem.append(st);
+        }
+        return elem.toString();
     }
 
 }

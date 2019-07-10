@@ -26,18 +26,20 @@ public class StationDao implements Dao<Station> {
         RouteStation stationTemp = null;
 
         try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
-             PreparedStatement stmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_BY_ROUTE_ID);
+             PreparedStatement pstmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_BY_ROUTE_ID);
         ) {
             int atr = 1;
-            stmt.setString(atr++, cityStart);
-            stmt.setString(atr++, String.valueOf(date));
-            stmt.setString(atr++, cityEnd);
-            stmt.setString(atr++, cityStart);
-            stmt.setString(atr++, String.valueOf(date));
-            stmt.setString(atr++, cityEnd);
-            stmt.setInt(atr++, id);
-            stmt.setInt(atr, id);
-            ResultSet rs = stmt.executeQuery();
+            pstmt.setString(atr++, cityStart);
+            pstmt.setString(atr++, String.valueOf(date));
+            pstmt.setInt(atr++, id);
+            pstmt.setString(atr++, cityEnd);
+            pstmt.setString(atr++, cityStart);
+            pstmt.setString(atr++, String.valueOf(date));
+            pstmt.setInt(atr++, id);
+            pstmt.setString(atr++, cityEnd);
+            pstmt.setInt(atr++, id);
+            pstmt.setInt(atr, id);
+            ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 stationTemp = new RouteStation();
                 stationTemp.setIdStation(rs.getInt("id"));

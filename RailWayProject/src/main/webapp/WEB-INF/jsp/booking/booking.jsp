@@ -20,10 +20,10 @@
             ==================================================--%>
             <input type="hidden" name="action" value="findTickets">
 
-            <input list="cities" type="text" name="cityStart"
+            <input id="cityStart" list="cities" type="text" name="cityStart"
                    value="${sessionScope.cityStart}" placeholder="From" style="width: 250px">
-            < - >
-            <input list="cities" type="text" name="cityEnd"
+            <img class = "switch_img" src="style/img/reload.png"/>
+            <input id="cityEnd" list="cities" type="text" name="cityEnd"
                    value="${sessionScope.cityEnd}" placeholder="Destination" style="width: 250px">
             <input type="date" name="date" required
                    value="${sessionScope.date}" style="width: 200px">
@@ -97,4 +97,5 @@
 <%@ include file="/WEB-INF/static/footer.jsp" %>
 </body>
 <script src="style/js/tooltip.js" type="text/javascript"></script>
+<script src="style/js/switch_cities.js" type="text/javascript"></script>
 </html>
