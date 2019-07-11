@@ -29,16 +29,18 @@
                 <th>Refuse</th>
                 <c:forEach items="${sessionScope.userChecks}" var="check" varStatus="loop">
                     <tr>
-                        <td>${check.dateEnd}</td>
-                        <td>${check.userInitial}</td>
-                        <td>${check.numTrain}</td>
-                        <td>${check.numCarriage}</td>
-                        <td>${check.numSeat}</td>
-                        <td>${check.cityStart}</td>
-                        <td>${check.cityEnd}</td>
+                        <td id="dateFrom">${check.dateEnd}</td>
+                        <td id="init">${check.userInitial}</td>
+                        <td id="numTrain">${check.numTrain}</td>
+                        <td id="numCarr">${check.numCarriage}</td>
+                        <td id="numSeat">${check.numSeat}</td>
+                        <td id="cityStart">${check.cityStart}</td>
+                        <td id="cityEnd">${check.cityEnd}</td>
                         <td>
                             <form action="account" method="get">
-                                <input class="normal" type="submit" value="Doc">
+                                <input type="hidden" name="action" value="showCheck">
+                                <input type="hidden" name="checkInd" value="${loop.index}">
+                                <input id="print-doc" class="normal" type="submit" value="Doc">
                             </form>
                         </td>
                         <td>
@@ -77,4 +79,5 @@
 </div>
 <%@ include file="/WEB-INF/static/footer.jsp" %>
 </body>
+<script src="style/js/qr.js" type="text/javascript"></script>
 </html>

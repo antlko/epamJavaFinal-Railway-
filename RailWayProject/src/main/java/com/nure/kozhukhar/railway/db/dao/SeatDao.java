@@ -28,18 +28,8 @@ public class SeatDao implements Dao<Seat> {
             stmt.setString(atr++, cityEnd);
             stmt.setInt(atr++, id);
             stmt.setInt(atr++, id);
-            stmt.setString(atr, cityEnd);
-
-//            stmt.setString(atr++, cityStart);
-//            stmt.setString(atr++, String.valueOf(date));
-//            stmt.setInt(atr++, id);
-//            stmt.setString(atr++, cityEnd);
-//            stmt.setString(atr++, cityStart);
-//            stmt.setString(atr++, String.valueOf(date));
-//            stmt.setString(atr++, cityEnd);
-//            stmt.setInt(atr++, id);
-//            stmt.setInt(atr++, id);
-//            stmt.setString(atr, cityEnd);
+            stmt.setString(atr++, cityEnd);
+            stmt.setString(atr, cityStart);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 SeatSearchBean seatTemp = new SeatSearchBean();
@@ -90,6 +80,34 @@ public class SeatDao implements Dao<Seat> {
         return seatsInfo;
     }
 
+    public static String getStationWithMinSeats(
+            String cityStart, String cityEnd, String type, Date date, Integer idTrain, Integer idCarriage) {
+
+        String stat = "";
+        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(Queries.SQL_FIND_CITY_WITH_MIN_VALUE_ON_ROUTE);
+        ) {
+            int atr = 1;
+            stmt.setString(atr++, String.valueOf(date));
+            stmt.setString(atr++, cityStart);
+            stmt.setString(atr++, String.valueOf(date));
+            stmt.setString(atr++, cityEnd);
+            stmt.setInt(atr++, idTrain);
+            stmt.setInt(atr++, idCarriage);
+            stmt.setString(atr++, type);
+            stmt.setString(atr++, cityEnd);
+            stmt.setString(atr, cityStart);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                stat = rs.getString("nameStation");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stat;
+    }
+
+
     public static List<Integer> getAllSeatsByCarriageTypeAndNum(
             String cityStart, String cityEnd, String type, Date date, Integer idTrain, Integer idCarriage) {
 
@@ -110,7 +128,9 @@ public class SeatDao implements Dao<Seat> {
             stmt.setInt(atr++, idTrain);
             stmt.setInt(atr++, idCarriage);
             stmt.setString(atr++, type);
-            stmt.setString(atr, cityStart);
+            stmt.setString(atr, getStationWithMinSeats(
+                    cityStart, cityEnd, type, date, idTrain, idCarriage)
+            );
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 seats.add(rs.getInt("numSeat"));

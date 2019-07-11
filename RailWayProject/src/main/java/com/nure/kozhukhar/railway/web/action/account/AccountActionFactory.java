@@ -26,6 +26,7 @@ public class AccountActionFactory {
         actions.put("register", new UserRegisterAction());
         actions.put("noFound", new NoFoundAction());
         actions.put("deleteCheck", new UserDeleteCheckAction());
+        actions.put("showCheck", new UserShowCheckAction());
     }
 
     public static Action getAction(HttpServletRequest request) {
