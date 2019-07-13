@@ -17,6 +17,7 @@
 <%@ include file="/WEB-INF/static/head.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <body>
+<au:AuthSecure/>
 <%@ include file="/WEB-INF/static/header.jsp" %>
 <section class="content">
     <div class="block-content">

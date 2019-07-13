@@ -17,11 +17,12 @@
 <c:set var="title" value="Booking" scope="page"/>
 <%@ include file="/WEB-INF/static/head.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<au:AuthSecure/>
 <body>
 <%@ include file="/WEB-INF/static/header.jsp" %>
 <section class="content">
     <div class="block-content">
-        <h1><fmt:message key="ticket.header_name" /></h1>
+        <h1><fmt:message key="ticket.header_name"/></h1>
     </div>
     <div class="block-centered-content">
         <form action="booking" method="POST">
@@ -34,7 +35,7 @@
                    value="${sessionScope.cityStart}"
                    placeholder="<fmt:message key="ticket.from" />" style="width: 250px">
 
-            <img class = "switch_img" src="style/img/reload.png"/>
+            <img class="switch_img" src="style/img/reload.png"/>
 
             <input id="cityEnd" list="cities" type="text" name="cityEnd"
                    value="${sessionScope.cityEnd}"
@@ -87,15 +88,21 @@
 
         </div>
         <div class="block-centered-content">
-            <h2><fmt:message key="ticket.carriage"/> </h2>
+            <h2><fmt:message key="ticket.carriage"/></h2>
         </div>
         <div class="block-centered-content">
-            <c:forEach var="carriage" items="${sessionScope.serviceCarriage}">
+            <c:forEach var="carriage" items="${sessionScope.serviceCarriage}" varStatus="i">
                 <form action="booking" method="GET">
                     <input type="hidden" name="action" value="seatInCarriage">
                     <input type="hidden" name="carrNum" value="${carriage.numCarriage}">
                     <input type="hidden" name="serviceCarriage" value="${sessionScope.serviceCarriage}">
-                    <input class="normal" type="submit" value="${carriage.numCarriage}">
+
+                    <c:if test="${sessionScope.checkedCarriage == carriage.numCarriage}">
+                        <input class="danger" type="submit" value="${carriage.numCarriage}">
+                    </c:if>
+                    <c:if test="${sessionScope.checkedCarriage != carriage.numCarriage}">
+                        <input class="normal" type="submit" value="${carriage.numCarriage}">
+                    </c:if>
                 </form>
             </c:forEach>
         </div>
@@ -118,7 +125,7 @@
             </div>
         </div>
         <div class="block-centered-content">
-            <h3><fmt:message key="ticket.total_price"/> </h3>
+            <h3><fmt:message key="ticket.total_price"/></h3>
             <input id="totalPrice" type="text" value="0" readonly>
         </div>
         <div class="block-centered-content">

@@ -17,6 +17,7 @@
 <%@ include file="/WEB-INF/static/head.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <body>
+<au:AuthSecure/>
 <%@ include file="/WEB-INF/static/header.jsp" %>
 <section class="content">
     <div class="block-content">
@@ -79,7 +80,7 @@
                                 <li>${stat.name}</li>
                             </c:forEach>
                              </ol>">
-                            Show route
+                            <fmt:message key="ticket.show_route"/>
                         </td>
                         <td>${route.travelTime}</td>
 

@@ -43,13 +43,12 @@ public class BookingSeatsAction extends Action {
                 cityStart, cityEnd, date, type, idTrain
         );
 
-        // TODO: get Carriage type price
-
         Integer totalRoutePrice = 0;
         for(RouteStation rs: rsb.getStationList()) {
             totalRoutePrice += rs.getPrice();
         }
 
+        session.setAttribute("checkedCarriage", seatBeanList.get(0).getNumCarriage());
         session.setAttribute("seatCheckType", type);
         session.setAttribute("serviceCarriage", seatBeanList);
         session.setAttribute("routePrice", totalRoutePrice + seatBeanList.get(0).getPriceSeat());
