@@ -6,5 +6,7 @@ var route = 'DATE DEPART: ' + $("#dateFrom").text() + ", "
     + 'Stations: ' + $("#cityStart").text() + "-"
     + $("#cityEnd").text() + ". ";
 
-document.getElementById("qr").src = 'http://qrcoder.ru/code/?' + route + '&4&0';
+var enc = encodeURIComponent(route);
+document.getElementById("qr").src =
+    'https://chart.apis.google.com/chart?cht=qr&chs=300x300&chld=L&choe=UTF-8&chl=' + enc;
 print();

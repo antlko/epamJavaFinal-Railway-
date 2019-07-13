@@ -20,6 +20,26 @@ public class SeatSearchBean {
 
     private Integer numCarriage;
 
+    private Integer busy;
+
+    private Integer maxSize;
+
+    public Integer getBusy() {
+        return busy;
+    }
+
+    public void setBusy(Integer busy) {
+        this.busy = busy;
+    }
+
+    public Integer getMaxSize() {
+        return maxSize;
+    }
+
+    public void setMaxSize(Integer maxSize) {
+        this.maxSize = maxSize;
+    }
+
     public Integer getPriceSeat() {
         return priceSeat;
     }
@@ -82,8 +102,11 @@ public class SeatSearchBean {
                 "seatType='" + seatType + '\'' +
                 ", free=" + free +
                 ", numSeat=" + numSeat +
+                ", listSeat=" + listSeat +
                 ", numTrain=" + numTrain +
+                ", priceSeat=" + priceSeat +
                 ", numCarriage=" + numCarriage +
+                ", maxSize=" + maxSize +
                 '}';
     }
 }

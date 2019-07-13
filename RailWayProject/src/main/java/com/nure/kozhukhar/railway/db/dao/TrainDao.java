@@ -12,6 +12,30 @@ import java.util.List;
 
 public class TrainDao implements Dao<Train> {
 
+
+    public static Integer getMaxSizeFromCarriageByTrain(Integer trainNum, Integer carrNum) {
+
+        Integer maxSize = null;
+
+        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM carriages C INNER JOIN Trains T ON C.id_train = T.id\n" +
+                     " WHERE C.num_carriage = ?" +
+                     " AND T.number = ?")
+        ) {
+            int atr = 1;
+            pstmt.setInt(atr++, carrNum);
+            pstmt.setInt(atr, trainNum);
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()) {
+                maxSize = rs.getInt("max_size");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return maxSize;
+    }
+
     public static void saveTrainContent(Integer idTrain, Integer countCarr, Integer countSeat, Integer idType) {
         PreparedStatement pstmt = null;
 
@@ -26,11 +50,11 @@ public class TrainDao implements Dao<Train> {
                 countCarriage = rs.getInt("cnt");
                 countCarriage++;
             }
-            countCarr+=countCarriage;
+            countCarr += countCarriage;
             for (int numCarr = countCarriage; numCarr < countCarr; ++numCarr) {
                 try {
                     atr = 1;
-                    pstmt = conn.prepareStatement("INSERT INTO carriages(id_train, num_carriage,id_type) VALUES(?,?,?,?)");
+                    pstmt = conn.prepareStatement("INSERT INTO carriages(id_train, num_carriage,id_type, max_size) VALUES(?,?,?,?)");
                     pstmt.setInt(atr++, idTrain);
                     pstmt.setInt(atr++, numCarr);
                     pstmt.setInt(atr++, idType);

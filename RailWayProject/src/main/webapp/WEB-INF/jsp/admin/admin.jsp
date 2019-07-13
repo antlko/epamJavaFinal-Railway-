@@ -165,7 +165,7 @@
                 <input class="middle sidebar-train" type="submit" name="showTrain" value="Show All">
                 <br>
                 <div id="sidebar-train" class="sidebar">
-                    <h3><fmt:message key="admin.all_available_train"/>n</h3>
+                    <h3><fmt:message key="admin.all_available_train"/></h3>
                     <c:forEach items="${requestScope.allTrainInfo}" var="train">
                         <li>${train.number}</li>
                     </c:forEach>

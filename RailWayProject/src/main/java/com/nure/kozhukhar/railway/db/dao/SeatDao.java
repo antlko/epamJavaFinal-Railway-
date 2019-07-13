@@ -15,33 +15,68 @@ public class SeatDao implements Dao<Seat> {
     private static final Logger LOG = Logger.getLogger(SeatDao.class);
 
     public static List<SeatSearchBean> getSeatCountInfo(String cityStart, String cityEnd, Date date, Integer id) {
-        List<SeatSearchBean> seatsInfo = new ArrayList<>();
+        List<SeatSearchBean> seatsInfoBusy = new ArrayList<>();
 
         try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
              PreparedStatement stmt = conn.prepareStatement(Queries.SQL_FIND_SEAT_FREE_INFO);
         ) {
             int atr = 1;
+            stmt.setString(atr++, cityStart);
             stmt.setString(atr++, String.valueOf(date));
+            stmt.setInt(atr++, id);
+            stmt.setString(atr++, cityStart);
+            stmt.setInt(atr++, id);
             stmt.setString(atr++, cityStart);
             stmt.setString(atr++, String.valueOf(date));
             stmt.setInt(atr++, id);
             stmt.setString(atr++, cityEnd);
             stmt.setInt(atr++, id);
             stmt.setInt(atr++, id);
-            stmt.setString(atr, getStationAllSeatsByIDRoute(
-                    cityStart, cityEnd, date, id));
+            stmt.setInt(atr, id);
+
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 SeatSearchBean seatTemp = new SeatSearchBean();
                 seatTemp.setSeatType(rs.getString("nameType"));
-                seatTemp.setFree(rs.getInt("free"));
+                seatTemp.setFree(rs.getInt("newFree"));
                 LOG.trace("SeatDao getting info [" + seatTemp.getSeatType() + ", " + seatTemp.getFree() + "]");
-                seatsInfo.add(seatTemp);
+                seatsInfoBusy.add(seatTemp);
             }
+
+            LOG.trace("Seat info test : " + seatsInfoBusy);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return seatsInfo;
+        return seatsInfoBusy;
+    }
+
+    public static List<SeatSearchBean> getMaxAllCarrSizeByIdRoute(Integer idRoute) {
+        List<SeatSearchBean> maxSeatList = new ArrayList<>();
+        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("SELECT TP.name as nameType, SUM(max_size) as maxCarr" +
+                     " FROM carriages C, Trains T, Types TP, Routes R\n" +
+                     "WHERE C.id_train = T.id\n" +
+                     "\tAND C.id_type = TP.id\n" +
+                     "    AND R.id_train = T.id\n" +
+                     "    AND R.id = ? " +
+                     "GROUP BY TP.name");
+        ) {
+            pstmt.setInt(1, idRoute);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                SeatSearchBean searchBeanTemp = new SeatSearchBean();
+                searchBeanTemp.setSeatType(rs.getString("nameType"));
+                searchBeanTemp.setMaxSize(rs.getInt("maxCarr"));
+                maxSeatList.add(searchBeanTemp);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return maxSeatList;
     }
 
     public static String getStationAllSeatsByIDRoute(
@@ -143,31 +178,40 @@ public class SeatDao implements Dao<Seat> {
 
         List<Integer> seats = new ArrayList<>();
 
-        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
-             PreparedStatement stmt = conn.prepareStatement(Queries.SQL_FIND_FREE_SEATS_BY_TRAIN_AND_CARRIAGE);
-        ) {
-            int atr = 1;
-            stmt.setString(atr++, String.valueOf(date));
-            stmt.setString(atr++, cityStart);
-            stmt.setString(atr++, String.valueOf(date));
-            stmt.setString(atr++, cityEnd);
-            stmt.setString(atr++, String.valueOf(date));
-            stmt.setString(atr++, cityStart);
-            stmt.setString(atr++, String.valueOf(date));
-            stmt.setString(atr++, cityEnd);
-            stmt.setInt(atr++, idTrain);
-            stmt.setInt(atr++, idCarriage);
-            stmt.setString(atr++, type);
-            stmt.setString(atr, getStationWithMinSeats(
-                    cityStart, cityEnd, type, date, idTrain, idCarriage)
-            );
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                seats.add(rs.getInt("numSeat"));
+        Integer maxSize = TrainDao.getMaxSizeFromCarriageByTrain(idTrain, idCarriage);
+        LOG.trace("Max size - > " + maxSize);
+        if (maxSize != null) {
+            try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(Queries.SQL_FIND_FALSE_SEATS_BY_TRAIN_AND_CARRIAGE);
+            ) {
+                List<Integer> busySeats = new ArrayList<>();
+
+                int atr = 1;
+                stmt.setString(atr++, cityStart);
+                stmt.setString(atr++, String.valueOf(date));
+                stmt.setString(atr++, cityStart);
+                stmt.setString(atr++, cityStart);
+                stmt.setString(atr++, String.valueOf(date));
+                stmt.setString(atr++, cityEnd);
+                stmt.setInt(atr++, idTrain);
+                stmt.setInt(atr++, idCarriage);
+                stmt.setString(atr, type);
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    busySeats.add(rs.getInt("numSeat"));
+                }
+
+                for (int i = 1; i <= maxSize; ++i) {
+                    if (!busySeats.contains(i)) {
+                        seats.add(i);
+                    }
+                }
+                LOG.trace("Count seats -> " + seats.size());
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
+        LOG.trace("INFO all seats : " + seats + ", maxSize -> " + maxSize);
         return seats;
     }
 
