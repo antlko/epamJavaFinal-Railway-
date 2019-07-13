@@ -29,16 +29,29 @@ public class StationDao implements Dao<Station> {
              PreparedStatement pstmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_BY_ROUTE_ID);
         ) {
             int atr = 1;
+
             pstmt.setString(atr++, cityStart);
             pstmt.setString(atr++, String.valueOf(date));
             pstmt.setInt(atr++, id);
-            pstmt.setString(atr++, cityEnd);
+            pstmt.setString(atr++, cityStart);
+            pstmt.setInt(atr++, id);
             pstmt.setString(atr++, cityStart);
             pstmt.setString(atr++, String.valueOf(date));
             pstmt.setInt(atr++, id);
             pstmt.setString(atr++, cityEnd);
             pstmt.setInt(atr++, id);
             pstmt.setInt(atr, id);
+
+//            pstmt.setString(atr++, cityStart);
+//            pstmt.setString(atr++, String.valueOf(date));
+//            pstmt.setInt(atr++, id);
+//            pstmt.setString(atr++, cityEnd);
+//            pstmt.setString(atr++, cityStart);
+//            pstmt.setString(atr++, String.valueOf(date));
+//            pstmt.setInt(atr++, id);
+//            pstmt.setString(atr++, cityEnd);
+//            pstmt.setInt(atr++, id);
+//            pstmt.setInt(atr, id);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 stationTemp = new RouteStation();
@@ -59,6 +72,7 @@ public class StationDao implements Dao<Station> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        LOG.trace("Received stations -> " +stations);
         return stations;
     }
 

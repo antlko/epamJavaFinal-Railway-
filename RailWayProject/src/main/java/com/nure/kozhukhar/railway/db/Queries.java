@@ -17,82 +17,136 @@ public class Queries {
             "                    ) \n" +
             "ORDER BY date_end;";
 
-    public static final String SQL_FIND_ROUTE_ON_DATE_BY_ROUTE_ID = "SELECT * \n" +
+    public static final String SQL_FIND_ROUTE_ON_DATE_BY_ROUTE_ID = "" +
+            "SELECT * \n" +
             "    FROM routes_on_date RD3, stations S3, routes_station RS\n" +
             "\tWHERE RD3.id_station = S3.id\n" +
             "\t\t\tAND RS.id_station = RD3.id_station\n" +
             "            AND RS.id_route = RD3.id_route\n" +
             "            AND RS.id_train = RD3.id_train\n" +
-            "            AND RD3.date_end >=(\n" +
-            "            SELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
-            "                        WHERE RD2.id_station = S2.id\n" +
-            "                        AND S2.name = ?\n" +
-            "                        AND ? = DATE(RD2.date_end)\n" +
-            "                        AND RD2.id_route = ?\n" +
-            "                        LIMIT 1\n" +
-            "                        )\n" +
-            "\t\t\tAND RD3.date_end <=Any (\n" +
-            "            SELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
-            "                        WHERE RD2.id_station = S2.id \n" +
-            "                        AND S2.name = ?\n" +
-            "                        AND RD2.date_end <= (\n" +
-            "\t\t\t\t\t\t\tSELECT RD6.date_end FROM routes_on_date RD6, stations S6, routes_station RS6\n" +
-            "\t\t\t\t\t\t\t\tWHERE RD6.id_station = S6.id\n" +
-            "\t\t\t\t\t\t\t\tAND RS6.id_station = RD6.id_station\n" +
-            "\t\t\t\t\t\t\t\tAND RS6.id_route = RD6.id_route\n" +
-            "\t\t\t\t\t\t\t\tAND RS6.id_train = RD6.id_train\n" +
-            "\t\t\t\t\t\t\t\tAND RD6.date_end >=All (\n" +
-            "\t\t\t\t\t\t\t\t\tSELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
-            "\t\t\t\t\t\t\t\t\t\tWHERE RD2.id_station = S2.id\n" +
-            "\t\t\t\t\t\t\t\t\t\tAND S2.name = ?\n" +
-            "\t\t\t\t\t\t\t\t\t\tAND ? = DATE(RD2.date_end)\n" +
-            "\t\t\t\t\t\t\t\t\t\tAND RD2.id_route = ?\n" +
-            "\t\t\t\t\t\t\t\t\t\t)\n" +
-            "                                AND S6.name = ?\n" +
-            "                                AND RD6.id_route = ?\n" +
-            "\t\t\t\t\t\t\t\tORDER BY date_end \n" +
-            "\t\t\t\t\t\t\t\tLIMIT 1\n" +
-            "                        )\n" +
-            "                        ORDER BY RD2.date_end\n" +
-            "                    ) \n" +
+            "           AND RD3.time_date_end >= (\n" +
+            "\t\t\tSELECT RD6.time_date_end FROM routes_on_date RD6, stations S6, routes_station RS6\n" +
+            "\t\t\t\t\t\t\t\t\t\tWHERE RD6.id_station = S6.id\n" +
+            "\t\t\t\t\t\t\t\t\t\tAND RS6.id_station = RD6.id_station\n" +
+            "\t\t\t\t\t\t\t\t\t\tAND RS6.id_route = RD6.id_route\n" +
+            "\t\t\t\t\t\t\t\t\t\tAND RS6.id_train = RD6.id_train\n" +
+            "\t\t\t\t\t\t\t\t\t\tAND RD6.date_end >=All (\n" +
+            "\t\t\t\t\t\t\t\t\t\t\tSELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
+            "\t\t\t\t\t\t\t\t\t\t\t\tWHERE RD2.id_station = S2.id\n" +
+            "\t\t\t\t\t\t\t\t\t\t\t\tAND S2.name = ?\n" +
+            "\t\t\t\t\t\t\t\t\t\t\t\tAND ? = DATE(RD2.date_end)\n" +
+            "\t\t\t\t\t\t\t\t\t\t\t\tAND RD2.id_route = ?\n" +
+            "\t\t\t\t\t\t\t\t\t\t\t\t)\n" +
+            "\t\t\t\t\t\t\t\t\t\tAND S6.name = ?\n" +
+            "\t\t\t\t\t\t\t\t\t\tAND RD6.id_route = ?\n" +
+            "\t\t\t\t\t\t\t\t\t\tORDER BY date_end\n" +
+            "\t\t\t\t\t\t\t\t\t\tLIMIT 1\n" +
+            "\t\t)\n" +
+            "\t\tAND RD3.time_date_end <= (\n" +
+            "\t\t\tSELECT RD6.time_date_end FROM routes_on_date RD6, stations S6, routes_station RS6\n" +
+            "\t\t\t\t\t\t\t\t\t\tWHERE RD6.id_station = S6.id\n" +
+            "\t\t\t\t\t\t\t\t\t\tAND RS6.id_station = RD6.id_station\n" +
+            "\t\t\t\t\t\t\t\t\t\tAND RS6.id_route = RD6.id_route\n" +
+            "\t\t\t\t\t\t\t\t\t\tAND RS6.id_train = RD6.id_train\n" +
+            "\t\t\t\t\t\t\t\t\t\tAND RD6.date_end >=All (\n" +
+            "\t\t\t\t\t\t\t\t\t\t\tSELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
+            "\t\t\t\t\t\t\t\t\t\t\t\tWHERE RD2.id_station = S2.id\n" +
+            "\t\t\t\t\t\t\t\t\t\t\t\tAND S2.name = ?\n" +
+            "\t\t\t\t\t\t\t\t\t\t\t\tAND ? = DATE(RD2.date_end)\n" +
+            "\t\t\t\t\t\t\t\t\t\t\t\tAND RD2.id_route = ?\n" +
+            "\t\t\t\t\t\t\t\t\t\t\t\t)\n" +
+            "\t\t\t\t\t\t\t\t\t\tAND S6.name = ?\n" +
+            "\t\t\t\t\t\t\t\t\t\tAND RD6.id_route = ?\n" +
+            "\t\t\t\t\t\t\t\t\t\tORDER BY date_end\n" +
+            "\t\t\t\t\t\t\t\t\t\tLIMIT 1\n" +
+            "\t\t)\n" +
             "\t\t\tAND RD3.id_route = ?\n" +
             "ORDER BY date_end";
 
-    public static final String SQL_FIND_ROUTE_ON_DATE_ID = "SELECT DISTINCT RD3.id_route, T.number, T.id FROM routes_on_date RD3, stations S3, trains T, routes R\n" +
-            "\tWHERE RD3.id_station = S3.id \n" +
-            "\t\tAND RD3.id_route = R.id \n" +
-            "\t\tAND R.id_train = T.id\n" +
-            "\tAND RD3.date_end >= (\n" +
-            "            SELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
-            "                        WHERE RD2.id_station = S2.id\n" +
-            "                        AND S2.name = ?\n" +
-            "                        AND ? = DATE(RD2.date_end)\n" +
-            "                         LIMIT 1  " +
-            "                        )\n" +
-            " AND RD3.date_end <=Any (\n" +
-            "            SELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
-            "                        WHERE RD2.id_station = S2.id \n" +
-            "                        AND S2.name = ?\n" +
-            "                        AND RD3.date_end <= (\n" +
-            "\t\t\t\t\t\t\tSELECT RD6.date_end FROM routes_on_date RD6, stations S6, routes_station RS6\n" +
-            "\t\t\t\t\t\t\t\tWHERE RD6.id_station = S6.id\n" +
-            "\t\t\t\t\t\t\t\tAND RS6.id_station = RD6.id_station\n" +
-            "\t\t\t\t\t\t\t\tAND RS6.id_route = RD6.id_route\n" +
-            "\t\t\t\t\t\t\t\tAND RS6.id_train = RD6.id_train\n" +
-            "\t\t\t\t\t\t\t\tAND RD6.date_end >=All (\n" +
-            "\t\t\t\t\t\t\t\t\tSELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
-            "\t\t\t\t\t\t\t\t\t\tWHERE RD2.id_station = S2.id\n" +
-            "\t\t\t\t\t\t\t\t\t\tAND S2.name = ?\n" +
-            "\t\t\t\t\t\t\t\t\t\tAND ? = DATE(RD2.date_end)\n" +
-            "           " +
-            "\t\t\t\t\t\t\t\t\t\t)\n" +
-            "                                AND S6.name = ?\n" +
-            "\t\t\t\t\t\t\t\tORDER BY date_end\n" +
-            "\t\t\t\t\t\t\t\tLIMIT 1\n" +
-            "                        )\n" +
-            "                        ORDER BY RD2.date_end\n" +
-            "                    ) \n" +
-            "ORDER BY date_end;";
+//            "    FROM routes_on_date RD3, stations S3, routes_station RS\n" +
+//            "\tWHERE RD3.id_station = S3.id\n" +
+//            "\t\t\tAND RS.id_station = RD3.id_station\n" +
+//            "            AND RS.id_route = RD3.id_route\n" +
+//            "            AND RS.id_train = RD3.id_train\n" +
+//            "            AND RD3.date_end >=(\n" +
+//            "            SELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
+//            "                        WHERE RD2.id_station = S2.id\n" +
+//            "                        AND S2.name = ?\n" +
+//            "                        AND ? = DATE(RD2.date_end)\n" +
+//            "                        AND RD2.id_route = ?\n" +
+//            "                        LIMIT 1\n" +
+//            "                        )\n" +
+//            "\t\t\tAND RD3.date_end <=Any (\n" +
+//            "            SELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
+//            "                        WHERE RD2.id_station = S2.id \n" +
+//            "                        AND S2.name = ?\n" +
+//            "                        AND RD2.date_end <= (\n" +
+//            "\t\t\t\t\t\t\tSELECT RD6.date_end FROM routes_on_date RD6, stations S6, routes_station RS6\n" +
+//            "\t\t\t\t\t\t\t\tWHERE RD6.id_station = S6.id\n" +
+//            "\t\t\t\t\t\t\t\tAND RS6.id_station = RD6.id_station\n" +
+//            "\t\t\t\t\t\t\t\tAND RS6.id_route = RD6.id_route\n" +
+//            "\t\t\t\t\t\t\t\tAND RS6.id_train = RD6.id_train\n" +
+//            "\t\t\t\t\t\t\t\tAND RD6.date_end >=All (\n" +
+//            "\t\t\t\t\t\t\t\t\tSELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
+//            "\t\t\t\t\t\t\t\t\t\tWHERE RD2.id_station = S2.id\n" +
+//            "\t\t\t\t\t\t\t\t\t\tAND S2.name = ?\n" +
+//            "\t\t\t\t\t\t\t\t\t\tAND ? = DATE(RD2.date_end)\n" +
+//            "\t\t\t\t\t\t\t\t\t\tAND RD2.id_route = ?\n" +
+//            "\t\t\t\t\t\t\t\t\t\t)\n" +
+//            "                                AND S6.name = ?\n" +
+//            "                                AND RD6.id_route = ?\n" +
+//            "\t\t\t\t\t\t\t\tORDER BY date_end \n" +
+//            "\t\t\t\t\t\t\t\tLIMIT 1\n" +
+//            "                        )\n" +
+//            "                        ORDER BY RD2.date_end\n" +
+//            "                    ) \n" +
+//            "\t\t\tAND RD3.id_route = ?\n" +
+//            "ORDER BY date_end";
+
+    public static final String SQL_FIND_ROUTE_ON_DATE_ID = "SELECT DISTINCT RD3.id_route, T.number, T.id\n" +
+            "    FROM routes_on_date RD3, stations S3, routes_station RS, Trains T\n" +
+            "\tWHERE RD3.id_station = S3.id\n" +
+            "\t\t\tAND T.id = RD3.id_train\n" +
+            "\t\t\tAND RS.id_station = RD3.id_station\n" +
+            "            AND RS.id_route = RD3.id_route\n" +
+            "            AND RS.id_train = RD3.id_train\n" +
+            "\t\t\tAND S3.name IN (?,?);";
+
+    //"SELECT DISTINCT RD3.id_route, T.number, T.id FROM routes_on_date RD3, stations S3, trains T, routes R\n" +
+//            "\tWHERE RD3.id_station = S3.id \n" +
+//            "\t\tAND RD3.id_route = R.id \n" +
+//            "\t\tAND R.id_train = T.id\n" +
+//            "\tAND RD3.date_end >= (\n" +
+//            "            SELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
+//            "                        WHERE RD2.id_station = S2.id\n" +
+//            "                        AND S2.name = ?\n" +
+//            "                        AND ? = DATE(RD2.date_end)\n" +
+//            "                         LIMIT 1  " +
+//            "                        )\n" +
+//            " AND RD3.date_end <=Any (\n" +
+//            "            SELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
+//            "                        WHERE RD2.id_station = S2.id \n" +
+//            "                        AND S2.name = ?\n" +
+//            "                        AND RD3.date_end <= (\n" +
+//            "\t\t\t\t\t\t\tSELECT RD6.date_end FROM routes_on_date RD6, stations S6, routes_station RS6\n" +
+//            "\t\t\t\t\t\t\t\tWHERE RD6.id_station = S6.id\n" +
+//            "\t\t\t\t\t\t\t\tAND RS6.id_station = RD6.id_station\n" +
+//            "\t\t\t\t\t\t\t\tAND RS6.id_route = RD6.id_route\n" +
+//            "\t\t\t\t\t\t\t\tAND RS6.id_train = RD6.id_train\n" +
+//            "\t\t\t\t\t\t\t\tAND RD6.date_end >=All (\n" +
+//            "\t\t\t\t\t\t\t\t\tSELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
+//            "\t\t\t\t\t\t\t\t\t\tWHERE RD2.id_station = S2.id\n" +
+//            "\t\t\t\t\t\t\t\t\t\tAND S2.name = ?\n" +
+//            "\t\t\t\t\t\t\t\t\t\tAND ? = DATE(RD2.date_end)\n" +
+//            "           " +
+//            "\t\t\t\t\t\t\t\t\t\t)\n" +
+//            "                                AND S6.name = ?\n" +
+//            "\t\t\t\t\t\t\t\tORDER BY date_end\n" +
+//            "\t\t\t\t\t\t\t\tLIMIT 1\n" +
+//            "                        )\n" +
+//            "                        ORDER BY RD2.date_end\n" +
+//            "                    ) \n" +
+//            "ORDER BY date_end;";
 
     public static final String SQL_FIND_SEAT_FREE_INFO = "SELECT nameType, ifnull(free,maxSUM2) as newFree FROM (\n" +
             "SELECT TPP1.name as nameType, SUM(max_size)as maxSUM2, SUM(max_size) - (\n" +
@@ -316,7 +370,7 @@ public class Queries {
             "\t\t\t\t\t\t\t\t\t\tAND S6.name = ?\n" +
             "\t\t\t\t\t\t\t\t\t\tORDER BY date_end\n" +
             "\t\t\t\t\t\t\t\t\t\tLIMIT 1\n" +
-            "\t\t)"+
+            "\t\t)" +
             "\tAND RD3.time_date_end < (\n" +
             "\t\tSELECT RD6.time_date_end FROM routes_on_date RD6, stations S6, routes_station RS6\n" +
             "\t\t\t\t\t\t\t\t\tWHERE RD6.id_station = S6.id\n" +
@@ -434,7 +488,7 @@ public class Queries {
             "\t\t\tSELECT S5.time_end FROM routes_station S5 INNER JOIN Stations ST2 ON S5.id_station = ST2.id\n" +
             "\t\t\tWHERE ST2.name = ?\n" +
             "\t\t\t\tAND S5.id_route = RD3.id_route\n" +
-            "\t\t)"+
+            "\t\t)" +
             "\t)\n" +
             "\t GROUP BY TP.name, S3.name, T.id, CR.num_carriage, ST.num_seat\n" +
             "\t ) H\n" +

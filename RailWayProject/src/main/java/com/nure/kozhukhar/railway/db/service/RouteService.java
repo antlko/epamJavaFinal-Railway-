@@ -29,6 +29,8 @@ public class RouteService {
         List<Route> routes = RouteDao.getIdRouteOnDate(cityStart, cityEnd, date);
         List<RouteSearchBean> routesBean = new ArrayList<>();
 
+        LOG.trace("Route-id list for loop -> " + routes);
+
         for (Route rt : routes) {
             RouteSearchBean routeInfo = new RouteSearchBean();
             routeInfo.setIdRoute(rt.getId());
