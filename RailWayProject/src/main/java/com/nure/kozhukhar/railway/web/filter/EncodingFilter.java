@@ -24,6 +24,7 @@ public class EncodingFilter implements Filter {
         if (requestEncoding == null) {
             LOG.trace("Request encoding = null, set encoding --> " + encoding);
             req.setCharacterEncoding(encoding);
+            resp.setCharacterEncoding(encoding);
         }
 
         chain.doFilter(req, resp);

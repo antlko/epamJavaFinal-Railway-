@@ -2,6 +2,15 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="au" uri="/WEB-INF/tld/auth_secure.tld" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<c:if test="${empty sessionScope.localize}">
+    <fmt:setLocale value="${cookie['localize'].value}"/>
+</c:if>
+<c:if test="${not empty sessionScope.localize}">
+    <fmt:setLocale value="${sessionScope.localize}"/>
+</c:if>
+<fmt:setBundle basename="messages"/>
 
 <html>
 
@@ -15,18 +24,18 @@
 <div class="tabs-content">
     <div class="tabs">
         <input type="radio" name="tabs" id="tabone" checked="checked">
-        <label for="tabone">History</label>
+        <label for="tabone"><fmt:message key="account.history"/></label>
         <div class="tab">
             <table>
-                <th>Date</th>
-                <th>Full name</th>
-                <th>Train</th>
-                <th>Carriage</th>
-                <th>Seat</th>
-                <th>From</th>
-                <th>Destination</th>
-                <th>Document</th>
-                <th>Refuse</th>
+                <th><fmt:message key="ticket.date"/> </th>
+                <th><fmt:message key="ticket.full_name"/></th>
+                <th><fmt:message key="ticket.train"/></th>
+                <th><fmt:message key="ticket.carriage"/></th>
+                <th><fmt:message key="ticket.seat"/></th>
+                <th><fmt:message key="ticket.from"/></th>
+                <th><fmt:message key="ticket.destination"/></th>
+                <th><fmt:message key="ticket.doc"/></th>
+                <th><fmt:message key="ticket.refuse"/></th>
                 <c:forEach items="${sessionScope.userChecks}" var="check" varStatus="loop">
                     <tr>
                         <td id="dateFrom">${check.dateEnd}</td>
@@ -56,21 +65,21 @@
         </div>
 
         <input type="radio" name="tabs" id="tabtwo">
-        <label for="tabtwo">Profile</label>
+        <label for="tabtwo"><fmt:message key="account.profile"/></label>
         <div class="tab">
             <div class="login-panel-bg">
                 <div class="login-panel-content">
-                    <h3>Hello, ${sessionScope.user.login}!</h3>
+                    <h3><fmt:message key="label.welcome"/>, ${sessionScope.user.login}!</h3>
                     <form action="account" method="post">
                         <input type="hidden" name="action" value="updatePersonal">
 
-                        <div class="edit-tag">Surname :</div>
+                        <div class="edit-tag"><fmt:message key="account.surname"/> :</div>
                         <input type="text" name="Surname" value="${sessionScope.user.surname}">
-                        <div class="edit-tag">Name :</div>
+                        <div class="edit-tag"><fmt:message key="account.name"/> :</div>
                         <input type="text" name="Name" value="${sessionScope.user.name}">
-                        <div class="edit-tag">Email :</div>
+                        <div class="edit-tag"><fmt:message key="auth.email"/> :</div>
                         <input type="text" name="Email" value="${sessionScope.user.email}">
-                        <input class="normal" type="submit" value="Save Info">
+                        <input class="normal" type="submit" value="<fmt:message key="account.save"/>">
                     </form>
                 </div>
             </div>

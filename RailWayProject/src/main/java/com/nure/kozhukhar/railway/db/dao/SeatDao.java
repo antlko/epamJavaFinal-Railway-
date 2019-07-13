@@ -28,8 +28,8 @@ public class SeatDao implements Dao<Seat> {
             stmt.setString(atr++, cityEnd);
             stmt.setInt(atr++, id);
             stmt.setInt(atr++, id);
-            stmt.setString(atr++, cityEnd);
-            stmt.setString(atr, cityStart);
+            stmt.setString(atr, getStationAllSeatsByIDRoute(
+                    cityStart, cityEnd, date, id));
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 SeatSearchBean seatTemp = new SeatSearchBean();
@@ -44,6 +44,36 @@ public class SeatDao implements Dao<Seat> {
         return seatsInfo;
     }
 
+    public static String getStationAllSeatsByIDRoute(
+            String cityStart, String cityEnd, Date date, Integer idRoute) {
+
+        String station = "";
+
+        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(Queries.SQL_SELECT_MIN_COUNT_STATION_ON_ROUTE);
+        ) {
+            int atr = 1;
+            pstmt.setString(atr++, String.valueOf(date));
+            pstmt.setString(atr++, cityStart);
+            pstmt.setString(atr++, String.valueOf(date));
+            pstmt.setInt(atr++, idRoute);
+            pstmt.setString(atr++, cityEnd);
+            pstmt.setInt(atr++, idRoute);
+            pstmt.setInt(atr++, idRoute);
+            pstmt.setString(atr++, cityEnd);
+            pstmt.setString(atr, cityStart);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                station = rs.getString("nmSt");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return station;
+    }
+
+
     public static List<SeatSearchBean> getAllSeatsByCarriageType(
             String cityStart, String cityEnd, String type, Date date, Integer idTrain) {
 
@@ -55,14 +85,14 @@ public class SeatDao implements Dao<Seat> {
             int atr = 1;
             LOG.trace("Info to query : " + cityStart
                     + ", " + cityEnd + ", " + date + ", " + idTrain + ", " + type + "; ");
-            stmt.setString(atr++, cityStart);
             stmt.setString(atr++, String.valueOf(date));
-            stmt.setString(atr++, cityEnd);
             stmt.setString(atr++, cityStart);
             stmt.setString(atr++, String.valueOf(date));
             stmt.setString(atr++, cityEnd);
             stmt.setInt(atr++, idTrain);
             stmt.setString(atr++, type);
+            stmt.setString(atr++, cityEnd);
+            stmt.setString(atr++, cityStart);
             stmt.setString(atr, cityStart);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {

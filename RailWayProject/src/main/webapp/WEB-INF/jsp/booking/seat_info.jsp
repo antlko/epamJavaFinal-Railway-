@@ -2,6 +2,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<c:if test="${empty sessionScope.localize}">
+    <fmt:setLocale value="${cookie['localize'].value}"/>
+</c:if>
+<c:if test="${not empty sessionScope.localize}">
+    <fmt:setLocale value="${sessionScope.localize}"/>
+</c:if>
+<fmt:setBundle basename="messages"/>
+
 <html>
 
 <c:set var="title" value="Booking" scope="page"/>
@@ -11,7 +21,7 @@
 <%@ include file="/WEB-INF/static/header.jsp" %>
 <section class="content">
     <div class="block-content">
-        <h1>Buy Tickets</h1>
+        <h1><fmt:message key="ticket.header_name" /></h1>
     </div>
     <div class="block-centered-content">
         <form action="booking" method="POST">
@@ -20,15 +30,21 @@
             ==================================================--%>
             <input type="hidden" name="action" value="findTickets">
 
-            <input list="cities" type="text" name="cityStart"
-                   value="${sessionScope.cityStart}" placeholder="From" style="width: 250px">
-            < - >
-            <input list="cities" type="text" name="cityEnd"
-                   value="${sessionScope.cityEnd}" placeholder="Destination" style="width: 250px">
+            <input id="cityStart" list="cities" type="text" name="cityStart"
+                   value="${sessionScope.cityStart}"
+                   placeholder="<fmt:message key="ticket.from" />" style="width: 250px">
+
+            <img class = "switch_img" src="style/img/reload.png"/>
+
+            <input id="cityEnd" list="cities" type="text" name="cityEnd"
+                   value="${sessionScope.cityEnd}"
+                   placeholder="<fmt:message key="ticket.destination" />" style="width: 250px">
+
             <input type="date" name="date" required
                    value="${sessionScope.date}" style="width: 200px">
 
-            <input class="normal" type="submit" value="Submit"/>
+            <input class="normal" type="submit"
+                   value="<fmt:message key="ticket.search" />"/>
         </form>
         <datalist id="cities">
             <c:forEach var="c" items="${requestScope.listStation}">
@@ -42,14 +58,14 @@
     <c:if test="${not empty sessionScope.userRoute}">
         <div class="block-centered-content">
             <table>
-                <th>Train</th>
-                <th>From</th>
-                <th>Destination</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Your route</th>
-                <th>Travel time</th>
-                <th>Coach type</th>
+                <th><fmt:message key="ticket.train"/></th>
+                <th><fmt:message key="ticket.from"/></th>
+                <th><fmt:message key="ticket.destination"/></th>
+                <th><fmt:message key="ticket.date"/></th>
+                <th><fmt:message key="ticket.time_start"/></th>
+                <th><fmt:message key="ticket.route"/></th>
+                <th><fmt:message key="ticket.travel_time"/></th>
+                <th><fmt:message key="ticket.coach_type"/></th>
                 <tr>
                     <td>${sessionScope.userRoute.train.number}</td>
                     <td>${sessionScope.cityStart}</td>
@@ -71,7 +87,7 @@
 
         </div>
         <div class="block-centered-content">
-            <h2>Carriages</h2>
+            <h2><fmt:message key="ticket.carriage"/> </h2>
         </div>
         <div class="block-centered-content">
             <c:forEach var="carriage" items="${sessionScope.serviceCarriage}">
@@ -102,7 +118,7 @@
             </div>
         </div>
         <div class="block-centered-content">
-            <h3>Total price :</h3>
+            <h3><fmt:message key="ticket.total_price"/> </h3>
             <input id="totalPrice" type="text" value="0" readonly>
         </div>
         <div class="block-centered-content">
@@ -115,7 +131,7 @@
                      ==================================================--%>
                 <input type="hidden" name="checkedCarriage" value="${sessionScope.checkedCarriage}">
                 <input id="chSeat" type="hidden" name="checkedSeats" value="">
-                <input class="normal" type="submit" value="Buy"/>
+                <input class="normal" type="submit" value="<fmt:message key="ticket.buy"/>"/>
             </form>
         </div>
     </c:if>

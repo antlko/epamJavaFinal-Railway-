@@ -2,6 +2,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="au" uri="/WEB-INF/tld/auth_secure.tld" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<c:if test="${empty sessionScope.localize}">
+    <fmt:setLocale value="${cookie['localize'].value}"/>
+</c:if>
+<c:if test="${not empty sessionScope.localize}">
+    <fmt:setLocale value="${sessionScope.localize}"/>
+</c:if>
+<fmt:setBundle basename="messages"/>
+
 
 <html>
 

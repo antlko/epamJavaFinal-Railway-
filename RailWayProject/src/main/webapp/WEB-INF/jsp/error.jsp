@@ -1,10 +1,13 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Admin
-  Date: 28.06.2019
-  Time: 15:57
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<c:if test="${empty sessionScope.localize}">
+    <fmt:setLocale value="${cookie['localize'].value}"/>
+</c:if>
+<c:if test="${not empty sessionScope.localize}">
+    <fmt:setLocale value="${sessionScope.localize}"/>
+</c:if>
+<fmt:setBundle basename="messages"/>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>

@@ -30,10 +30,11 @@ public class TrainDao implements Dao<Train> {
             for (int numCarr = countCarriage; numCarr < countCarr; ++numCarr) {
                 try {
                     atr = 1;
-                    pstmt = conn.prepareStatement("INSERT INTO carriages(id_train, num_carriage,id_type) VALUES(?,?,?)");
+                    pstmt = conn.prepareStatement("INSERT INTO carriages(id_train, num_carriage,id_type) VALUES(?,?,?,?)");
                     pstmt.setInt(atr++, idTrain);
                     pstmt.setInt(atr++, numCarr);
-                    pstmt.setInt(atr, idType);
+                    pstmt.setInt(atr++, idType);
+                    pstmt.setInt(atr, countSeat);
                     pstmt.executeUpdate();
                     for (int numSeat = 1; numSeat <= countSeat; ++numSeat) {
                         atr = 1;

@@ -1,6 +1,15 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<c:if test="${empty sessionScope.localize}">
+    <fmt:setLocale value="${cookie['localize'].value}"/>
+</c:if>
+<c:if test="${not empty sessionScope.localize}">
+    <fmt:setLocale value="${sessionScope.localize}"/>
+</c:if>
+<fmt:setBundle basename="messages"/>
 
 <html>
 
@@ -21,11 +30,11 @@
             <input type="hidden" name="action" value="account">
 
             ${requestScope.errorMessage}
-            <input type="text" name="login" placeholder="Login">
-            <input type="password" name="password" placeholder="Password">
-            <input class="normal" type="submit" value="Submit"/>
+            <input type="text" name="login" placeholder="<fmt:message key="auth.login"/>">
+            <input type="password" name="password" placeholder="<fmt:message key="auth.password"/>">
+            <input class="normal" type="submit" value="<fmt:message key="label.sign_in"/>"/>
         </form>
-        <a href="login?action=register">Haven't account? Create!</a>
+        <a href="login?action=register"><fmt:message key="auth.login_message"/></a>
     </div>
 </div>
 

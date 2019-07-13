@@ -94,117 +94,167 @@ public class Queries {
             "                    ) \n" +
             "ORDER BY date_end;";
 
-    public static final String SQL_FIND_SEAT_FREE_INFO = "SELECT nameType, MIN(freeCnt) as free FROM (\n" +
-            "SELECT TP.name as nameType, Count(*) as freeCnt FROM routes_on_date RD3, stations S3, trains T, routes R, seats ST, Types TP, carriages CR\n" +
-            "WHERE RD3.id_station = S3.id\n" +
-            "            AND RD3.id_route = R.id \n" +
-            "            AND R.id_train = T.id\n" +
-            "\t\t\tAND CR.id_train = R.id_train\n" +
-            "            AND CR.id_type = TP.id\n" +
-            "            AND ST.num_carriage = CR.num_carriage\n" +
-            "            AND ST.id_train = R.id_train\n" +
-            "            AND RD3.id_route NOT IN (\n" +
-            "\t\t\t\tSELECT US.id_route FROM user_check US\n" +
-            "\t\t\t\t\tWHERE US.id_route = RD3.id_route\n" +
-            "\t\t\t\t\tAND US.id_station = RD3.id_station\n" +
-            "\t\t\t\t\tAND US.id_train = RD3.id_train\n" +
-            "\t\t\t\t\tAND US.num_seat = ST.num_seat\n" +
-            "\t\t\t\t\tAND US.num_carriage = ST.num_carriage\n" +
-            "\t\t\t\t\tAND US.date_end = RD3.date_end\n" +
-            "\t\t\t\t\t\n" +
-            "\t\t\t)\n" +
-            "AND RD3.date_end >= ?\n" +
-            "AND RD3.date_end <= (\n" +
-            "\tSELECT RD6.date_end FROM routes_on_date RD6, stations S6, routes_station RS6\n" +
-            "\t\t\t\t\t\t\t\tWHERE RD6.id_station = S6.id\n" +
-            "\t\t\t\t\t\t\t\tAND RS6.id_station = RD6.id_station\n" +
-            "\t\t\t\t\t\t\t\tAND RS6.id_route = RD6.id_route\n" +
-            "\t\t\t\t\t\t\t\tAND RS6.id_train = RD6.id_train\n" +
-            "\t\t\t\t\t\t\t\tAND RD6.date_end >=All (\n" +
-            "\t\t\t\t\t\t\t\t\tSELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
-            "\t\t\t\t\t\t\t\t\t\tWHERE RD2.id_station = S2.id\n" +
-            "\t\t\t\t\t\t\t\t\t\tAND S2.name = ?\n" +
-            "\t\t\t\t\t\t\t\t\t\tAND ? = DATE(RD2.date_end)\n" +
-            "                    AND RD2.id_route = ?" +
-            "\t\t\t\t\t\t\t\t\t\t\n" +
-            "\t\t\t\t\t\t\t\t\t\t)\n" +
-            "                                AND S6.name = ?\n" +
-            "\t\t\t\t\t\t\t\tAND RD6.id_route = ?\n" +
-            "\t\t\t\t\t\t\t\tORDER BY date_end\n" +
-            "\t\t\t\t\t\t\t\tLIMIT 1\n" +
-            ")\n" +
-            "AND RD3.id_route = ?\n" +
-            "AND S3.name IN ( \n" +
-            "\tSELECT ST1.name FROM routes_station S4 INNER JOIN Stations ST1 ON S4.id_station = ST1.id\n" +
-            "\tWHERE S4.id_route = RD3.id_route\n" +
-            "\t\tAND S4.time_end < (\n" +
-            "\t\t\tSELECT S5.time_end FROM routes_station S5 INNER JOIN Stations ST2 ON S5.id_station = ST2.id\n" +
-            "\t\t\tWHERE ST2.name = ?\n" +
-            "\t\t\t\tAND S5.id_route = RD3.id_route\n" +
-            "\t\t)\n" +
-            "    AND S4.time_end >= (\n" +
-            "\t\t\tSELECT S5.time_end FROM routes_station S5 INNER JOIN Stations ST2 ON S5.id_station = ST2.id\n" +
-            "\t\t\tWHERE ST2.name = ?\n" +
-            "\t\t\t\tAND S5.id_route = RD3.id_route\n" +
-            "\t\t)"+
-            ")\n" +
-            " GROUP BY TP.name, S3.name\n" +
-            " ) H\n" +
-            " GROUP BY nameType";
+    public static final String SQL_FIND_SEAT_FREE_INFO = "SELECT nameType, Count(*) as free FROM (\n" +
+            "\tSELECT TP.name as nameType, S3.name as nameStation, T.id as idTrain, CR.num_carriage as numCarr, ST.num_seat as numSeat\n" +
+            "\tFROM routes_on_date RD3, stations S3, trains T, routes R, seats ST, Types TP, carriages CR\n" +
+            "\tWHERE RD3.id_station = S3.id\n" +
+            "\t\t\t\tAND RD3.id_route = R.id \n" +
+            "\t\t\t\tAND R.id_train = T.id\n" +
+            "\t\t\t\tAND CR.id_train = R.id_train\n" +
+            "\t\t\t\tAND CR.id_type = TP.id\n" +
+            "\t\t\t\tAND ST.num_carriage = CR.num_carriage\n" +
+            "\t\t\t\tAND ST.id_train = R.id_train\n" +
+            "\t\t\t\tAND RD3.id_route NOT IN (\n" +
+            "\t\t\t\t\tSELECT US.id_route FROM user_check US\n" +
+            "\t\t\t\t\t\tWHERE US.id_route = RD3.id_route\n" +
+            "\t\t\t\t\t\tAND US.id_station = RD3.id_station\n" +
+            "\t\t\t\t\t\tAND US.id_train = RD3.id_train\n" +
+            "\t\t\t\t\t\tAND US.num_seat = ST.num_seat\n" +
+            "\t\t\t\t\t\tAND US.num_carriage = ST.num_carriage\n" +
+//            "\t\t\tAND US.date_end = RD3.date_end\n" +
+            "\t\t\t\t)\t\n" +
+            "\tAND RD3.date_end >= ?\n" +
+            "\tAND RD3.date_end <= (\n" +
+            "\t\tSELECT RD6.date_end FROM routes_on_date RD6, stations S6, routes_station RS6\n" +
+            "\t\t\t\t\t\t\t\t\tWHERE RD6.id_station = S6.id\n" +
+            "\t\t\t\t\t\t\t\t\tAND RS6.id_station = RD6.id_station\n" +
+            "\t\t\t\t\t\t\t\t\tAND RS6.id_route = RD6.id_route\n" +
+            "\t\t\t\t\t\t\t\t\tAND RS6.id_train = RD6.id_train\n" +
+            "\t\t\t\t\t\t\t\t\tAND RD6.date_end >=All (\n" +
+            "\t\t\t\t\t\t\t\t\t\tSELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
+            "\t\t\t\t\t\t\t\t\t\t\tWHERE RD2.id_station = S2.id\n" +
+            "\t\t\t\t\t\t\t\t\t\t\tAND S2.name = ?\n" +
+            "\t\t\t\t\t\t\t\t\t\t\tAND ? = DATE(RD2.date_end)\n" +
+            "\t\t\t\t\t\t\t\t\t\t\tAND RD2.id_route = ?\n" +
+            "\t\t\t\t\t\t\t\t\t\t\t)\n" +
+            "\t\t\t\t\t\t\t\t\tAND S6.name = ?\n" +
+            "\t\t\t\t\t\t\t\t\tAND RD6.id_route = ?\n" +
+            "\t\t\t\t\t\t\t\t\tORDER BY date_end\n" +
+            "\t\t\t\t\t\t\t\t\tLIMIT 1\n" +
+            "\t)\n" +
+            "\tAND RD3.id_route = ?\n" +
+            "\tAND S3.name = ?\n" +
+            "           \n" +
+            "\t GROUP BY TP.name, S3.name, T.id, CR.num_carriage, ST.num_seat\n" +
+            "\t ) H\n" +
+            "\t GROUP BY nameType";
+//
+//    public static final String SQL_FIND_SEAT_FREE_INFO = "SELECT nameType, MIN(freeCnt) as free FROM (\n" +
+//            "SELECT TP.name as nameType, Count(*) as freeCnt FROM routes_on_date RD3, stations S3, trains T, routes R, seats ST, Types TP, carriages CR\n" +
+//            "WHERE RD3.id_station = S3.id\n" +
+//            "            AND RD3.id_route = R.id \n" +
+//            "            AND R.id_train = T.id\n" +
+//            "\t\t\tAND CR.id_train = R.id_train\n" +
+//            "            AND CR.id_type = TP.id\n" +
+//            "            AND ST.num_carriage = CR.num_carriage\n" +
+//            "            AND ST.id_train = R.id_train\n" +
+//            "            AND RD3.id_route NOT IN (\n" +
+//            "\t\t\t\tSELECT US.id_route FROM user_check US\n" +
+//            "\t\t\t\t\tWHERE US.id_route = RD3.id_route\n" +
+//            "\t\t\t\t\tAND US.id_station = RD3.id_station\n" +
+//            "\t\t\t\t\tAND US.id_train = RD3.id_train\n" +
+//            "\t\t\t\t\tAND US.num_seat = ST.num_seat\n" +
+//            "\t\t\t\t\tAND US.num_carriage = ST.num_carriage\n" +
+//            "\t\t\t\t\tAND US.date_end = RD3.date_end\n" +
+//            "\t\t\t\t\t\n" +
+//            "\t\t\t)\n" +
+//            "AND RD3.date_end >= ?\n" +
+//            "AND RD3.date_end <= (\n" +
+//            "\tSELECT RD6.date_end FROM routes_on_date RD6, stations S6, routes_station RS6\n" +
+//            "\t\t\t\t\t\t\t\tWHERE RD6.id_station = S6.id\n" +
+//            "\t\t\t\t\t\t\t\tAND RS6.id_station = RD6.id_station\n" +
+//            "\t\t\t\t\t\t\t\tAND RS6.id_route = RD6.id_route\n" +
+//            "\t\t\t\t\t\t\t\tAND RS6.id_train = RD6.id_train\n" +
+//            "\t\t\t\t\t\t\t\tAND RD6.date_end >=All (\n" +
+//            "\t\t\t\t\t\t\t\t\tSELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
+//            "\t\t\t\t\t\t\t\t\t\tWHERE RD2.id_station = S2.id\n" +
+//            "\t\t\t\t\t\t\t\t\t\tAND S2.name = ?\n" +
+//            "\t\t\t\t\t\t\t\t\t\tAND ? = DATE(RD2.date_end)\n" +
+//            "                    AND RD2.id_route = ?" +
+//            "\t\t\t\t\t\t\t\t\t\t\n" +
+//            "\t\t\t\t\t\t\t\t\t\t)\n" +
+//            "                                AND S6.name = ?\n" +
+//            "\t\t\t\t\t\t\t\tAND RD6.id_route = ?\n" +
+//            "\t\t\t\t\t\t\t\tORDER BY date_end\n" +
+//            "\t\t\t\t\t\t\t\tLIMIT 1\n" +
+//            ")\n" +
+//            "AND RD3.id_route = ?\n" +
+//            "AND S3.name IN ( \n" +
+//            "\tSELECT ST1.name FROM routes_station S4 INNER JOIN Stations ST1 ON S4.id_station = ST1.id\n" +
+//            "\tWHERE S4.id_route = RD3.id_route\n" +
+//            "\t\tAND S4.time_end < (\n" +
+//            "\t\t\tSELECT S5.time_end FROM routes_station S5 INNER JOIN Stations ST2 ON S5.id_station = ST2.id\n" +
+//            "\t\t\tWHERE ST2.name = ?\n" +
+//            "\t\t\t\tAND S5.id_route = RD3.id_route\n" +
+//            "\t\t)\n" +
+//            "    AND S4.time_end >= (\n" +
+//            "\t\t\tSELECT S5.time_end FROM routes_station S5 INNER JOIN Stations ST2 ON S5.id_station = ST2.id\n" +
+//            "\t\t\tWHERE ST2.name = ?\n" +
+//            "\t\t\t\tAND S5.id_route = RD3.id_route\n" +
+//            "\t\t)"+
+//            ")\n" +
+//            " GROUP BY TP.name, S3.name\n" +
+//            " ) H\n" +
+//            " GROUP BY nameType";
 
-    public static final String SQL_FIND_FREE_SEATS_BY_TRAIN = "SELECT * FROM (SELECT DISTINCT TP.price as tpPrice, TP.name as nameType, S3.name as nameStation, T.id as idTrain, CR.num_carriage as numCarr\n" +
+    public static final String SQL_FIND_FREE_SEATS_BY_TRAIN = "SELECT * FROM (\n" +
+            "            SELECT DISTINCT TP.price as tpPrice, TP.name as nameType, S3.name as nameStation, T.id as idTrain, T.number as numTrain, CR.num_carriage as numCarr\n" +
             "            FROM routes_on_date RD3, stations S3, trains T, routes R, seats ST, Types TP, carriages CR\n" +
             "            WHERE RD3.id_station = S3.id\n" +
-            "            AND RD3.id_route = R.id \n" +
-            "            AND R.id_train = T.id\n" +
-            "                    AND CR.id_train = R.id_train\n" +
-            "                    AND CR.id_type = TP.id\n" +
-            "                    AND ST.num_carriage = CR.num_carriage\n" +
-            "                    AND ST.id_train = R.id_train\n" +
-            "                    AND RD3.id_route NOT IN (\n" +
-            "            SELECT US.id_route FROM user_check US\n" +
-            "                        WHERE US.id_route = RD3.id_route\n" +
-            "            AND US.id_train = RD3.id_train\n" +
-            "                            AND US.num_carriage = CR.num_carriage\n" +
-            "                            AND US.num_seat = ST.num_seat\n" +
-            "                            AND US.id_station = RD3.id_station\n" +
-            "                    )\n" +
-            "\tAND RD3.date_end >= (\n" +
-            "            SELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
-            "                        WHERE RD2.id_station = S2.id\n" +
-            "                        AND S2.name = ?\n" +
-            "                        AND ? = DATE(RD2.date_end)\n" +
-            "                         LIMIT 1  " +
-            "                        )\n" +
-            "\tAND RD3.date_end <=Any (\n" +
-            "            SELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
-            "                        WHERE RD2.id_station = S2.id \n" +
-            "                        AND S2.name = ?\n" +
-            "                        AND RD3.date_end <= (\n" +
-            "\t\t\t\t\t\t\tSELECT RD6.date_end FROM routes_on_date RD6, stations S6, routes_station RS6\n" +
-            "\t\t\t\t\t\t\t\tWHERE RD6.id_station = S6.id\n" +
-            "\t\t\t\t\t\t\t\tAND RS6.id_station = RD6.id_station\n" +
-            "\t\t\t\t\t\t\t\tAND RS6.id_route = RD6.id_route\n" +
-            "\t\t\t\t\t\t\t\tAND RS6.id_train = RD6.id_train\n" +
-            "\t\t\t\t\t\t\t\tAND RD6.date_end >=All (\n" +
-            "\t\t\t\t\t\t\t\t\tSELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
-            "\t\t\t\t\t\t\t\t\t\tWHERE RD2.id_station = S2.id\n" +
-            "\t\t\t\t\t\t\t\t\t\tAND S2.name = ?\n" +
-            "\t\t\t\t\t\t\t\t\t\tAND ? = DATE(RD2.date_end)\n" +
-            "\t\t\t\t\t\t\t\t\t\t)\n" +
-            "                                AND S6.name = ?\n" +
-            "\t\t\t\t\t\t\t\tORDER BY date_end\n" +
-            "\t\t\t\t\t\t\t\tLIMIT 1\n" +
-            "                        )\n" +
-            "                        ORDER BY RD2.date_end\n" +
-            "                    ) \n" +
-            "                   AND T.number = ?\n" +
-            "                   AND TP.name = ?\n" +
-            "           GROUP BY S3.name, T.id,CR.num_carriage,ST.num_seat\n" +
-            "ORDER BY RD3.date_end\n" +
-            ") H\n" +
-            "WHERE H.nameStation = ?\n" +
-            "ORDER BY idTrain,numCarr";
+            "\t\t\t\t\tAND RD3.id_route = R.id\n" +
+            "\t\t\t\t\tAND R.id_train = T.id\n" +
+            "\t\t\t\t\tAND CR.id_train = R.id_train\n" +
+            "\t\t\t\t\tAND CR.id_type = TP.id\n" +
+            "\t\t\t\t\tAND ST.num_carriage = CR.num_carriage\n" +
+            "\t\t\t\t\tAND ST.id_train = R.id_train\n" +
+            "\t\t\t\t\tAND RD3.id_route NOT IN (\n" +
+            "\t\t\t\t\t\tSELECT US.id_route FROM user_check US\n" +
+            "\t\t\t\t\t\tWHERE US.id_route = RD3.id_route\n" +
+            "\t\t\t\t\t\tAND US.id_station = RD3.id_station\n" +
+            "\t\t\t\t\t\tAND US.id_train = RD3.id_train\n" +
+            "\t\t\t\t\t\tAND US.num_seat = ST.num_seat\n" +
+            "\t\t\t\t\t\tAND US.num_carriage = ST.num_carriage\n" +
+            "\t\t\t\t\t\tAND US.date_end = RD3.date_end\n" +
+            "\t\t\t\t)\n" +
+            "\t\t\t\tAND RD3.date_end >= ?\n" +
+            "\t\t\t\tAND RD3.date_end <= (\n" +
+            "\t\t\t\t\tSELECT RD6.date_end FROM routes_on_date RD6, stations S6, routes_station RS6\n" +
+            "\t\t\t\t\t\t\tWHERE RD6.id_station = S6.id\n" +
+            "\t\t\t\t\t\t\tAND RS6.id_station = RD6.id_station\n" +
+            "\t\t\t\t\t\t\tAND RS6.id_route = RD6.id_route\n" +
+            "\t\t\t\t\t\t\tAND RS6.id_train = RD6.id_train\n" +
+            "\t\t\t\t\t\t\tAND RD6.date_end >=All (\n" +
+            "\t\t\t\t\t\t\tSELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
+            "\t\t\t\t\t\t\tWHERE RD2.id_station = S2.id\n" +
+            "\t\t\t\t\t\t\t\tAND S2.name = ?\n" +
+            "\t\t\t\t\t\t\t\tAND ? = DATE(RD2.date_end)\n" +
+            "\t\t\t\t\t\t\t\t)\n" +
+            "\t\t\t\t\t\t\tAND S6.name = ?\n" +
+            "\t\t\t\t\t\t\tORDER BY date_end\n" +
+            "\t\t\t\t\t\t\t  LIMIT 1\n" +
+            "\t\t\t\t)\n" +
+            "\t\t\t\tAND T.number = ?\n" +
+            "\t\t\t\tAND TP.name = ?\n" +
+            "\t\t\t\tAND S3.name IN (\n" +
+            "\t\t\t\tSELECT ST1.name FROM routes_station S4 INNER JOIN Stations ST1 ON S4.id_station = ST1.id\n" +
+            "\t\t\t\tWHERE S4.id_route = RD3.id_route\n" +
+            "\t\t\t\t\tAND S4.time_end < (\n" +
+            "            \t\tSELECT S5.time_end FROM routes_station S5 INNER JOIN Stations ST2 ON S5.id_station = ST2.id\n" +
+            "\t\t\t\t\t\tWHERE ST2.name = ?\n" +
+            "\t\t\t\t\t\tAND S5.id_route = S4.id_route\n" +
+            "\t\t\t\t)\n" +
+            "            AND S4.time_end >= (\n" +
+            "\t\t\t\t\tSELECT S5.time_end FROM routes_station S5 INNER JOIN Stations ST2 ON S5.id_station = ST2.id\n" +
+            "\t\t\t\t\tWHERE ST2.name = ?\n" +
+            "\t\t\t\t\tAND S5.id_route = RD3.id_route\n" +
+            "\t\t\t\t)\n" +
+            "            )\n" +
+            "            GROUP BY S3.name, T.id,CR.num_carriage,ST.num_seat\n" +
+            "            ORDER BY RD3.date_end\n" +
+            "            ) H\n" +
+            "\t\t\t WHERE H.nameStation = ?\n" +
+            "            ORDER BY idTrain,numCarr\n" +
+            "     ";
 
     public static final String SQL_FIND_FREE_SEATS_BY_TRAIN_AND_CARRIAGE = "SELECT TP.name as nameType, S3.name as nameStation, T.id as idTrain, CR.num_carriage as numCarr, ST.num_seat as numSeat FROM routes_on_date RD3, stations S3, trains T, routes R, seats ST, Types TP, carriages CR\n" +
             "WHERE RD3.id_station = S3.id\n" +
@@ -365,4 +415,63 @@ public class Queries {
             "\t ORDER BY free\n" +
             "\t LIMIT 1\n" +
             "\n";
+    public static final String SQL_SELECT_MIN_COUNT_STATION_ON_ROUTE = "\n" +
+            "\tSELECT nameStation as nmSt, Count(*) as free FROM (\n" +
+            "SELECT TP.name as nameType, S3.name as nameStation, T.id as idTrain, CR.num_carriage as numCarr, ST.num_seat as numSeat\n" +
+            "\tFROM routes_on_date RD3, stations S3, trains T, routes R, seats ST, Types TP, carriages CR\n" +
+            "\tWHERE RD3.id_station = S3.id\n" +
+            "\t\t\t\tAND RD3.id_route = R.id \n" +
+            "\t\t\t\tAND R.id_train = T.id\n" +
+            "\t\t\t\tAND CR.id_train = R.id_train\n" +
+            "\t\t\t\tAND CR.id_type = TP.id\n" +
+            "\t\t\t\tAND ST.num_carriage = CR.num_carriage\n" +
+            "\t\t\t\tAND ST.id_train = R.id_train\n" +
+            "\t\t\t\tAND RD3.id_route NOT IN (\n" +
+            "\t\t\t\t\tSELECT US.id_route FROM user_check US\n" +
+            "\t\t\t\t\t\tWHERE US.id_route = RD3.id_route\n" +
+            "\t\t\t\t\t\tAND US.id_station = RD3.id_station\n" +
+            "\t\t\t\t\t\tAND US.id_train = RD3.id_train\n" +
+            "\t\t\t\t\t\tAND US.num_seat = ST.num_seat\n" +
+            "\t\t\t\t\t\tAND US.num_carriage = ST.num_carriage\n" +
+            "\tAND US.date_end = RD3.date_end" +
+            "\t\t\t\t)\t\n" +
+            "\tAND RD3.date_end >= ?\n" +
+            "\tAND RD3.date_end <= (\n" +
+            "\t\tSELECT RD6.date_end FROM routes_on_date RD6, stations S6, routes_station RS6\n" +
+            "\t\t\t\t\t\t\t\t\tWHERE RD6.id_station = S6.id\n" +
+            "\t\t\t\t\t\t\t\t\tAND RS6.id_station = RD6.id_station\n" +
+            "\t\t\t\t\t\t\t\t\tAND RS6.id_route = RD6.id_route\n" +
+            "\t\t\t\t\t\t\t\t\tAND RS6.id_train = RD6.id_train\n" +
+            "\t\t\t\t\t\t\t\t\tAND RD6.date_end >=All (\n" +
+            "\t\t\t\t\t\t\t\t\t\tSELECT RD2.date_end FROM routes_on_date RD2, stations S2\n" +
+            "\t\t\t\t\t\t\t\t\t\t\tWHERE RD2.id_station = S2.id\n" +
+            "\t\t\t\t\t\t\t\t\t\t\tAND S2.name = ?\n" +
+            "\t\t\t\t\t\t\t\t\t\t\tAND ? = DATE(RD2.date_end)\n" +
+            "\t\t\t\t\t\t\t\t\t\t\tAND RD2.id_route =?\n" +
+            "\t\t\t\t\t\t\t\t\t\t\t)\n" +
+            "\t\t\t\t\t\t\t\t\tAND S6.name = ?\n" +
+            "\t\t\t\t\t\t\t\t\tAND RD6.id_route = ?\n" +
+            "\t\t\t\t\t\t\t\t\tORDER BY date_end\n" +
+            "\t\t\t\t\t\t\t\t\tLIMIT 1\n" +
+            "\t)\n" +
+            "\tAND RD3.id_route = ?\n" +
+            "\tAND S3.name IN ( \n" +
+            "\t\tSELECT ST1.name FROM routes_station S4 INNER JOIN Stations ST1 ON S4.id_station = ST1.id\n" +
+            "\t\tWHERE S4.id_route = RD3.id_route\n" +
+            "\t\t\tAND S4.time_end < (\n" +
+            "\t\t\t\tSELECT S5.time_end FROM routes_station S5 INNER JOIN Stations ST2 ON S5.id_station = ST2.id\n" +
+            "\t\t\t\tWHERE ST2.name = ?\n" +
+            "\t\t\t\t\tAND S5.id_route = S4.id_route\n" +
+            "\t\t\t)\n" +
+            "\t\t\tAND S4.time_end >= (\n" +
+            "            SELECT S5.time_end FROM routes_station S5 INNER JOIN Stations ST2 ON S5.id_station = ST2.id\n" +
+            "            WHERE ST2.name = ?\n" +
+            "            AND S5.id_route = RD3.id_route\n" +
+            "            )\n" +
+            "\t)\n" +
+            "\t GROUP BY TP.name, S3.name, T.id, CR.num_carriage, ST.num_seat\n" +
+            "\t ) H\n" +
+            "\t GROUP BY nameStation\n" +
+            "\t ORDER BY free\n" +
+            "\t LIMIT 1\n";
 }

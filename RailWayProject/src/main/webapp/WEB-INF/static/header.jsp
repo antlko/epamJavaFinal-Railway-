@@ -5,16 +5,20 @@
     </div>
     <nav>
         <ul class="nav-links">
-            <li><a class="nav-link" href="index.jsp">Home</a></li>
-            <li><a class="nav-link" href="booking">Tickets</a></li>
-            <li><a class="nav-link" href="contact">Contact</a></li>
+            <li><a class="nav-link" href="index.jsp"><fmt:message key="header.home"/></a></li>
+            <li><a class="nav-link" href="booking"><fmt:message key="header.ticket"/></a></li>
+            <li><a class="nav-link" href="contact"><fmt:message key="header.contact"/></a></li>
         </ul>
     </nav>
 
     <div class="cart login-js">
+        <div class="lang">
+            <a href="?pageLocale=ru">RU</a>
+            <a href="?pageLocale=en">EN</a>
+        </div>
         <c:if test="${not empty sessionScope.user}">
             <a href="account">
-                ${sessionScope.user.login}
+                    ${sessionScope.user.login}
             </a>
             <a href="account?action=logout">
                 <img src="style/img/exit.svg" height="30" width="30"/>

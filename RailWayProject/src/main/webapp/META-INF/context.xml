@@ -34,7 +34,7 @@
               password="12345"
               driverClassName="com.mysql.jdbc.Driver"
               description="JCG Example MySQL database."
-              url="jdbc:mysql://localhost:3306/db_train?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC"
+              url="jdbc:mysql://localhost:3306/db_train?useUnicode=true&amp;characterEncoding=UTF-8&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC"
               maxTotal="100"
               maxIdle="30"
               maxWaitMillis="15000"

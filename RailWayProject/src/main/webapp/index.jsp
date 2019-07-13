@@ -1,6 +1,16 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
+
+<c:if test="${empty sessionScope.localize}">
+    <fmt:setLocale value="${cookie['localize'].value}"/>
+</c:if>
+<c:if test="${not empty sessionScope.localize}">
+    <fmt:setLocale value="${sessionScope.localize}"/>
+</c:if>
+<fmt:setBundle basename="messages"/>
 
 <html>
 
@@ -14,24 +24,22 @@
     <section class="presentation">
         <div class="introduction">
             <div class="intro-text">
-                <h1>Facilities and services</h1>
+                <h1><fmt:message key="label.message_preview.header"/></h1>
                 <p>
-                    Book a group study room. Print, copy, scan and pay.
-                    Technology and wifi access.
-                    Disability services and adaptive technology
+                    <fmt:message key="label.message_preview"/>
                 </p>
             </div>
             <div class="cta">
                 <form action="login" method="get">
                     <input type="hidden" name="action" value="register">
                     <button class="cta-reg login-js">
-                        Create Account
+                        <fmt:message key="label.reg"/>
                     </button>
                 </form>
                 <form action="login" method="get">
                     <input type="hidden" name="action" value="login">
                     <button class="cta-login login-js">
-                        Login
+                        <fmt:message key="label.sign_in"/>
                     </button>
                 </form>
             </div>

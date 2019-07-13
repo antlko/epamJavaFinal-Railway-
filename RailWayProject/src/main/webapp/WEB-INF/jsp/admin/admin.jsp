@@ -2,6 +2,15 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="au" uri="/WEB-INF/tld/auth_secure.tld" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<c:if test="${empty sessionScope.localize}">
+    <fmt:setLocale value="${cookie['localize'].value}"/>
+</c:if>
+<c:if test="${not empty sessionScope.localize}">
+    <fmt:setLocale value="${sessionScope.localize}"/>
+</c:if>
+<fmt:setBundle basename="messages"/>
 
 <html>
 
@@ -15,26 +24,26 @@
 <section class="content">
 
     <div class="block-content">
-        <h1>Admin panel</h1>
+        <h1><fmt:message key="admin.admin_panel"/></h1>
     </div>
     <div class="tabs-content">
         <div class="tabs">
             <input type="radio" name="tabs" id="tab_1" value=1
                    <c:if test="${sessionScope.tab == 1 or empty sessionScope.tab}">checked</c:if>
             />
-            <label for="tab_1">Personal</label>
+            <label for="tab_1"><fmt:message key="admin.personal"/></label>
             <div class="tab">
                 <div class="login-panel-bg">
                     <div class="login-panel-content">
-                        <h3>Change user role:</h3>
+                        <h3><fmt:message key="admin.change_user_role"/></h3>
                         <form action="admin">
                             <input type="hidden" name="action" value="changeUser">
                             <input type="hidden" name="checkVal" value="1">
 
-                            <div class="edit-tag">User login :</div>
+                            <div class="edit-tag"><fmt:message key="auth.login"/> :</div>
                             <input type="text" name="loginUser">
 
-                            <div class="edit-tag">Role :</div>
+                            <div class="edit-tag"><fmt:message key="admin.role"/> :</div>
                             <select name="tagRole">
                                 <option>USER</option>
                                 <option>ADMIN</option>
@@ -49,18 +58,18 @@
             <input type="radio" name="tabs" id="tab_2" value=2
                    <c:if test="${sessionScope.tab == 2}">checked</c:if>
             />
-            <label for="tab_2">Stations</label>
+            <label for="tab_2"><fmt:message key="admin.stations"/></label>
             <div class="tab">
                 <%--=================================================
                                Country Settings
                     ==================================================--%>
-                <h3>Country info</h3>
+                <h3><fmt:message key="admin.country_info"/></h3>
                 <hr>
                 <form action="admin" method="post">
                     <input type="hidden" name="action" value="changeCountry">
                     <input type="hidden" name="checkVal" value="2">
 
-                    <div class="edit-tag">Country :</div>
+                    <div class="edit-tag"><fmt:message key="admin.country"/> :</div>
                     <input type="text" name="countryName">
                     <input class="normal" type="submit" name="changeCountryInfo" value="Save">
                     <input class="danger" type="submit" name="changeCountryInfo" value="Delete">
@@ -68,7 +77,7 @@
                 <input class="middle sidebar-country" type="submit" name="showCountry" value="Show All">
                 <br>
                 <div id="sidebar-country" class="sidebar">
-                    <h3>All available country</h3>
+                    <h3><fmt:message key="admin.all_available_country"/></h3>
                     <c:forEach items="${requestScope.allCountryInfo}" var="country">
                         <li>${country.name}</li>
                     </c:forEach>
@@ -76,16 +85,16 @@
                 <%--=================================================
                               City Settings
                     ==================================================--%>
-                <h3>Cities info</h3>
+                <h3><fmt:message key="admin.cities_info"/></h3>
                 <hr>
                 <form action="admin" method="post">
                     <input type="hidden" name="action" value="changeCity">
                     <input type="hidden" name="checkVal" value="2">
 
-                    <div class="edit-tag">City :</div>
+                    <div class="edit-tag"><fmt:message key="admin.city_name"/> :</div>
                     <input type="text" name="cityName">
 
-                    <div class="edit-tag">Country :</div>
+                    <div class="edit-tag"><fmt:message key="admin.country"/> :</div>
                     <select name="tagCountries">
                         <c:forEach items="${requestScope.allCountryInfo}" var="country">
                             <option value="${country.name}">${country.name}</option>
@@ -97,7 +106,7 @@
                 <input class="middle sidebar-city" type="submit" name="showCity" value="Show All">
                 <br>
                 <div id="sidebar-city" class="sidebar">
-                    <h3>All available cities</h3>
+                    <h3><fmt:message key="admin.all_available_cities"/></h3>
                     <c:forEach items="${requestScope.allCityInfo}" var="city">
                         <li>${city.name}</li>
                     </c:forEach>
@@ -105,16 +114,16 @@
                 <%--=================================================
                            Station settings
                 ==================================================--%>
-                <h3>Stations info</h3>
+                <h3><fmt:message key="admin.station_info"/></h3>
                 <hr>
                 <form action="admin" method="post">
                     <input type="hidden" name="action" value="changeStation">
                     <input type="hidden" name="checkVal" value="2">
 
-                    <div class="edit-tag">Station :</div>
+                    <div class="edit-tag"><fmt:message key="admin.station"/> :</div>
                     <input type="text" name="stationName">
 
-                    <div class="edit-tag">City :</div>
+                    <div class="edit-tag"><fmt:message key="admin.city_name"/> :</div>
                     <select name="tagCities">
                         <c:forEach items="${requestScope.allCityInfo}" var="city">
                             <option value="${city.name}">${city.name}</option>
@@ -126,7 +135,7 @@
                 <input class="middle sidebar-station" type="submit" name="showStation" value="Show All">
                 <br>
                 <div id="sidebar-station" class="sidebar">
-                    <h3>All available station</h3>
+                    <h3><fmt:message key="admin.all_available_station"/></h3>
                     <c:forEach items="${requestScope.allStationInfo}" var="station">
                         <li>${station.name}</li>
                     </c:forEach>
@@ -136,18 +145,18 @@
             <input type="radio" name="tabs" id="tab_3" value=3
                    <c:if test="${sessionScope.tab == 3}">checked</c:if>
             />
-            <label for="tab_3">Trains</label>
+            <label for="tab_3"><fmt:message key="admin.train"/></label>
             <div class="tab">
                 <%--=================================================
                            Train settings
                 ==================================================--%>
-                <h3>Train info</h3>
+                <h3><fmt:message key="admin.train_info"/></h3>
                 <hr>
                 <form action="admin" method="post">
                     <input type="hidden" name="action" value="changeTrain">
                     <input type="hidden" name="checkVal" value="3">
 
-                    <div class="edit-tag">Train number :</div>
+                    <div class="edit-tag"><fmt:message key="admin.train_number"/> :</div>
                     <input type="text" name="trainNumber">
 
                     <input class="normal" type="submit" name="changeTrainInfo" value="Save">
@@ -156,7 +165,7 @@
                 <input class="middle sidebar-train" type="submit" name="showTrain" value="Show All">
                 <br>
                 <div id="sidebar-train" class="sidebar">
-                    <h3>All available train</h3>
+                    <h3><fmt:message key="admin.all_available_train"/>n</h3>
                     <c:forEach items="${requestScope.allTrainInfo}" var="train">
                         <li>${train.number}</li>
                     </c:forEach>
@@ -164,16 +173,16 @@
                 <%--=================================================
                    Carriage-type settings
                  ==================================================--%>
-                <h3>Carriage-type info</h3>
+                <h3><fmt:message key="admin.carr_type_info"/></h3>
                 <hr>
                 <form action="admin" method="post">
                     <input type="hidden" name="action" value="changeType">
                     <input type="hidden" name="checkVal" value="3">
 
-                    <div class="edit-tag">Type name :</div>
+                    <div class="edit-tag"><fmt:message key="admin.carr_name"/> :</div>
                     <input type="text" name="typeName">
 
-                    <div class="edit-tag">Type price :</div>
+                    <div class="edit-tag"><fmt:message key="admin.carr_price"/> :</div>
                     <input type="text" name="typePrice">
 
                     <input class="normal" type="submit" name="changeTypeInfo" value="Save">
@@ -182,7 +191,7 @@
                 <input class="middle sidebar-type" type="submit" name="showType" value="Show All">
                 <br>
                 <div id="sidebar-type" class="sidebar">
-                    <h3>All available types</h3>
+                    <h3><fmt:message key="admin.all_available_types"/></h3>
                     <table style="margin: auto">
                         <th>Type</th>
                         <th>Price</th>
@@ -197,31 +206,31 @@
                 <%--=================================================
                            Carriage settings
                 ==================================================--%>
-                <h3>Inside transport information</h3>
+                <h3><fmt:message key="admin.inside_transport_information"/></h3>
                 <hr>
                 <form action="admin" method="post">
                     <input type="hidden" name="action" value="changeCarrSeat">
                     <input type="hidden" name="checkVal" value="3">
 
-                    <div class="edit-tag">Train number :</div>
+                    <div class="edit-tag"><fmt:message key="admin.train_number"/> :</div>
                     <select name="tagTrains">
                         <c:forEach items="${requestScope.allTrainInfo}" var="train">
                             <option value="${train.number}">${train.number}</option>
                         </c:forEach>
                     </select>
 
-                    <div class="edit-tag">Number of carriage :</div>
+                    <div class="edit-tag"><fmt:message key="admin.number_of_carr"/> :</div>
                     <input id="rangeCarr" class="slider" type="range" min="1" max="20"
                            value="5" name="carriageCount">
                     <output for="rangeCarr" class="countRangeCarr">5</output>
 
-                    <div class="edit-tag">Number of seats :</div>
+                    <div class="edit-tag"><fmt:message key="admin.number_of_seat"/> :</div>
                     <input id="rangeSeat" class="slider" type="range" min="1" max="45"
                            value="45" name="seatCount">
                     <output for="rangeCarr" class="countRangeSeat">45</output>
 
 
-                    <div class="edit-tag">Carriage type :</div>
+                    <div class="edit-tag"><fmt:message key="admin.carr_type"/> :</div>
                     <select name="tagTypes">
                         <c:forEach items="${requestScope.allTypeInfo}" var="type">
                             <option value="${type.name}">${type.name}</option>
@@ -234,11 +243,11 @@
                 <input class="middle sidebar-train-stat" type="submit" name="showTrainStatistic" value="Show All">
                 <br>
                 <div id="sidebar-train-stat" class="sidebar">
-                    <h3>All available trains statistic</h3>
+                    <h3><fmt:message key="admin.all_available_train_statistic"/></h3>
                     <table style="margin: auto">
                         <th>Train</th>
-                        <th>Numbers of carriages</th>
-                        <th>Numbers of seats</th>
+                        <th><fmt:message key="admin.number_of_carr"/></th>
+                        <th><fmt:message key="admin.number_of_seat"/></th>
                         <c:forEach items="${requestScope.allTrainStatInfo}" var="trStat">
                             <tr>
                                 <td>${trStat.trainNumber}</td>
@@ -254,19 +263,19 @@
             <input type="radio" name="tabs" id="tab_4" value=4
                    <c:if test="${sessionScope.tab == 4}">checked</c:if>
             />
-            <label for="tab_4">Routes</label>
+            <label for="tab_4"><fmt:message key="admin.routes"/></label>
             <div class="tab">
                 <%--=================================================
                              Route Settings
                 ==================================================--%>
-                <h3>Route info</h3>
+                <h3><fmt:message key="admin.routes_info"/></h3>
                 <hr>
                 <form action="admin" method="post">
                     <input type="hidden" name="action" value="changeRoute">
                     <input type="hidden" name="checkVal" value="4">
 
                     <div id="myDIV" class="header">
-                        <h2>Add stations to new route :</h2>
+                        <h2><fmt:message key="admin.add_station_to_new_route"/> :</h2>
                         <%--<input type="" id="myInput" placeholder="Title...">--%>
                         <select name="tagTypes" id="myInput">
                             <c:forEach items="${requestScope.allStationInfo}" var="station">
@@ -278,10 +287,15 @@
                         <input type="datetime-local" id="time-station-end" name="time-station-end" required
                                style="width: 210px">
 
-                        <input type="text" id="price-value" name="price-value" placeholder="Price" required value="">
+                        <input type="text" id="price-value" name="price-value"
+                               placeholder="<fmt:message key="admin.price"/>" required value="">
 
-                        <span onclick="newElement()" class="addBtn">Add</span>
-                        <span onclick="removeAllElement()" class="addBtn">Remove</span>
+                        <span onclick="newElement()" class="addBtn">
+                            <fmt:message key="admin.btn_add"/>
+                        </span>
+                        <span onclick="removeAllElement()" class="addBtn">
+                            <fmt:message key="admin.btn_remove"/>
+                        </span>
                     </div>
 
                     <ul id="myUL" class=".checker">
@@ -290,7 +304,7 @@
 
                     <input type="hidden" id="listInfoStation" name="listInfoStation" value="">
 
-                    <div class="edit-tag">Train number for route :</div>
+                    <div class="edit-tag"><fmt:message key="admin.train_number_for_route"/> :</div>
                     <select name="tagTrains">
                         <c:forEach items="${requestScope.allTrainInfo}" var="train">
                             <option value="${train.number}">${train.number}</option>
@@ -300,23 +314,25 @@
                     <input class="normal" type="submit" name="changeRouteInfo" value="Save">
                 </form>
                 <hr>
-                <h3>Route on date</h3>
+                <h3><fmt:message key="admin.route_on_date"/></h3>
                 <form action="admin" method="post">
                     <input type="hidden" name="action" value="changeRoute">
                     <input type="hidden" name="checkVal" value="4">
 
-                    <div class="edit-tag">Route ID :</div>
+                    <div class="edit-tag"><fmt:message key="admin.route_ID"/> :</div>
                     <input type="text" name="routeId" value="">
 
-                    <div class="edit-tag">Date Start :</div>
+                    <div class="edit-tag"><fmt:message key="admin.date_start"/> :</div>
                     <input type="date" name="date-station"
                            style="width: 150px">
 
-                    <div class="edit-tag">Date End :</div>
+                    <div class="edit-tag"><fmt:message key="admin.date_end"/> :</div>
                     <input type="date" name="date-station-end"
                            style="width: 150px">
 
-                    <button class="input-sbt" type="submit" name="changeRouteInfo" value="SaveRoutesDate">Save</button>
+                    <button class="input-sbt" type="submit" name="changeRouteInfo" value="SaveRoutesDate">
+                        <fmt:message key="admin.btn_save"/>
+                    </button>
                     <input class="danger" type="submit" name="changeRouteInfo" value="Delete">
                 </form>
 
@@ -324,10 +340,10 @@
                 <input class="middle sidebar-route-stat" type="submit" name="showRoute" value="Show All">
                 <br>
                 <div id="sidebar-route-stat" class="sidebar">
-                    <h3>All Routes</h3>
+                    <h3><fmt:message key="admin.all_routes"/></h3>
                     <table>
-                        <th>Route ID</th>
-                        <th>Station list</th>
+                        <th><fmt:message key="admin.route_ID"/></th>
+                        <th><fmt:message key="admin.station_list"/></th>
                         <c:forEach items="${requestScope.allRouteInfo}" var="route">
                             <tr>
                                 <td>${route.idRoute}</td>
