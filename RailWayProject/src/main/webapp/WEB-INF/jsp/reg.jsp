@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
 <c:if test="${empty sessionScope.localize}">
     <fmt:setLocale value="${cookie['localize'].value}"/>
@@ -23,11 +24,15 @@
 <div class="login-panel-bg">
     <div class="login-panel-content">
         <img src="style/img/new_logo.svg" height="80" width="80" alt="">
+
+        <h:errorValid error="${sessionScope.errorMessage}"/>
+
         <form action="login" method="POST">
             <%--=================================================
                 Action : 'createUser' will create new user
             ==================================================--%>
             <input type="hidden" name="action" value="createUser">
+            <input type="hidden" name="errorPage" value="/login?action=register">
 
             <input type="text" name="login" placeholder="<fmt:message key="auth.login"/>">
             <input type="password" name="password" placeholder="<fmt:message key="auth.password"/>">

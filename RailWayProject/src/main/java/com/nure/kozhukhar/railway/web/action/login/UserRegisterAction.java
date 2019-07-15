@@ -15,6 +15,6 @@ public class UserRegisterAction extends Action {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
-        return "WEB-INF/jsp/reg.jsp";
+        return "/reg";
     }
 }

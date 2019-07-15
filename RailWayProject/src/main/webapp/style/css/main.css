@@ -28,6 +28,16 @@ input[type=submit] {
 
 }
 
+.block-centered-content-error {
+    background: rgba(244, 149, 146, 0.94);
+    padding: 15px;
+    width: 60%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: 5px auto;
+}
+
 .input-sbt {
     border: none;
     color: white;

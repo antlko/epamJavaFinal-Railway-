@@ -17,7 +17,7 @@ public class LoginActionFactory {
     private static Action action;
 
     static {
-        actions.put("login", new UserLoginAction());
+        actions.put("login", new UserLoginPageAction());
         actions.put("account", new UserSignInAction());
         actions.put("register", new UserRegisterAction());
         actions.put("createUser", new UserCreateAction());

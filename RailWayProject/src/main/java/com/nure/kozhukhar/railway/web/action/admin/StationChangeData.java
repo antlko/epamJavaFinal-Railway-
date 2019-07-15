@@ -5,6 +5,9 @@ import com.nure.kozhukhar.railway.db.dao.CountryDao;
 import com.nure.kozhukhar.railway.db.dao.StationDao;
 import com.nure.kozhukhar.railway.db.entity.City;
 import com.nure.kozhukhar.railway.db.entity.Station;
+import com.nure.kozhukhar.railway.exception.AppException;
+import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
 
@@ -20,23 +23,27 @@ public class StationChangeData extends Action {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+            throws IOException, ServletException, AppException {
 
 
         StationDao stationsDao = new StationDao();
         Station station = new Station();
-
-        if ("Save".equals(request.getParameter("changeStationInfo"))) {
-            station.setName(request.getParameter("stationName"));
-            station.setIdCity(CityDao.getIdCityByName(
-                    request.getParameter("tagCities")
-            ));
-            LOG.trace("Selected ID city is --> " + station.getIdCity());
-            stationsDao.save(station);
-        }
-        if ("Delete".equals(request.getParameter("changeStationInfo"))) {
-            station.setName(request.getParameter("stationName"));
-            stationsDao.delete(station);
+        try {
+            if ("Save".equals(request.getParameter("changeStationInfo"))) {
+                station.setName(request.getParameter("stationName"));
+                station.setIdCity(CityDao.getIdCityByName(
+                        request.getParameter("tagCities")
+                ));
+                LOG.trace("Selected ID city is --> " + station.getIdCity());
+                stationsDao.save(station);
+            }
+            if ("Delete".equals(request.getParameter("changeStationInfo"))) {
+                station.setName(request.getParameter("stationName"));
+                stationsDao.delete(station);
+            }
+        } catch (DBException e) {
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, e.getMessage()));
         }
 
         String checkedVal = request.getParameter("checkVal");

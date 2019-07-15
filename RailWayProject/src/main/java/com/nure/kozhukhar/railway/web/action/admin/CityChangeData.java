@@ -5,6 +5,9 @@ import com.nure.kozhukhar.railway.db.dao.CountryDao;
 import com.nure.kozhukhar.railway.db.dao.UserDao;
 import com.nure.kozhukhar.railway.db.entity.City;
 import com.nure.kozhukhar.railway.db.entity.Country;
+import com.nure.kozhukhar.railway.exception.AppException;
+import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
 
@@ -20,23 +23,27 @@ public class CityChangeData extends Action {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+            throws IOException, ServletException, AppException {
 
         CityDao cityDao = new CityDao();
         City city = new City();
-
-        if ("Save".equals(request.getParameter("changeCityInfo"))) {
-            city.setName(request.getParameter("cityName"));
-            CountryDao countryDao = new CountryDao();
-            city.setIdCountry(CountryDao.findIdCountyByName(
-                    request.getParameter("tagCountries")
-            ));
-            LOG.trace("Selected ID country is --> " + city.getIdCountry());
-            cityDao.save(city);
-        }
-        if ("Delete".equals(request.getParameter("changeCityInfo"))) {
-            city.setName(request.getParameter("cityName"));
-            cityDao.delete(city);
+        try {
+            if ("Save".equals(request.getParameter("changeCityInfo"))) {
+                city.setName(request.getParameter("cityName"));
+                CountryDao countryDao = new CountryDao();
+                city.setIdCountry(CountryDao.findIdCountyByName(
+                        request.getParameter("tagCountries")
+                ));
+                LOG.trace("Selected ID country is --> " + city.getIdCountry());
+                cityDao.save(city);
+            }
+            if ("Delete".equals(request.getParameter("changeCityInfo"))) {
+                city.setName(request.getParameter("cityName"));
+                cityDao.delete(city);
+            }
+        } catch (DBException e) {
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, e.getMessage()));
         }
 
         String checkedVal = request.getParameter("checkVal");

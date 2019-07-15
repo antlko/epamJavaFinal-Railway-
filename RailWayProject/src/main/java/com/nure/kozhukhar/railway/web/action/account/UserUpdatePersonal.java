@@ -2,6 +2,9 @@ package com.nure.kozhukhar.railway.web.action.account;
 
 import com.nure.kozhukhar.railway.db.dao.UserDao;
 import com.nure.kozhukhar.railway.db.entity.User;
+import com.nure.kozhukhar.railway.exception.AppException;
+import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
 
@@ -17,7 +20,7 @@ public class UserUpdatePersonal extends Action {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+            throws IOException, ServletException, AppException {
 
         HttpSession session = request.getSession();
 
@@ -31,7 +34,12 @@ public class UserUpdatePersonal extends Action {
         newUser.setId(oldUser.getId());
 
         UserDao userTempDao = new UserDao();
-        userTempDao.update(newUser, null);
+        try {
+            userTempDao.update(newUser, null);
+        } catch (DBException e) {
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, e.getMessage()));
+        }
         LOG.trace("New User data : " + newUser);
 
         session.setAttribute("user", newUser);

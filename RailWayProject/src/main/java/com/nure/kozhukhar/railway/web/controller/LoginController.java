@@ -26,9 +26,15 @@ public class LoginController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         LOG.debug("Controller get starts.");
+
+        String errorPage = request.getParameter("errorPage");
+        if(errorPage == null) {
+            errorPage = "WEB-INF/jsp/error.jsp";
+        }
+
         Action action = LoginActionFactory.getAction(request);
         ServletProcessUtil.process(request, response,
-                "WEB-INF/jsp/login.jsp", action);
+                errorPage, action);
     }
 
 }

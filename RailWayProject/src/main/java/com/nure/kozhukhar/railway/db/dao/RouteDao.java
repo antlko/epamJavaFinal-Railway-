@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class RouteDao implements Dao<RouteStation> {
@@ -213,32 +214,36 @@ public class RouteDao implements Dao<RouteStation> {
 
     public static List<Route> getIdRouteOnDate(String cityStart, String cityEnd, Date date) {
         List<Route> routes = new ArrayList<>();
+        Date sqlDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
 
-        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
-        ) {
-            PreparedStatement pstmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_ID);
-            int atr = 1;
-            pstmt.setString(atr++, cityStart);
-            pstmt.setString(atr, cityEnd);
-            ResultSet rs = pstmt.executeQuery();
+        if (date.compareTo(sqlDate) > 0) {
 
-            Route routeTemp = null;
-            Train trainTemp = null;
-            Integer commonPrice = 0;
-            while (rs.next()) {
-                routeTemp = new Route();
-                trainTemp = new Train();
+            try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
+            ) {
+                PreparedStatement pstmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_ID);
+                int atr = 1;
+                pstmt.setString(atr++, cityStart);
+                pstmt.setString(atr, cityEnd);
+                ResultSet rs = pstmt.executeQuery();
 
-                trainTemp.setId(rs.getInt("id"));
-                trainTemp.setNumber(rs.getInt("number"));
-                routeTemp.setId(rs.getInt("id_route"));
-                routeTemp.setTrain(trainTemp);
+                Route routeTemp = null;
+                Train trainTemp = null;
+                Integer commonPrice = 0;
+                while (rs.next()) {
+                    routeTemp = new Route();
+                    trainTemp = new Train();
+
+                    trainTemp.setId(rs.getInt("id"));
+                    trainTemp.setNumber(rs.getInt("number"));
+                    routeTemp.setId(rs.getInt("id_route"));
+                    routeTemp.setTrain(trainTemp);
 //                commonPrice+=rs.getInt("price");
-                routes.add(routeTemp);
+                    routes.add(routeTemp);
+                }
+                pstmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            pstmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return routes;
     }

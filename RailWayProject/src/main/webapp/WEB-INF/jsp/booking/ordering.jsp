@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
 <c:if test="${empty sessionScope.localize}">
     <fmt:setLocale value="${cookie['localize'].value}"/>
@@ -20,6 +21,9 @@
 <au:AuthSecure/>
 <%@ include file="/WEB-INF/static/header.jsp" %>
 <section class="content">
+
+    <h:errorValid error="${sessionScope.errorMessage}"/>
+
     <div class="block-content">
         <h1>Ordering page...</h1>
     </div>

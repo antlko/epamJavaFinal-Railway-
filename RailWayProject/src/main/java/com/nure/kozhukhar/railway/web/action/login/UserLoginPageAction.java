@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class UserLoginAction extends Action {
+public class UserLoginPageAction extends Action {
 
-    private static final Logger LOG = Logger.getLogger(UserLoginAction.class);
+    private static final Logger LOG = Logger.getLogger(UserLoginPageAction.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

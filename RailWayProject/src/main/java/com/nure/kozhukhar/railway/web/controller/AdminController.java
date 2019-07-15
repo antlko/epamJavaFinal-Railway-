@@ -31,6 +31,6 @@ public class AdminController extends HttpServlet {
         Action action = AdminActionFactory.getAction(request);
         LOG.trace("Action name in servlet : " + action);
         ServletProcessUtil.process(request, response,
-                "WEB-INF/jsp/error.jsp", action);
+                "/admin", action);
     }
 }

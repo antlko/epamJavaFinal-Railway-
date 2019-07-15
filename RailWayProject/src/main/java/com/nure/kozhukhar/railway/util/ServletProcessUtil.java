@@ -1,11 +1,13 @@
 package com.nure.kozhukhar.railway.util;
 
+import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -45,10 +47,9 @@ public class ServletProcessUtil {
         String forward = errorPath;
         try {
             forward = action.execute(request, response);
-        } catch (Exception ex) {
-
+        } catch (AppException ex) {
+            request.getSession().setAttribute("errorMessage", ex.getMessage());
         }
-        LOG.trace("Forward address --> " + forward);
         LOG.debug("Controller finished, now go to forward address --> " + forward);
 
         if (controllers.contains(forward)) {

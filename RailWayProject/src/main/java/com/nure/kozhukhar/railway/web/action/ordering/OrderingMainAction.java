@@ -8,6 +8,9 @@ import com.nure.kozhukhar.railway.db.entity.User;
 import com.nure.kozhukhar.railway.db.entity.UserCheck;
 import com.nure.kozhukhar.railway.db.entity.route.Route;
 import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
+import com.nure.kozhukhar.railway.exception.AppException;
+import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
 
@@ -27,7 +30,7 @@ public class OrderingMainAction extends Action {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+            throws IOException, ServletException, AppException {
 
         HttpSession session = request.getSession();
         if (session.getAttribute("user") == null) {
@@ -46,9 +49,14 @@ public class OrderingMainAction extends Action {
         UserCheck userCheck = new UserCheck();
         String[] seatList = request.getParameter("checkedSeats").split(" ");
         userCheck.setIdUser(((User) session.getAttribute("user")).getId());
-        userCheck.setInitials(UserDao.getFullNameByUserId(
-                ((User) session.getAttribute("user")).getId())
-        );
+        try {
+            userCheck.setInitials(UserDao.getFullNameByUserId(
+                    ((User) session.getAttribute("user")).getId())
+            );
+        } catch (DBException e) {
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, e.getMessage()));
+        }
         userCheck.setNumCarriage(Integer.valueOf(request.getParameter("checkedCarriage")));
         userCheck.setIdRoute(route.getIdRoute());
 

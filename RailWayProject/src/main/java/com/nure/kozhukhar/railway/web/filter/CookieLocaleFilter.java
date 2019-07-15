@@ -1,5 +1,7 @@
 package com.nure.kozhukhar.railway.web.filter;
 
+import org.apache.log4j.Logger;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
@@ -9,6 +11,8 @@ import java.io.IOException;
 
 @WebFilter(filterName = "CookieLocaleFilter", urlPatterns = { "/*" })
 public class CookieLocaleFilter implements Filter {
+
+    private static final Logger LOG = Logger.getLogger(CookieLocaleFilter.class);
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
