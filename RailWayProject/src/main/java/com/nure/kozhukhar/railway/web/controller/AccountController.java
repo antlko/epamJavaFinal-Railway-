@@ -30,6 +30,6 @@ public class AccountController extends HttpServlet {
         Action action = AccountActionFactory.getAction(request);
         LOG.trace("Action name in servlet : " + action);
         ServletProcessUtil.process(request, response,
-                "WEB-INF/jsp/error.jsp", action);
+                "/account", action);
     }
 }

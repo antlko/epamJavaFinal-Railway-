@@ -30,6 +30,6 @@ public class OrderingController extends HttpServlet {
         Action action = OrderingActionFactory.getAction(request);
         LOG.trace("Action name in servlet : " + action);
         ServletProcessUtil.process(request, response,
-                "WEB-INF/jsp/error.jsp", action);
+                "WEB-INF/jsp/error_400.jsp", action);
     }
 }

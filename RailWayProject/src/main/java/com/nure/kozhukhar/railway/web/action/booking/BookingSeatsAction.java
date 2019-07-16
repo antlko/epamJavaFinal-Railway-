@@ -4,6 +4,9 @@ import com.nure.kozhukhar.railway.db.bean.RouteSearchBean;
 import com.nure.kozhukhar.railway.db.bean.SeatSearchBean;
 import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
 import com.nure.kozhukhar.railway.db.service.RouteService;
+import com.nure.kozhukhar.railway.exception.AppException;
+import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
 
@@ -22,7 +25,7 @@ public class BookingSeatsAction extends Action {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+            throws IOException, ServletException, AppException {
 
         HttpSession session = request.getSession();
 
@@ -39,21 +42,26 @@ public class BookingSeatsAction extends Action {
         String type = request.getParameter("seatCheckType");
         Integer idTrain = rsb.getTrain().getNumber();
 
-        List<SeatSearchBean> seatBeanList = RouteService.getSeatInfoByCarriageType(
-                cityStart, cityEnd, date, type, idTrain
-        );
+        try {
+            List<SeatSearchBean> seatBeanList = RouteService.getSeatInfoByCarriageType(
+                    cityStart, cityEnd, date, type, idTrain
+            );
 
-        Integer totalRoutePrice = 0;
-        for(RouteStation rs: rsb.getStationList()) {
-            totalRoutePrice += rs.getPrice();
+            Integer totalRoutePrice = 0;
+            for (RouteStation rs : rsb.getStationList()) {
+                totalRoutePrice += rs.getPrice();
+            }
+
+            session.setAttribute("checkedCarriage", seatBeanList.get(0).getNumCarriage());
+            session.setAttribute("seatCheckType", type);
+            session.setAttribute("serviceCarriage", seatBeanList);
+            session.setAttribute("routePrice", totalRoutePrice + seatBeanList.get(0).getPriceSeat());
+            session.setAttribute("serviceSeats", seatBeanList.get(0).getListSeat());
+            session.setAttribute("userRoute", rsb);
+        } catch (DBException e) {
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, e.getMessage()));
         }
-
-        session.setAttribute("checkedCarriage", seatBeanList.get(0).getNumCarriage());
-        session.setAttribute("seatCheckType", type);
-        session.setAttribute("serviceCarriage", seatBeanList);
-        session.setAttribute("routePrice", totalRoutePrice + seatBeanList.get(0).getPriceSeat());
-        session.setAttribute("serviceSeats", seatBeanList.get(0).getListSeat());
-        session.setAttribute("userRoute", rsb);
 
         return "WEB-INF/jsp/booking/seat_info.jsp";
     }

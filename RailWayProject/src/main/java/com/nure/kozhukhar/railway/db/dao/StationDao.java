@@ -3,6 +3,8 @@ package com.nure.kozhukhar.railway.db.dao;
 import com.nure.kozhukhar.railway.db.Queries;
 import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
 import com.nure.kozhukhar.railway.db.entity.Station;
+import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.TimeUtil;
 import org.apache.log4j.Logger;
@@ -21,13 +23,17 @@ public class StationDao implements Dao<Station> {
 
     private static final Logger LOG = Logger.getLogger(StationDao.class);
 
-    public static List<RouteStation> getAllStationByRoute(String cityStart, String cityEnd, Date date, Integer id) {
+    public static List<RouteStation> getAllStationByRoute(String cityStart, String cityEnd, Date date, Integer id) throws DBException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
         List<RouteStation> stations = new ArrayList<>();
         RouteStation stationTemp = null;
 
-        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_BY_ROUTE_ID);
-        ) {
+        try {
+            conn = DBUtil.getInstance().getDataSource().getConnection();
+            pstmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_BY_ROUTE_ID);
             int atr = 1;
 
             pstmt.setString(atr++, cityStart);
@@ -41,18 +47,7 @@ public class StationDao implements Dao<Station> {
             pstmt.setString(atr++, cityEnd);
             pstmt.setInt(atr++, id);
             pstmt.setInt(atr, id);
-
-//            pstmt.setString(atr++, cityStart);
-//            pstmt.setString(atr++, String.valueOf(date));
-//            pstmt.setInt(atr++, id);
-//            pstmt.setString(atr++, cityEnd);
-//            pstmt.setString(atr++, cityStart);
-//            pstmt.setString(atr++, String.valueOf(date));
-//            pstmt.setInt(atr++, id);
-//            pstmt.setString(atr++, cityEnd);
-//            pstmt.setInt(atr++, id);
-//            pstmt.setInt(atr, id);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             while (rs.next()) {
                 stationTemp = new RouteStation();
                 stationTemp.setIdStation(rs.getInt("id"));
@@ -69,10 +64,18 @@ public class StationDao implements Dao<Station> {
 
                 LOG.trace("Checking station : " + stationTemp.getIdStation() + ", " + stationTemp.getTimeEnd());
             }
+            conn.commit();
+
         } catch (SQLException e) {
+            DBUtil.rollback(conn);
             e.printStackTrace();
+            throw new DBException(Messages.ERR_CANNOT_GET_STATIONS_IN_ROUTE, e);
+        } finally {
+            DBUtil.close(rs);
+            DBUtil.close(pstmt);
+            DBUtil.close(conn);
         }
-        LOG.trace("Received stations -> " +stations);
+        LOG.trace("Received stations -> " + stations);
         return stations;
     }
 
@@ -82,13 +85,17 @@ public class StationDao implements Dao<Station> {
     }
 
     @Override
-    public List<Station> getAll() {
+    public List<Station> getAll() throws DBException {
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+
         List<Station> stations = new ArrayList<>();
         Station stationTemp = null;
-        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
-             Statement stmt = conn.createStatement();
-        ) {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM stations;");
+        try {
+            conn = DBUtil.getInstance().getDataSource().getConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM stations;");
             while (rs.next()) {
                 stationTemp = new Station();
                 stationTemp.setId(rs.getInt("id"));
@@ -96,22 +103,41 @@ public class StationDao implements Dao<Station> {
                 stationTemp.setIdCity(rs.getInt("id_city"));
                 stations.add(stationTemp);
             }
+            conn.commit();
+
         } catch (SQLException e) {
+            DBUtil.rollback(conn);
             e.printStackTrace();
+            throw new DBException(Messages.ERR_CANNOT_GET_STATIONS, e);
+        } finally {
+            DBUtil.close(rs);
+            DBUtil.close(stmt);
+            DBUtil.close(conn);
         }
         return stations;
     }
 
     @Override
-    public void save(Station station) {
-        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();) {
-            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO stations(name,id_city) VALUES(?,?)");
+    public void save(Station station) throws DBException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = DBUtil.getInstance().getDataSource().getConnection();
+            pstmt = conn.prepareStatement("INSERT INTO stations(name,id_city) VALUES(?,?)");
+
             int atr = 1;
             pstmt.setString(atr++, station.getName());
             pstmt.setInt(atr, station.getIdCity());
             pstmt.executeUpdate();
+            conn.commit();
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            DBUtil.rollback(conn);
+            throw new DBException(Messages.ERR_CANNOT_SAVE_STATION, e);
+        } finally {
+            DBUtil.close(pstmt);
+            DBUtil.close(conn);
         }
     }
 
@@ -121,14 +147,25 @@ public class StationDao implements Dao<Station> {
     }
 
     @Override
-    public void delete(Station station) {
-        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("DELETE FROM stations WHERE name = ?");
-        ) {
+    public void delete(Station station) throws DBException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = DBUtil.getInstance().getDataSource().getConnection();
+            pstmt = conn.prepareStatement("DELETE FROM stations WHERE name = ?");
+
             pstmt.setString(1, station.getName());
             pstmt.executeUpdate();
+            conn.commit();
+
         } catch (SQLException e) {
+            DBUtil.rollback(conn);
             e.printStackTrace();
+            throw new DBException(Messages.ERR_CANNOT_DELETE_STATION, e);
+        } finally {
+            DBUtil.close(pstmt);
+            DBUtil.close(conn);
         }
     }
 }

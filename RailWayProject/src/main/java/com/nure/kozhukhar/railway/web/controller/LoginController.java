@@ -29,7 +29,7 @@ public class LoginController extends HttpServlet {
 
         String errorPage = request.getParameter("errorPage");
         if(errorPage == null) {
-            errorPage = "WEB-INF/jsp/error.jsp";
+            errorPage = "WEB-INF/jsp/error_400.jsp";
         }
 
         Action action = LoginActionFactory.getAction(request);

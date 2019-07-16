@@ -30,6 +30,6 @@ public class BookingController extends HttpServlet {
         Action action = BookingActionFactory.getAction(request);
         LOG.trace("Action name in servlet : " + action);
         ServletProcessUtil.process(request, response,
-                "WEB-INF/jsp/error.jsp", action);
+                "/booking", action);
     }
 }

@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
 <c:if test="${empty sessionScope.localize}">
     <fmt:setLocale value="${cookie['localize'].value}"/>
@@ -17,12 +18,13 @@
 <%@ include file="/WEB-INF/static/head.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <body>
-<au:AuthSecure/>
 <%@ include file="/WEB-INF/static/header.jsp" %>
 <section class="content">
     <div class="block-content">
         <h1><fmt:message key="ticket.header_name" /></h1>
     </div>
+    <h:errorValid error="${sessionScope.errorMessage}"/>
+
     <div class="block-centered-content">
         <form action="booking" method="POST">
             <%--=================================================

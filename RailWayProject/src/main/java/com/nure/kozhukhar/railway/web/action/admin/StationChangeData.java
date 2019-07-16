@@ -19,7 +19,7 @@ import java.io.IOException;
 
 public class StationChangeData extends Action {
 
-    private static final Logger LOG = Logger.getLogger(CityChangeData.class);
+    private static final Logger LOG = Logger.getLogger(StationChangeData.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

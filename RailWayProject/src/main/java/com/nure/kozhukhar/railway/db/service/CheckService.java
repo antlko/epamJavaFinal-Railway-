@@ -4,6 +4,7 @@ import com.nure.kozhukhar.railway.db.bean.UserCheckBean;
 import com.nure.kozhukhar.railway.db.dao.CheckDao;
 import com.nure.kozhukhar.railway.db.dao.UserDao;
 import com.nure.kozhukhar.railway.db.entity.UserCheck;
+import com.nure.kozhukhar.railway.exception.DBException;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class CheckService {
 
     private static final Logger LOG = Logger.getLogger(CheckService.class);
 
-    public static List<UserCheckBean> getUserTicketsById(Integer idUser) {
+    public static List<UserCheckBean> getUserTicketsById(Integer idUser) throws DBException {
         List<UserCheck> userCheckList = CheckDao.getAllCheckByUserId(idUser);
         LOG.trace("User check (not bean) --> " + userCheckList);
         List<UserCheckBean> checksInfo = new ArrayList<>();

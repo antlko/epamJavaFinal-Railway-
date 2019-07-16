@@ -29,18 +29,22 @@ public class LocaleMessageUtil {
 
         LOG.trace("Lang inside cookie - > " + lang);
 
-
+        Locale locale = Locale.forLanguageTag(lang);
         if (!"".equals(lang)) {
-            Locale locale = Locale.forLanguageTag(lang);
             rb = ResourceBundle.getBundle("messages", locale);
         }
-
         try {
-            if (rb != null) {
+            try {
+                if (rb != null) {
+                    output = rb.getString(localeMessage);
+                } else {
+                    throw new MissingResourceException("Missing rb",
+                            LocaleMessageUtil.class.toString(), null);
+                }
+            } catch (MissingResourceException e) {
+                LOG.debug("RS First Bundle error - > " + e);
+                rb = ResourceBundle.getBundle("messages", Locale.forLanguageTag("en"));
                 output = rb.getString(localeMessage);
-            } else {
-                throw new MissingResourceException("Resource was not found",
-                        LocaleMessageUtil.class.toString(), null);
             }
         } catch (MissingResourceException e) {
             LOG.debug("RS Bundle error - > " + e);

@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="au" uri="/WEB-INF/tld/auth_secure.tld" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
 <c:if test="${empty sessionScope.localize}">
     <fmt:setLocale value="${cookie['localize'].value}"/>
@@ -25,6 +26,9 @@
     <div class="tabs">
         <input type="radio" name="tabs" id="tabone" checked="checked">
         <label for="tabone"><fmt:message key="account.history"/></label>
+
+        <h:errorValid error="${sessionScope.errorMessage}"/>
+
         <div class="tab">
             <table>
                 <th><fmt:message key="ticket.date"/> </th>

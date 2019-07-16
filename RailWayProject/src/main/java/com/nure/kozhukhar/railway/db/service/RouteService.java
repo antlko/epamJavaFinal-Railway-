@@ -7,6 +7,9 @@ import com.nure.kozhukhar.railway.db.dao.SeatDao;
 import com.nure.kozhukhar.railway.db.dao.StationDao;
 import com.nure.kozhukhar.railway.db.entity.route.Route;
 import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
+import com.nure.kozhukhar.railway.exception.AppException;
+import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.util.TimeUtil;
 import org.apache.log4j.Logger;
 
@@ -25,7 +28,9 @@ public class RouteService {
 
     private static final Logger LOG = Logger.getLogger(RouteService.class);
 
-    public static List<RouteSearchBean> getRouteInfoByCityDate(String cityStart, String cityEnd, Date date) {
+    public static List<RouteSearchBean> getRouteInfoByCityDate(String cityStart, String cityEnd, Date date) throws DBException {
+
+
         List<Route> routes = RouteDao.getIdRouteOnDate(cityStart, cityEnd, date);
         List<RouteSearchBean> routesBean = new ArrayList<>();
 
@@ -46,7 +51,7 @@ public class RouteService {
 
             LOG.debug("Route stations list is -> " + routeStations);
             LOG.debug("List stations in routeInfo -> " + routeInfo.getStationList());
-            if(routeInfo.getStationList().size() == 0) {
+            if (routeInfo.getStationList().size() == 0) {
                 continue;
             }
 
@@ -76,7 +81,7 @@ public class RouteService {
 
     public static List<SeatSearchBean> getSeatInfoByCarriageType(
             String cityStart, String cityEnd, Date date, String type, Integer idTrain
-    ) {
+    ) throws DBException {
         List<SeatSearchBean> seatSearchBeans = SeatDao.getAllSeatsByCarriageType(
                 cityStart, cityEnd, type, date, idTrain);
         for (SeatSearchBean searchBean : seatSearchBeans) {

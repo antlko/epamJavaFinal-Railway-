@@ -2,6 +2,9 @@ package com.nure.kozhukhar.railway.web.action.account;
 
 import com.nure.kozhukhar.railway.db.entity.User;
 import com.nure.kozhukhar.railway.db.service.CheckService;
+import com.nure.kozhukhar.railway.exception.AppException;
+import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 
 import javax.servlet.ServletException;
@@ -13,13 +16,18 @@ import java.io.IOException;
 public class UserShowCheckAction extends Action {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+            throws IOException, ServletException, AppException {
 
         HttpSession session = request.getSession();
         Integer idUser = ((User) session.getAttribute("user")).getId();
-        request.setAttribute("checkInfo", CheckService.getUserTicketsById(idUser).get(
-                Integer.valueOf(request.getParameter("checkInd"))
-        ));
+        try {
+            request.setAttribute("checkInfo", CheckService.getUserTicketsById(idUser).get(
+                    Integer.valueOf(request.getParameter("checkInd"))
+            ));
+        } catch (DBException e) {
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, e.getMessage()));
+        }
 
         return "WEB-INF/jsp/user/print_doc.jsp";
     }

@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
+<%@ taglib prefix="au" uri="/WEB-INF/tld/auth_secure.tld" %>
 
 <c:if test="${empty sessionScope.localize}">
     <fmt:setLocale value="${cookie['localize'].value}"/>

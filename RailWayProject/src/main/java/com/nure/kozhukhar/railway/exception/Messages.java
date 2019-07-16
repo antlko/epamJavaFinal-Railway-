@@ -29,8 +29,55 @@ public class Messages {
 	public static final String ERR_GET_CITY_BY_ID = "error.city_was_not_found";
 	public static final String ERR_COUNTRY_DELETE = "error.country_delete";
 	public static final String ERR_COUNTRY_SAVE = "error.country_save";
-	public static final String ERR_COUNTRIES_WAS_NOT_FOUND = "error.countries_wa_not_found";
+	public static final String ERR_COUNTRIES_WAS_NOT_FOUND = "error.countries_was_not_found";
 	public static final String ERR_COUNTRY_WAS_NOT_FOUND = "error.country_was_not_found";
+
+	/**
+	 * Error message Train/Carriage/Type by DBException
+	 */
+	public static final String ERR_DELETE_TYPE_OF_CARRIAGE = "error.delete_carr_type";
+	public static final String ERR_UPDATE_CARR_TYPE = "error.update_carr_type";
+	public static final String ERR_SAVE_CARR_TYPE = "error.save_carr_type";
+	public static final String ERR_GET_TYPES = "error.get_all_carr_type";
+	public static final String ERR_GET_ID_TYPE = "error.type_was_not_found";
+	public static final String ERR_DELETE_TRAIN = "error.delete_train";
+	public static final String ERR_SAVE_NEW_TRAIN = "error.save_new_train";
+	public static final String ERR_GET_ALL_TRAINS = "error.cannot_get_all_trains";
+	public static final String ERR_GET_TRAIN = "error.train_was_not_found";
+	public static final String ERR_DELETE_ALL_TRAINS_CONTENT = "error.delete_train";
+	public static final String ERR_CANNOT_GET_INFO_TRAIN = "error.cannot_get_trains_info";
+	public static final String ERR_CANNOT_SAVE_NEW_CARRIAGE_AND_SEAT = "error.cannot_save_new_carriage_or_seats";
+	public static final String ERR_GET_MAX_SIZE = "error.cannot_get_max_carr_size";
+
+	/**
+	 * Error message Route/Station by DBException
+	 */
+	public static final String ERR_GET_STATION = "error.cannot_get_station";
+	public static final String ERR_CANNOT_SAVE_STATION_IN_ROUTE = "error.cannot_save_station_in_route";
+	public static final String ERR_CANNOT_GET_ROUTE = "error.cannot_get_route";
+	public static final String ERR_GET_ROUTE_ON_DATE = "error.route_was_not_found";
+	public static final String ERR_CANNOT_GET_STATION = "error.station_was_not_found";
+	public static final String ERR_ROUTE_WAS_NOT_SAVED = "error.route_was_not_saved";
+	public static final String ERR_CANNOT_DELETE_ROUTE = "error.cannot_delete_route";
+	public static final String ERR_COUNT_ALL_FREE_SEAT = "error.cannot_count_all_free_seats";
+	public static final String ERR_CANNOT_GET_ALL_SEAT = "error.cannot_get_all_seats";
+	public static final String ERR_CANNOT_GET_STATIONS_IN_ROUTE = "error.cannot_get_stations_in_route";
+	public static final String ERR_CANNOT_GET_STATIONS = "error.cannot_get_stations";
+	public static final String ERR_CANNOT_SAVE_STATION = "error.cannot_save_the_new_station";
+	public static final String ERR_CANNOT_DELETE_STATION = "error.cannot_delete_station";
+	public static final String ERR_CANNOT_DELETE_USER_CHECK = "error.cannot_delete_check";
+
+	/**
+	 * Error message User Check by DBException
+	 */
+	public static final String ERR_CANNOT_GET_CARRIAGE_INFO = "error.cannot_get_carriage_info";
+	public static final String ERR_CANNOT_GET_CHECK_BY_USER = "error.cannot_get_check_by_user";
+	public static final String ERR_CANNOT_SAVE_USER_CHECK = "error.cannot_save_user_check";
+
+	/**
+	 * Logical Error message by APPException
+	 */
+	public static final String ERR_CANNOT_FIND_ANY_ROUTE = "error.cannot_find_any_route";
 
 
 	private Messages() {

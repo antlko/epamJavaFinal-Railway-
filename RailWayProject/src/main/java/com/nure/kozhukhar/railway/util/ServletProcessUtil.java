@@ -48,6 +48,7 @@ public class ServletProcessUtil {
         try {
             forward = action.execute(request, response);
         } catch (AppException ex) {
+            LOG.error("New exception in servlet -> " + ex.getMessage());
             request.getSession().setAttribute("errorMessage", ex.getMessage());
         }
         LOG.debug("Controller finished, now go to forward address --> " + forward);

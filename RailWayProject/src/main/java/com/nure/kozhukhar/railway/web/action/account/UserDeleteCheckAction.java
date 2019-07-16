@@ -3,6 +3,9 @@ package com.nure.kozhukhar.railway.web.action.account;
 import com.nure.kozhukhar.railway.db.bean.UserCheckBean;
 import com.nure.kozhukhar.railway.db.dao.CheckDao;
 import com.nure.kozhukhar.railway.db.entity.UserCheck;
+import com.nure.kozhukhar.railway.exception.AppException;
+import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
 
@@ -19,7 +22,7 @@ public class UserDeleteCheckAction extends Action {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+            throws IOException, ServletException, AppException {
 
         Integer checkInt = Integer.valueOf(request.getParameter("checkInd"));
         List<UserCheckBean> userCheckBeans = (ArrayList<UserCheckBean>)request.getSession().getAttribute("userChecks");
@@ -27,9 +30,13 @@ public class UserDeleteCheckAction extends Action {
 
         LOG.trace("Check for delete : " + userCheck);
 
-
-        CheckDao checkDao = new CheckDao();
-        checkDao.delete(userCheck);
+        try {
+            CheckDao checkDao = new CheckDao();
+            checkDao.delete(userCheck);
+        } catch (DBException e) {
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, e.getMessage()));
+        }
 
 
         return "/account";

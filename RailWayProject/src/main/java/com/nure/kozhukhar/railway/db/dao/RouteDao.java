@@ -6,6 +6,8 @@ import com.nure.kozhukhar.railway.db.entity.*;
 import com.nure.kozhukhar.railway.db.entity.route.Route;
 import com.nure.kozhukhar.railway.db.entity.route.RouteOnDate;
 import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
+import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.TimeUtil;
 import org.apache.log4j.Logger;
@@ -24,33 +26,46 @@ public class RouteDao implements Dao<RouteStation> {
     private static final Logger LOG = Logger.getLogger(RouteDao.class);
 
 
-    public static Integer getIdStationByName(String name) {
+    public static Integer getIdStationByName(String name) throws DBException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
         Integer idStation = null;
-        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("SELECT id FROM stations WHERE name = ?");
-        ) {
+        try {
+            conn = DBUtil.getInstance().getDataSource().getConnection();
+            pstmt = conn.prepareStatement("SELECT id FROM stations WHERE name = ?");
             pstmt.setString(1, name);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             if (rs.next()) {
                 idStation = rs.getInt("id");
             }
+            conn.commit();
 
         } catch (SQLException e) {
+            DBUtil.rollback(conn);
             e.printStackTrace();
+            throw new DBException(Messages.ERR_GET_STATION, e);
+        } finally {
+            DBUtil.close(rs);
+            DBUtil.close(pstmt);
+            DBUtil.close(conn);
         }
         return idStation;
     }
 
-    public static void saveStationByRouteId(Integer idRoute, LocalDateTime dateStart, LocalDateTime dateEnd) {
+    public static void saveStationByRouteId(Integer idRoute, LocalDateTime dateStart, LocalDateTime dateEnd) throws DBException {
+        Connection conn = null;
         PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
         List<RouteStation> stationList = new ArrayList<>();
 
-        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
-        ) {
+        try {
+            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("SELECT * FROM routes_station WHERE id_route = ?");
             pstmt.setInt(1, idRoute);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             while (rs.next()) {
                 RouteStation routeStationTemp = new RouteStation();
                 routeStationTemp.setIdTrain(rs.getInt("id_train"));
@@ -135,24 +150,37 @@ public class RouteDao implements Dao<RouteStation> {
                 newDateStart.clear();
                 newDateEnd.clear();
             }
-            pstmt.close();
+            conn.commit();
+
         } catch (SQLException e) {
+            DBUtil.rollback(conn);
             e.printStackTrace();
+            throw new DBException(Messages.ERR_CANNOT_SAVE_STATION_IN_ROUTE, e);
+        } finally {
+            DBUtil.close(rs);
+            DBUtil.close(pstmt);
+            DBUtil.close(conn);
         }
     }
 
-    public static List<RouteSearchBean> getAllRoute() {
+    public static List<RouteSearchBean> getAllRoute() throws DBException {
+        Connection conn = null;
+        Statement stmt = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        ResultSet rsStat = null;
+
         List<RouteSearchBean> routes = new ArrayList<>();
 
-        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
-             Statement stmt = conn.createStatement();
-        ) {
-            ResultSet rs = stmt.executeQuery("SELECT DISTINCT id FROM routes;");
+        try {
+            conn = DBUtil.getInstance().getDataSource().getConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT DISTINCT id FROM routes;");
             while (rs.next()) {
                 int idRoute = rs.getInt("id");
-                PreparedStatement pstmt = conn.prepareStatement("SELECT name from routes_station RS INNER JOIN Stations S ON RS.id_station = S.id WHERE id_route = ? ORDER BY time_end ");
+                pstmt = conn.prepareStatement("SELECT name from routes_station RS INNER JOIN Stations S ON RS.id_station = S.id WHERE id_route = ? ORDER BY time_end ");
                 pstmt.setInt(1, idRoute);
-                ResultSet rsStat = pstmt.executeQuery();
+                rsStat = pstmt.executeQuery();
 
                 RouteSearchBean routeTemp = new RouteSearchBean();
                 routeTemp.setIdRoute(idRoute);
@@ -167,64 +195,89 @@ public class RouteDao implements Dao<RouteStation> {
                 routes.add(routeTemp);
             }
 
+            conn.commit();
+
         } catch (SQLException e) {
+            DBUtil.rollback(conn);
             e.printStackTrace();
+            throw new DBException(Messages.ERR_CANNOT_GET_ROUTE, e);
+        } finally {
+            DBUtil.close(rs);
+            DBUtil.close(pstmt);
+            DBUtil.close(conn);
         }
         return routes;
     }
 
-    public static List<RouteOnDate> getRouteOnDate(String cityStart, String cityEnd, Date date) {
-        List<RouteOnDate> routes = new ArrayList<>();
-        Station stationTemp = null;
-        RouteOnDate routeTemp = null;
+//
+//    public static List<RouteOnDate> getRouteOnDate(String cityStart, String cityEnd, Date date) throws DBException {
+//        Connection conn = null;
+//        PreparedStatement pstmt = null;
+//        ResultSet rs = null;
+//
+//        List<RouteOnDate> routes = new ArrayList<>();
+//        Station stationTemp = null;
+//        RouteOnDate routeTemp = null;
+//
+//        try {
+//            conn = DBUtil.getInstance().getDataSource().getConnection();
+//            pstmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_AND_CITIES);
+//
+//            int atr = 1;
+//            LOG.trace("Booking [date, cityStart, cityEnd] in DAO : " + date + ", " + cityStart + " <-> " + cityEnd);
+//            LOG.trace("Date in string : " + date);
+//
+//            pstmt.setString(atr++, cityStart);
+//            pstmt.setString(atr++, String.valueOf(date));
+//            pstmt.setString(atr, cityEnd);
+//            rs = pstmt.executeQuery();
+//            while (rs.next()) {
+//                stationTemp = new Station();
+//                routeTemp = new RouteOnDate();
+//
+//                routeTemp.setDateEnd(rs.getDate("date_end"));
+//                routeTemp.setTimeDateStart(rs.getDate("time_date_start"));
+//                routeTemp.setTimeDateStart(rs.getDate("time_date_end"));
+//
+//                stationTemp.setId(rs.getInt("id_station"));
+//                stationTemp.setName(rs.getString("name"));
+//                routeTemp.setStation(stationTemp);
+//
+//                LOG.trace("Booking rote temp: " + routeTemp);
+//                routes.add(routeTemp);
+//            }
+//            conn.commit();
+//
+//        } catch (SQLException e) {
+//            DBUtil.rollback(conn);
+//            e.printStackTrace();
+//            throw new DBException(Messages.ERR_GET_MAX_SIZE, e);
+//        } finally {
+//            DBUtil.close(rs);
+//            DBUtil.close(pstmt);
+//            DBUtil.close(conn);
+//        }
+//        return routes;
+//    }
 
-        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_AND_CITIES);
-        ) {
+    public static List<Route> getIdRouteOnDate(String cityStart, String cityEnd, Date date) throws DBException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
-            int atr = 1;
-            LOG.trace("Booking [date, cityStart, cityEnd] in DAO : " + date + ", " + cityStart + " <-> " + cityEnd);
-            LOG.trace("Date in string : " + date);
-
-            pstmt.setString(atr++, cityStart);
-            pstmt.setString(atr++, String.valueOf(date));
-            pstmt.setString(atr, cityEnd);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                stationTemp = new Station();
-                routeTemp = new RouteOnDate();
-
-                routeTemp.setDateEnd(rs.getDate("date_end"));
-                routeTemp.setTimeDateStart(rs.getDate("time_date_start"));
-                routeTemp.setTimeDateStart(rs.getDate("time_date_end"));
-
-                stationTemp.setId(rs.getInt("id_station"));
-                stationTemp.setName(rs.getString("name"));
-                routeTemp.setStation(stationTemp);
-
-                LOG.trace("Booking rote temp: " + routeTemp);
-                routes.add(routeTemp);
-            }
-            pstmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return routes;
-    }
-
-    public static List<Route> getIdRouteOnDate(String cityStart, String cityEnd, Date date) {
         List<Route> routes = new ArrayList<>();
         Date sqlDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
 
         if (date.compareTo(sqlDate) > 0) {
 
-            try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
-            ) {
-                PreparedStatement pstmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_ID);
+            try {
+                conn = DBUtil.getInstance().getDataSource().getConnection();
+                pstmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_ID);
+
                 int atr = 1;
                 pstmt.setString(atr++, cityStart);
                 pstmt.setString(atr, cityEnd);
-                ResultSet rs = pstmt.executeQuery();
+                rs = pstmt.executeQuery();
 
                 Route routeTemp = null;
                 Train trainTemp = null;
@@ -237,30 +290,48 @@ public class RouteDao implements Dao<RouteStation> {
                     trainTemp.setNumber(rs.getInt("number"));
                     routeTemp.setId(rs.getInt("id_route"));
                     routeTemp.setTrain(trainTemp);
-//                commonPrice+=rs.getInt("price");
                     routes.add(routeTemp);
                 }
-                pstmt.close();
+                conn.commit();
+
             } catch (SQLException e) {
+                DBUtil.rollback(conn);
                 e.printStackTrace();
+                throw new DBException(Messages.ERR_GET_ROUTE_ON_DATE, e);
+            } finally {
+                DBUtil.close(rs);
+                DBUtil.close(pstmt);
+                DBUtil.close(conn);
             }
         }
         return routes;
     }
 
-    public static List<String> getAllStationsByRouteId(Integer idRoute) {
+    public static List<String> getAllStationsByRouteId(Integer idRoute) throws DBException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
         List<String> stations = new ArrayList<>();
 
-        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM routes_station RS INNER JOIN stations S ON RS.id_station = S.id WHERE id_route = ? ORDER BY time_end");
-        ) {
+        try {
+            conn = DBUtil.getInstance().getDataSource().getConnection();
+            pstmt = conn.prepareStatement("SELECT * FROM routes_station RS INNER JOIN stations S ON RS.id_station = S.id WHERE id_route = ? ORDER BY time_end");
             pstmt.setInt(1, idRoute);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             while (rs.next()) {
                 stations.add(rs.getString("name"));
             }
+            conn.commit();
+
         } catch (SQLException e) {
+            DBUtil.rollback(conn);
             e.printStackTrace();
+            throw new DBException(Messages.ERR_CANNOT_GET_STATION, e);
+        } finally {
+            DBUtil.close(rs);
+            DBUtil.close(pstmt);
+            DBUtil.close(conn);
         }
         LOG.trace("List stations by Id -> " + stations);
         return stations;
@@ -276,17 +347,20 @@ public class RouteDao implements Dao<RouteStation> {
         return null;
     }
 
-    public static void saveOneRoute(Integer trainNumber) {
+    public static void saveOneRoute(Integer trainNumber) throws DBException {
+        Connection conn = null;
         PreparedStatement pstmt = null;
-        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection()
-        ) {
+        ResultSet rs = null;
+
+        try {
+            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("SELECT Count(DISTINCT id) as idRoute FROM routes");
 
             int atr = 1;
             Integer idRoute = 1;
             Integer idTrain = TrainDao.getIdTrainByNumber(trainNumber);
 
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             if (rs.next()) {
                 idRoute += rs.getInt("idRoute");
             }
@@ -294,24 +368,34 @@ public class RouteDao implements Dao<RouteStation> {
             pstmt.setInt(atr++, idRoute);
             pstmt.setInt(atr, idTrain);
             pstmt.executeUpdate();
+            conn.commit();
 
         } catch (SQLException e) {
+            DBUtil.rollback(conn);
             e.printStackTrace();
+            throw new DBException(Messages.ERR_ROUTE_WAS_NOT_SAVED, e);
+        } finally {
+            DBUtil.close(rs);
+            DBUtil.close(pstmt);
+            DBUtil.close(conn);
         }
     }
 
     @Override
-    public void save(RouteStation routeStation) {
+    public void save(RouteStation routeStation) throws DBException {
+        Connection conn = null;
         PreparedStatement pstmt = null;
-        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection()
-        ) {
+        ResultSet rs = null;
+
+        try {
+            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("SELECT Count(DISTINCT id) as idRoute FROM routes");
 
             int atr = 1;
             Integer idRoute = 0;
             Integer idTrain = TrainDao.getIdTrainByNumber(routeStation.getIdTrain());
 
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             if (rs.next()) {
                 idRoute = rs.getInt("idRoute");
             }
@@ -333,9 +417,16 @@ public class RouteDao implements Dao<RouteStation> {
             pstmt.setString(atr++, dateEnd);
             pstmt.setInt(atr, routeStation.getPrice());
             pstmt.executeUpdate();
-            pstmt.close();
+            conn.commit();
+
         } catch (SQLException e) {
+            DBUtil.rollback(conn);
             e.printStackTrace();
+            throw new DBException(Messages.ERR_CANNOT_SAVE_STATION_IN_ROUTE, e);
+        } finally {
+            DBUtil.close(rs);
+            DBUtil.close(pstmt);
+            DBUtil.close(conn);
         }
     }
 
@@ -345,15 +436,25 @@ public class RouteDao implements Dao<RouteStation> {
     }
 
     @Override
-    public void delete(RouteStation routeStation) {
+    public void delete(RouteStation routeStation) throws DBException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
 
-        try (Connection conn = DBUtil.getInstance().getDataSource().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("DELETE FROM routes WHERE id = ?");
-        ) {
+        try {
+            conn = DBUtil.getInstance().getDataSource().getConnection();
+            pstmt = conn.prepareStatement("DELETE FROM routes WHERE id = ?");
+
             pstmt.setInt(1, routeStation.getIdRoute());
             pstmt.executeUpdate();
+            conn.commit();
+
         } catch (SQLException e) {
+            DBUtil.rollback(conn);
             e.printStackTrace();
+            throw new DBException(Messages.ERR_CANNOT_DELETE_ROUTE, e);
+        } finally {
+            DBUtil.close(pstmt);
+            DBUtil.close(conn);
         }
     }
 }
