@@ -19,6 +19,7 @@ public class OrderingActionFactory {
 
     static {
         actions.put("orderingMain", new OrderingMainAction());
+        actions.put("noFound", new NoFoundAction());
     }
 
     public static Action getAction(HttpServletRequest request) {

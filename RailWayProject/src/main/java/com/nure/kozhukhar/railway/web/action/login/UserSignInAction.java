@@ -6,6 +6,7 @@ import com.nure.kozhukhar.railway.db.entity.User;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
 import com.nure.kozhukhar.railway.exception.Messages;
+import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class UserSignInAction extends Action {
@@ -30,9 +33,13 @@ public class UserSignInAction extends Action {
         String password = request.getParameter("password");
 
         User user = null;
-        try {
+        try (Connection connection = DBUtil.getInstance().getDataSource().getConnection();) {
+            connection.setAutoCommit(false);
+
+            UserDao userDao = new UserDao(connection);
+
             try {
-                user = UserDao.getByLogin(login);
+                user = userDao.getByLogin(login);
             } catch (DBException e) {
                 throw new AppException(LocaleMessageUtil
                         .getMessageWithLocale(request, Messages.ERR_USER_LOGIN_OR_PASSWORD));
@@ -48,19 +55,19 @@ public class UserSignInAction extends Action {
 
             String role = Role.USER.getName();
 
-            if (UserDao.getUserRolesByLogin(user.getLogin()).contains(Role.ADMIN.getName())) {
-                LOG.trace("Show available roles : " + UserDao.getUserRolesByLogin(user.getLogin()));
+            if (userDao.getUserRolesByLogin(user.getLogin()).contains(Role.ADMIN.getName())) {
+                LOG.trace("Show available roles : " + userDao.getUserRolesByLogin(user.getLogin()));
                 role = Role.ADMIN.getName();
             }
 
             session.setAttribute("userRoles",
                     role
             );
-            LOG.trace("User roles : " + UserDao.getUserRolesByLogin(user.getLogin()));
+            LOG.trace("User roles : " + userDao.getUserRolesByLogin(user.getLogin()));
             session.setAttribute("user", user);
 
             LOG.debug("User in session" + session.getAttribute("user"));
-        } catch (DBException e) {
+        } catch (DBException | ClassNotFoundException | SQLException e) {
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
         }

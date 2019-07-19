@@ -7,6 +7,7 @@ import com.nure.kozhukhar.railway.db.entity.UserCheck;
 import com.nure.kozhukhar.railway.exception.DBException;
 import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.DBUtil;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,14 +15,20 @@ import java.util.List;
 
 public class CityDao implements Dao<City> {
 
-    public static Integer getIdCityByName(String name) throws DBException {
-        Connection conn = null;
+    private static final Logger LOG = Logger.getLogger(CheckDao.class);
+
+    private Connection conn;
+
+    public CityDao(Connection conn) {
+        this.conn = conn;
+    }
+
+    public Integer getIdCityByName(String name) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         Integer idCity = null;
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("SELECT id FROM cities WHERE name = ?");
 
             pstmt.setString(1, name);
@@ -37,7 +44,8 @@ public class CityDao implements Dao<City> {
             e.printStackTrace();
             throw new DBException(Messages.ERR_GET_CITY_BY_ID, e);
         } finally {
-            DBUtil.close(conn, pstmt, rs);
+            DBUtil.close(rs);
+            DBUtil.close(pstmt);
         }
 
         return idCity;
@@ -50,13 +58,11 @@ public class CityDao implements Dao<City> {
 
     @Override
     public List<City> getAll() throws DBException {
-        Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
 
         List<City> cityNames = new ArrayList<>();
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM Cities ORDER BY name");
             while (rs.next()) {
@@ -71,7 +77,8 @@ public class CityDao implements Dao<City> {
             e.printStackTrace();
             throw new DBException(Messages.ERR_GET_CITY_LIST, e);
         } finally {
-            DBUtil.close(conn, stmt, rs);
+            DBUtil.close(rs);
+            DBUtil.close(stmt);
         }
 
         return cityNames;
@@ -79,11 +86,9 @@ public class CityDao implements Dao<City> {
 
     @Override
     public void save(City city) throws DBException {
-        Connection conn = null;
         PreparedStatement pstmt = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("INSERT INTO cities(name,id_country) VALUES(?,?)");
             int atr = 1;
             pstmt.setString(atr++, city.getName());
@@ -93,11 +98,10 @@ public class CityDao implements Dao<City> {
 
         } catch (SQLException e) {
             DBUtil.rollback(conn);
-            e.printStackTrace();
+            LOG.trace(Messages.ERR_CITY_SAVE, e);
             throw new DBException(Messages.ERR_CITY_SAVE, e);
         } finally {
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 
@@ -108,11 +112,9 @@ public class CityDao implements Dao<City> {
 
     @Override
     public void delete(City city) throws DBException {
-        Connection conn = null;
         PreparedStatement pstmt = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("DELETE FROM cities WHERE name = ?");
             pstmt.setString(1, city.getName());
             pstmt.executeUpdate();
@@ -124,7 +126,6 @@ public class CityDao implements Dao<City> {
             throw new DBException(Messages.ERR_DELETE_CITY, e);
         } finally {
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 }

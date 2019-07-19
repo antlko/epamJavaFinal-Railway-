@@ -14,17 +14,19 @@ import java.util.List;
 
 public class TrainDao implements Dao<Train> {
 
+    private Connection conn;
 
-    public static Integer getMaxSizeFromCarriageByTrain(Integer trainNum, Integer carrNum) throws DBException {
-        Connection conn = null;
+    public TrainDao(Connection conn) {
+        this.conn = conn;
+    }
+
+    public Integer getMaxSizeFromCarriageByTrain(Integer trainNum, Integer carrNum) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         Integer maxSize = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
-
             pstmt = conn.prepareStatement("SELECT * FROM carriages C INNER JOIN Trains T ON C.id_train = T.id\n" +
                     " WHERE C.num_carriage = ?" +
                     " AND T.number = ?");
@@ -44,19 +46,16 @@ public class TrainDao implements Dao<Train> {
         } finally {
             DBUtil.close(rs);
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
 
         return maxSize;
     }
 
-    public static void saveTrainContent(Integer idTrain, Integer countCarr, Integer countSeat, Integer idType) throws DBException {
-        Connection conn = null;
+    public void saveTrainContent(Integer idTrain, Integer countCarr, Integer countSeat, Integer idType) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             int atr = 1;
             Integer countCarriage = 0;
             pstmt = conn.prepareStatement("SELECT Count(num_carriage) as cnt FROM carriages WHERE id_train = ?");
@@ -93,19 +92,16 @@ public class TrainDao implements Dao<Train> {
         } finally {
             DBUtil.close(rs);
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 
-    public static List<TrainStatisticBean> getTrainsStatistic() throws DBException {
-        Connection conn = null;
+    public List<TrainStatisticBean> getTrainsStatistic() throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         List<TrainStatisticBean> trainStatistic = new ArrayList<>();
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement(Queries.SQL_SELECT_COUNT_CARRIAGES_AND_SEATS);
             rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -124,18 +120,15 @@ public class TrainDao implements Dao<Train> {
         } finally {
             DBUtil.close(rs);
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
         return trainStatistic;
     }
 
-    public static void deleteAllTrainContent(Integer idTrain) throws DBException {
-        Connection conn = null;
+    public void deleteAllTrainContent(Integer idTrain) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("DELETE FROM seats WHERE id_train = ? ");
             pstmt.setInt(1, idTrain);
             pstmt.executeUpdate();
@@ -151,18 +144,15 @@ public class TrainDao implements Dao<Train> {
         } finally {
             DBUtil.close(rs);
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 
-    public static Integer getIdTrainByNumber(Integer number) throws DBException {
-        Connection conn = null;
+    public Integer getIdTrainByNumber(Integer number) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         Integer idTrain = null;
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("SELECT id FROM trains WHERE number = ?");
             pstmt.setInt(1, number);
             rs = pstmt.executeQuery();
@@ -178,7 +168,6 @@ public class TrainDao implements Dao<Train> {
         } finally {
             DBUtil.close(rs);
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
 
         return idTrain;
@@ -191,14 +180,12 @@ public class TrainDao implements Dao<Train> {
 
     @Override
     public List<Train> getAll() throws DBException {
-        Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         List<Train> trains = new ArrayList<>();
         Train trainTemp = null;
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             Statement stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM trains;");
             while (rs.next()) {
@@ -216,19 +203,16 @@ public class TrainDao implements Dao<Train> {
         } finally {
             DBUtil.close(rs);
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
         return trains;
     }
 
     @Override
     public void save(Train train) throws DBException {
-        Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("INSERT INTO trains(number) VALUES(?)");
             pstmt.setInt(1, train.getNumber());
             pstmt.executeUpdate();
@@ -236,12 +220,10 @@ public class TrainDao implements Dao<Train> {
 
         } catch (SQLException e) {
             DBUtil.rollback(conn);
-            e.printStackTrace();
             throw new DBException(Messages.ERR_SAVE_NEW_TRAIN, e);
         } finally {
             DBUtil.close(rs);
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 
@@ -252,12 +234,10 @@ public class TrainDao implements Dao<Train> {
 
     @Override
     public void delete(Train train) throws DBException {
-        Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("DELETE FROM trains WHERE number = ?");
             pstmt.setInt(1, train.getNumber());
             pstmt.executeUpdate();
@@ -270,7 +250,6 @@ public class TrainDao implements Dao<Train> {
         } finally {
             DBUtil.close(rs);
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 }

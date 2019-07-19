@@ -35,8 +35,8 @@
             <input type="hidden" name="action" value="account">
             <input type="hidden" name="errorPage" value="/login">
 
-            <input type="text" name="login" placeholder="<fmt:message key="auth.login"/>">
-            <input type="password" name="password" placeholder="<fmt:message key="auth.password"/>">
+            <input type="text" name="login" placeholder="<fmt:message key="auth.login"/>" required>
+            <input type="password" name="password" placeholder="<fmt:message key="auth.password"/>" required>
             <input class="normal" type="submit" value="<fmt:message key="label.sign_in"/>"/>
         </form>
         <a href="login?action=register"><fmt:message key="auth.login_message"/></a>

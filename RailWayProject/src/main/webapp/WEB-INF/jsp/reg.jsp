@@ -34,9 +34,9 @@
             <input type="hidden" name="action" value="createUser">
             <input type="hidden" name="errorPage" value="/login?action=register">
 
-            <input type="text" name="login" placeholder="<fmt:message key="auth.login"/>">
-            <input type="password" name="password" placeholder="<fmt:message key="auth.password"/>">
-            <input type="email" name="email" placeholder="<fmt:message key="auth.email"/>">
+            <input type="text" name="login" placeholder="<fmt:message key="auth.login"/>" required>
+            <input type="password" name="password" placeholder="<fmt:message key="auth.password"/>" required>
+            <input type="email" name="email" placeholder="<fmt:message key="auth.email"/>" required>
             <input class="normal" type="submit" value="<fmt:message key="label.sign_in"/>"/>
         </form>
         <a href="login?action=login"><fmt:message key="auth.reg_message"/></a>

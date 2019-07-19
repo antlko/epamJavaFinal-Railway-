@@ -6,6 +6,7 @@ import com.nure.kozhukhar.railway.db.entity.City;
 import com.nure.kozhukhar.railway.db.entity.Country;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
@@ -14,6 +15,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class CountryChangeData extends Action {
 
@@ -23,10 +26,12 @@ public class CountryChangeData extends Action {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, AppException {
 
-        CountryDao countryDao = new CountryDao();
-        Country country = new Country();
+        try (Connection connection = DBUtil.getInstance().getDataSource().getConnection()) {
+            connection.setAutoCommit(false);
+            CountryDao countryDao = new CountryDao(connection);
 
-        try {
+            Country country = new Country();
+
             if ("Save".equals(request.getParameter("changeCountryInfo"))) {
                 country.setName(request.getParameter("countryName"));
                 countryDao.save(country);
@@ -35,7 +40,7 @@ public class CountryChangeData extends Action {
                 country.setName(request.getParameter("countryName"));
                 countryDao.delete(country);
             }
-        } catch (DBException ex) {
+        } catch (DBException | ClassNotFoundException | SQLException ex) {
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, ex.getMessage()));
         }

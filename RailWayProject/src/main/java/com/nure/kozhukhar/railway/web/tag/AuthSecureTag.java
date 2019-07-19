@@ -9,6 +9,7 @@ import java.io.IOException;
 
 public class AuthSecureTag extends SimpleTagSupport {
 
+
     @Override
     public void doTag() throws JspException, IOException {
         PageContext pageContext = (PageContext) getJspContext();

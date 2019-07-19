@@ -22,17 +22,21 @@ import java.util.Locale;
 
 public class UserDao implements Dao<User> {
 
+    private Connection conn;
+
+    public UserDao(Connection conn) {
+        this.conn = conn;
+    }
+
     private static final Logger LOG = Logger.getLogger(UserDao.class);
 
-    public static User getByLogin(String login) throws DBException {
-        Connection conn = null;
+    public User getByLogin(String login) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         User user = new User();
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("SELECT * FROM users WHERE login = ?");
 
             pstmt.setString(1, login);
@@ -53,21 +57,21 @@ public class UserDao implements Dao<User> {
             DBUtil.rollback(conn);
             throw new DBException(Messages.ERR_GET_USER_BY_LOGIN, e);
         } finally {
-            DBUtil.close(conn, pstmt, rs);
+            DBUtil.close(pstmt);
+            DBUtil.close(rs);
         }
 
         return user;
     }
 
-    public static List<String> getUserRolesByLogin(String login) throws DBException {
-        Connection conn = null;
+    public List<String> getUserRolesByLogin(String login) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         List<String> roles = new ArrayList<>();
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("SELECT role FROM users U INNER JOIN user_roles UR ON U.id = UR.id WHERE login = ?;");
             pstmt.setString(1, login);
             rs = pstmt.executeQuery();
@@ -80,22 +84,20 @@ public class UserDao implements Dao<User> {
             DBUtil.rollback(conn);
             throw new DBException(Messages.ERR_GET_USER_ROLE_BY_LOGIN, e);
         } finally {
-            DBUtil.close(conn, pstmt, rs);
+            DBUtil.close(pstmt);
+            DBUtil.close(rs);
         }
         return roles;
     }
 
-    public static String getFullNameByUserId(Integer idUser) throws DBException {
-        Connection conn = null;
+    public String getFullNameByUserId(Integer idUser) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         String initials = "";
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("SELECT * FROM users WHERE id = ?");
-
             pstmt.setInt(1, idUser);
             rs = pstmt.executeQuery();
             if (rs.next()) {
@@ -108,21 +110,18 @@ public class UserDao implements Dao<User> {
             DBUtil.rollback(conn);
             throw new DBException(Messages.ERR_GET_DB_USER_FULL_NAME, e);
         } finally {
-            DBUtil.close(conn, pstmt, rs);
+            DBUtil.close(pstmt);
+            DBUtil.close(rs);
         }
         return initials;
     }
 
-    public static void saveUserRoleByLogin(User user, String role) throws DBException {
-        Connection conn = null;
+    public void saveUserRoleByLogin(User user, String role) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
-
         try {
             Integer userId = getByLogin(user.getLogin()).getId();
-
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("SELECT * FROM user_roles WHERE id = ? AND role = ?");
             int atr = 1;
             pstmt.setInt(atr++, userId);
@@ -141,7 +140,8 @@ public class UserDao implements Dao<User> {
             e.printStackTrace();
             throw new DBException(Messages.ERR_SAVE_USER_ROLE, e);
         } finally {
-            DBUtil.close(conn, pstmt, rs);
+            DBUtil.close(pstmt);
+            DBUtil.close(rs);
         }
     }
 
@@ -159,14 +159,14 @@ public class UserDao implements Dao<User> {
     @Override
     public void save(User user) throws DBException {
         PreparedStatement pstmt = null;
-        Connection conn = null;
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
-            pstmt = conn.prepareStatement("INSERT INTO users(login,password,email,name,surname) VALUES(?,?,?,null,null)");
+            pstmt = conn.prepareStatement("INSERT INTO users(login,password,email,name,surname) VALUES(?,?,?,?,?)");
             int atr = 1;
             pstmt.setString(atr++, user.getLogin());
             pstmt.setString(atr++, user.getPassword());
-            pstmt.setString(atr, user.getEmail());
+            pstmt.setString(atr++, user.getEmail());
+            pstmt.setString(atr++, user.getName());
+            pstmt.setString(atr, user.getSurname());
             pstmt.executeUpdate();
             atr = 1;
             pstmt = conn.prepareStatement("INSERT INTO user_roles(id,role) VALUES(?,?)");
@@ -180,16 +180,13 @@ public class UserDao implements Dao<User> {
             throw new DBException(Messages.ERR_ADD_NEW_USER, e);
         } finally {
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 
     @Override
     public void update(User user, String[] params) throws DBException {
         PreparedStatement pstmt = null;
-        Connection conn = null;
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("UPDATE users SET name = ?,surname = ?, email = ? WHERE login = ?");
             int atr = 1;
             pstmt.setString(atr++, user.getName());
@@ -204,19 +201,16 @@ public class UserDao implements Dao<User> {
             throw new DBException(Messages.ERR_UPDATE_USER_DATA, e);
         } finally {
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 
     @Override
     public void delete(User user) throws DBException {
         PreparedStatement pstmt = null;
-        Connection conn = null;
 
         Integer userId = getByLogin(user.getLogin()).getId();
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("DELETE FROM user_roles WHERE id = ?");
             pstmt.setInt(1, userId);
             pstmt.executeUpdate();
@@ -230,7 +224,6 @@ public class UserDao implements Dao<User> {
             throw new DBException(Messages.ERR_DELETE_USER, e);
         } finally {
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 }

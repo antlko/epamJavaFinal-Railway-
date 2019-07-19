@@ -51,15 +51,15 @@
                         <td id="cityEnd">${check.cityEnd}</td>
                         <td>
                             <form action="account" method="get">
-                                <input type="hidden" name="action" value="showCheck">
-                                <input type="hidden" name="checkInd" value="${loop.index}">
+                                <input type="hidden" name="action" value="showCheck" required>
+                                <input type="hidden" name="checkInd" value="${loop.index}" required>
                                 <input id="print-doc" class="normal" type="submit" value="Doc">
                             </form>
                         </td>
                         <td>
                             <form action="account" method="post">
-                                <input type="hidden" name="action" value="deleteCheck">
-                                <input type="hidden" name="checkInd" value="${loop.index}">
+                                <input type="hidden" name="action" value="deleteCheck" required>
+                                <input type="hidden" name="checkInd" value="${loop.index}" required>
                                 <input class="danger" type="submit" value="X" style="width: 40px;">
                             </form>
                         </td>
@@ -78,9 +78,9 @@
                         <input type="hidden" name="action" value="updatePersonal">
 
                         <div class="edit-tag"><fmt:message key="account.surname"/> :</div>
-                        <input type="text" name="Surname" value="${sessionScope.user.surname}">
+                        <input type="text" name="Surname" value="${sessionScope.user.surname}" required>
                         <div class="edit-tag"><fmt:message key="account.name"/> :</div>
-                        <input type="text" name="Name" value="${sessionScope.user.name}">
+                        <input type="text" name="Name" value="${sessionScope.user.name}" required>
                         <div class="edit-tag"><fmt:message key="auth.email"/> :</div>
                         <input type="text" name="Email" value="${sessionScope.user.email}">
                         <input class="normal" type="submit" value="<fmt:message key="account.save"/>">

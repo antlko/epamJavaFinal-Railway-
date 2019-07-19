@@ -16,16 +16,20 @@ import java.util.List;
 
 public class CheckDao implements Dao {
 
+    private Connection conn;
+
+    public CheckDao(Connection conn) {
+        this.conn = conn;
+    }
+
     private static final Logger LOG = Logger.getLogger(CheckDao.class);
 
-    public static void saveUserCheckInfo(UserCheck userCheck) throws DBException {
-        Connection conn = null;
+    public void saveUserCheckInfo(UserCheck userCheck) throws DBException {
         PreparedStatement pstmt = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("INSERT INTO user_check (id_user, date_end, id_train,num_carriage,num_seat,id_station,id_route,initials) \n" +
-                     "VALUES(?,?,?,?,?,?,?,?);");
+                    "VALUES(?,?,?,?,?,?,?,?);");
 
             String date = Timestamp.valueOf(userCheck.getDateEnd()).toString().split("\\.")[0];
 
@@ -43,22 +47,18 @@ public class CheckDao implements Dao {
 
         } catch (SQLException e) {
             DBUtil.rollback(conn);
-            e.printStackTrace();
             throw new DBException(Messages.ERR_CANNOT_SAVE_USER_CHECK, e);
         } finally {
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 
-    public static List<UserCheck> getAllCheckByUserId(Integer idUser) throws DBException {
-        Connection conn = null;
+    public List<UserCheck> getAllCheckByUserId(Integer idUser) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         List<UserCheck> userChecks = new ArrayList<>();
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement(Queries.SQL_SELECT_ALL_CHECK_FOR_USER);
 
             pstmt.setInt(1, idUser);
@@ -74,20 +74,18 @@ public class CheckDao implements Dao {
             }
             conn.commit();
 
-        } catch (SQLException e) {
+        } catch (SQLException | NullPointerException e) {
             DBUtil.rollback(conn);
             e.printStackTrace();
             throw new DBException(Messages.ERR_CANNOT_GET_CHECK_BY_USER, e);
         } finally {
             DBUtil.close(rs);
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
         return userChecks;
     }
 
-    public static UserCheckBean getAllCarriageInfoByTags(Integer idUser, Integer idTrain, Integer numCarriage, Integer numSeat) throws DBException {
-        Connection conn = null;
+    public UserCheckBean getAllCarriageInfoByTags(Integer idUser, Integer idTrain, Integer numCarriage, Integer numSeat) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
@@ -96,7 +94,6 @@ public class CheckDao implements Dao {
         String cityEnd = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement(Queries.SQL_SELECT_ALL_STATION_INFO_FOR_CHECK);
 
             int atr = 1;
@@ -125,11 +122,12 @@ public class CheckDao implements Dao {
         } finally {
             DBUtil.close(rs);
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
-        userCheckBean.setCityStart(stationList.get(0).getName());
-        userCheckBean.setCityEnd(cityEnd);
-        userCheckBean.setStationList(stationList);
+        if (stationList.size() > 0) {
+            userCheckBean.setCityStart(stationList.get(0).getName());
+            userCheckBean.setCityEnd(cityEnd);
+            userCheckBean.setStationList(stationList);
+        }
 
         return userCheckBean;
     }
@@ -156,16 +154,14 @@ public class CheckDao implements Dao {
 
     @Override
     public void delete(Object o) throws DBException {
-        Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
-        if(o == null) return;
+        if (o == null) return;
 
         if (o instanceof UserCheckBean) {
             UserCheckBean userCheckBean = (UserCheckBean) o;
             try {
-                conn = DBUtil.getInstance().getDataSource().getConnection();
                 pstmt = conn.prepareStatement(Queries.SQL_DELETE_USER_CHECK);
                 int atr = 1;
                 pstmt.setInt(atr++, userCheckBean.getIdUser());
@@ -175,14 +171,13 @@ public class CheckDao implements Dao {
                 pstmt.executeUpdate();
                 conn.commit();
 
-            } catch (SQLException e) {
+            } catch (SQLException | NullPointerException e) {
                 DBUtil.rollback(conn);
                 e.printStackTrace();
                 throw new DBException(Messages.ERR_CANNOT_DELETE_USER_CHECK, e);
             } finally {
                 DBUtil.close(rs);
                 DBUtil.close(pstmt);
-                DBUtil.close(conn);
             }
         }
     }

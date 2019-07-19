@@ -29,7 +29,6 @@ public class BookingSeatsAction extends Action {
 
         HttpSession session = request.getSession();
 
-
         Integer indRoute = Integer.valueOf(request.getParameter("checkedRouteForUser"));
         List<RouteSearchBean> listRsb = (ArrayList<RouteSearchBean>) session.getAttribute("infoRoutes");
         RouteSearchBean rsb = listRsb.get(indRoute);
@@ -52,12 +51,14 @@ public class BookingSeatsAction extends Action {
                 totalRoutePrice += rs.getPrice();
             }
 
-            session.setAttribute("checkedCarriage", seatBeanList.get(0).getNumCarriage());
-            session.setAttribute("seatCheckType", type);
-            session.setAttribute("serviceCarriage", seatBeanList);
-            session.setAttribute("routePrice", totalRoutePrice + seatBeanList.get(0).getPriceSeat());
-            session.setAttribute("serviceSeats", seatBeanList.get(0).getListSeat());
-            session.setAttribute("userRoute", rsb);
+            if (seatBeanList.size() > 0) {
+                session.setAttribute("checkedCarriage", seatBeanList.get(0).getNumCarriage());
+                session.setAttribute("seatCheckType", type);
+                session.setAttribute("serviceCarriage", seatBeanList);
+                session.setAttribute("routePrice", totalRoutePrice + seatBeanList.get(0).getPriceSeat());
+                session.setAttribute("serviceSeats", seatBeanList.get(0).getListSeat());
+                session.setAttribute("userRoute", rsb);
+            }
         } catch (DBException e) {
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));

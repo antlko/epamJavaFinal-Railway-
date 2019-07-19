@@ -6,6 +6,7 @@ import com.nure.kozhukhar.railway.db.entity.Type;
 import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
@@ -14,6 +15,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -31,14 +34,17 @@ public class RouteChangeData extends Action {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, AppException {
 
-        RouteDao routeDao = new RouteDao();
+        try (Connection connection = DBUtil.getInstance().getDataSource().getConnection()) {
+            RouteDao routeDao = new RouteDao(connection);
+            connection.setAutoCommit(false);
 
-        try {
             if ("Save".equals(request.getParameter("changeRouteInfo"))) {
                 List<RouteStation> routeStation = new ArrayList<>();
-                RouteDao.saveOneRoute(Integer.valueOf(request.getParameter("tagTrains")));
+                routeDao.saveOneRoute(Integer.valueOf(request.getParameter("tagTrains")));
 
-                List<String> infoStation = Arrays.asList(request.getParameter("listInfoStation").split(";"));
+                List<String> infoStation = Arrays.asList(
+                        request.getParameter("listInfoStation").split(";")
+                );
                 Pattern pattern = Pattern.compile("((.*?), (((.*?) (.*?))-((.*?) (.*?)))\\.( Price: (.*?)$))");
 
                 LOG.trace(infoStation);
@@ -76,19 +82,15 @@ public class RouteChangeData extends Action {
             if ("SaveRoutesDate".equals(request.getParameter("changeRouteInfo"))) {
                 LOG.debug("Save route on date part.");
                 String dateStart = request.getParameter("date-station") + " 00:00";
-                LOG.trace("1 test");
                 String dateEnd = request.getParameter("date-station-end") + " 00:00";
-                LOG.trace("2 test");
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-                LOG.trace("3 test");
                 LocalDateTime dateTimeStart = LocalDateTime.parse(dateStart, formatter);
-                LOG.trace("4 test");
                 LocalDateTime dateTimeEnd = LocalDateTime.parse(dateEnd, formatter);
 
                 LOG.trace("Dates from form --> " + dateTimeStart + " - " + dateTimeEnd);
 
-                RouteDao.saveStationByRouteId(Integer.valueOf(
+                routeDao.saveStationByRouteId(Integer.valueOf(
                         request.getParameter("routeId")),
                         dateTimeStart, dateTimeEnd
                 );
@@ -99,7 +101,7 @@ public class RouteChangeData extends Action {
                 routeStation.setIdRoute(Integer.valueOf(request.getParameter("routeId")));
                 routeDao.delete(routeStation);
             }
-        } catch (DBException e) {
+        } catch (DBException | ClassNotFoundException | SQLException e) {
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
         }

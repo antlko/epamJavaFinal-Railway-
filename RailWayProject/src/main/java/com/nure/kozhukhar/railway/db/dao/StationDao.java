@@ -21,10 +21,15 @@ import java.util.Properties;
 
 public class StationDao implements Dao<Station> {
 
+    private Connection conn;
+
+    public StationDao(Connection conn) {
+        this.conn = conn;
+    }
+
     private static final Logger LOG = Logger.getLogger(StationDao.class);
 
-    public static List<RouteStation> getAllStationByRoute(String cityStart, String cityEnd, Date date, Integer id) throws DBException {
-        Connection conn = null;
+    public List<RouteStation> getAllStationByRoute(String cityStart, String cityEnd, Date date, Integer id) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
@@ -32,7 +37,6 @@ public class StationDao implements Dao<Station> {
         RouteStation stationTemp = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_BY_ROUTE_ID);
             int atr = 1;
 
@@ -73,7 +77,6 @@ public class StationDao implements Dao<Station> {
         } finally {
             DBUtil.close(rs);
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
         LOG.trace("Received stations -> " + stations);
         return stations;
@@ -86,14 +89,12 @@ public class StationDao implements Dao<Station> {
 
     @Override
     public List<Station> getAll() throws DBException {
-        Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
 
         List<Station> stations = new ArrayList<>();
         Station stationTemp = null;
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM stations;");
             while (rs.next()) {
@@ -112,18 +113,15 @@ public class StationDao implements Dao<Station> {
         } finally {
             DBUtil.close(rs);
             DBUtil.close(stmt);
-            DBUtil.close(conn);
         }
         return stations;
     }
 
     @Override
     public void save(Station station) throws DBException {
-        Connection conn = null;
         PreparedStatement pstmt = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("INSERT INTO stations(name,id_city) VALUES(?,?)");
 
             int atr = 1;
@@ -137,7 +135,6 @@ public class StationDao implements Dao<Station> {
             throw new DBException(Messages.ERR_CANNOT_SAVE_STATION, e);
         } finally {
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 
@@ -148,11 +145,9 @@ public class StationDao implements Dao<Station> {
 
     @Override
     public void delete(Station station) throws DBException {
-        Connection conn = null;
         PreparedStatement pstmt = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("DELETE FROM stations WHERE name = ?");
 
             pstmt.setString(1, station.getName());
@@ -165,7 +160,6 @@ public class StationDao implements Dao<Station> {
             throw new DBException(Messages.ERR_CANNOT_DELETE_STATION, e);
         } finally {
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 }

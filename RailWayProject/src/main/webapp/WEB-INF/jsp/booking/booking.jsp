@@ -32,13 +32,13 @@
             ==================================================--%>
             <input type="hidden" name="action" value="findTickets">
 
-            <input id="cityStart" list="cities" type="text" name="cityStart"
+            <input id="cityStart" list="cities" type="text" name="cityStart" required
                    value="${sessionScope.cityStart}"
                    placeholder="<fmt:message key="ticket.from" />" style="width: 250px">
 
             <img class = "switch_img" src="style/img/reload.png"/>
 
-            <input id="cityEnd" list="cities" type="text" name="cityEnd"
+            <input id="cityEnd" list="cities" type="text" name="cityEnd" required
                    value="${sessionScope.cityEnd}"
                    placeholder="<fmt:message key="ticket.destination" />" style="width: 250px">
 

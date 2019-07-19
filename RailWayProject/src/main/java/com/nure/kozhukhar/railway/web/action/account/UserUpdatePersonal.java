@@ -4,6 +4,7 @@ import com.nure.kozhukhar.railway.db.dao.UserDao;
 import com.nure.kozhukhar.railway.db.entity.User;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class UserUpdatePersonal extends Action {
 
@@ -33,10 +36,13 @@ public class UserUpdatePersonal extends Action {
         newUser.setLogin(oldUser.getLogin());
         newUser.setId(oldUser.getId());
 
-        UserDao userTempDao = new UserDao();
-        try {
+        try (Connection connection = DBUtil.getInstance().getDataSource().getConnection();) {
+            connection.setAutoCommit(false);
+
+            UserDao userTempDao = new UserDao(connection);
             userTempDao.update(newUser, null);
-        } catch (DBException e) {
+
+        } catch (DBException | ClassNotFoundException | SQLException e) {
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
         }

@@ -104,12 +104,14 @@ public class UserCheck extends Entity {
         this.idRoute = idRoute;
     }
 
+
     @Override
     public String toString() {
         return "UserCheck{" +
                 "idUser=" + idUser +
                 ", totalPrice=" + totalPrice +
                 ", idTrain=" + idTrain +
+                ", initials='" + initials + '\'' +
                 ", numCarriage=" + numCarriage +
                 ", numSeat=" + numSeat +
                 ", numTrain=" + numTrain +

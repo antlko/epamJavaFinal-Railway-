@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,15 +31,17 @@ public class BookingStartPageAction extends Action {
 
         session.removeAttribute("listInfoBookingMessage");
 
-        StationDao stationDao = new StationDao();
-        try {
+        try (Connection connection = DBUtil.getInstance().getDataSource().getConnection()) {
+            connection.setAutoCommit(false);
+            StationDao stationDao = new StationDao(connection);
+
             List<Station> stationList = stationDao.getAll();
 
             if (stationList.size() > 0) {
                 request.setAttribute("listStation", stationList);
                 LOG.trace("list size : " + stationList.size() + " : " + stationList);
             }
-        } catch (DBException e) {
+        } catch (DBException | ClassNotFoundException | SQLException e) {
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
         }

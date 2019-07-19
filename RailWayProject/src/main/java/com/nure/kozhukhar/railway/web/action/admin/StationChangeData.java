@@ -7,6 +7,7 @@ import com.nure.kozhukhar.railway.db.entity.City;
 import com.nure.kozhukhar.railway.db.entity.Station;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
@@ -16,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class StationChangeData extends Action {
 
@@ -26,12 +29,17 @@ public class StationChangeData extends Action {
             throws IOException, ServletException, AppException {
 
 
-        StationDao stationsDao = new StationDao();
-        Station station = new Station();
-        try {
+        try (Connection connection = DBUtil.getInstance().getDataSource().getConnection()) {
+            connection.setAutoCommit(false);
+
+            StationDao stationsDao = new StationDao(connection);
+            CityDao cityDao = new CityDao(connection);
+
+            Station station = new Station();
+
             if ("Save".equals(request.getParameter("changeStationInfo"))) {
                 station.setName(request.getParameter("stationName"));
-                station.setIdCity(CityDao.getIdCityByName(
+                station.setIdCity(cityDao.getIdCityByName(
                         request.getParameter("tagCities")
                 ));
                 LOG.trace("Selected ID city is --> " + station.getIdCity());
@@ -41,7 +49,7 @@ public class StationChangeData extends Action {
                 station.setName(request.getParameter("stationName"));
                 stationsDao.delete(station);
             }
-        } catch (DBException e) {
+        } catch (DBException | ClassNotFoundException | SQLException | NullPointerException e) {
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
         }

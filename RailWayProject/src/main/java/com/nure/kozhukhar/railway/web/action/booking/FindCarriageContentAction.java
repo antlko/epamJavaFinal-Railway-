@@ -25,8 +25,10 @@ public class FindCarriageContentAction extends Action {
         Integer carrNum = Integer.valueOf(request.getParameter("carrNum"));
         Integer indCarrNum = 0;
         LOG.trace("Carr name :  " + carrNum);
-        LOG.debug("Request serviceCarriage " + session.getAttribute("serviceCarriage"));
-        List<SeatSearchBean> seatBeanList = (ArrayList<SeatSearchBean>) session.getAttribute("serviceCarriage");
+
+        List<SeatSearchBean> seatBeanList =
+                (ArrayList<SeatSearchBean>) session.getAttribute("serviceCarriage");
+        LOG.debug("Request serviceCarriage " + seatBeanList);
         for(SeatSearchBean searchBean : seatBeanList) {
             if (carrNum.equals(searchBean.getNumCarriage())) {
                 break;

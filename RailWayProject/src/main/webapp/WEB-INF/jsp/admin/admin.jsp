@@ -43,7 +43,7 @@
                             <input type="hidden" name="checkVal" value="1">
 
                             <div class="edit-tag"><fmt:message key="auth.login"/> :</div>
-                            <input type="text" name="loginUser">
+                            <input type="text" name="loginUser" required>
 
                             <div class="edit-tag"><fmt:message key="admin.role"/> :</div>
                             <select name="tagRole">
@@ -72,7 +72,7 @@
                     <input type="hidden" name="checkVal" value="2">
 
                     <div class="edit-tag"><fmt:message key="admin.country"/> :</div>
-                    <input type="text" name="countryName">
+                    <input type="text" name="countryName" required>
                     <input class="normal" type="submit" name="changeCountryInfo" value="Save">
                     <input class="danger" type="submit" name="changeCountryInfo" value="Delete">
                 </form>
@@ -94,7 +94,7 @@
                     <input type="hidden" name="checkVal" value="2">
 
                     <div class="edit-tag"><fmt:message key="admin.city_name"/> :</div>
-                    <input type="text" name="cityName">
+                    <input type="text" name="cityName" required>
 
                     <div class="edit-tag"><fmt:message key="admin.country"/> :</div>
                     <select name="tagCountries">
@@ -123,7 +123,7 @@
                     <input type="hidden" name="checkVal" value="2">
 
                     <div class="edit-tag"><fmt:message key="admin.station"/> :</div>
-                    <input type="text" name="stationName">
+                    <input type="text" name="stationName" required>
 
                     <div class="edit-tag"><fmt:message key="admin.city_name"/> :</div>
                     <select name="tagCities">
@@ -159,7 +159,7 @@
                     <input type="hidden" name="checkVal" value="3">
 
                     <div class="edit-tag"><fmt:message key="admin.train_number"/> :</div>
-                    <input type="text" name="trainNumber">
+                    <input type="text" name="trainNumber" required>
 
                     <input class="normal" type="submit" name="changeTrainInfo" value="Save">
                     <input class="danger" type="submit" name="changeTrainInfo" value="Delete">
@@ -182,10 +182,10 @@
                     <input type="hidden" name="checkVal" value="3">
 
                     <div class="edit-tag"><fmt:message key="admin.carr_name"/> :</div>
-                    <input type="text" name="typeName">
+                    <input type="text" name="typeName" required>
 
                     <div class="edit-tag"><fmt:message key="admin.carr_price"/> :</div>
-                    <input type="text" name="typePrice">
+                    <input type="text" name="typePrice" required>
 
                     <input class="normal" type="submit" name="changeTypeInfo" value="Save">
                     <input class="danger" type="submit" name="changeTypeInfo" value="Delete">
@@ -223,12 +223,12 @@
 
                     <div class="edit-tag"><fmt:message key="admin.number_of_carr"/> :</div>
                     <input id="rangeCarr" class="slider" type="range" min="1" max="20"
-                           value="5" name="carriageCount">
+                           value="5" name="carriageCount" required>
                     <output for="rangeCarr" class="countRangeCarr">5</output>
 
                     <div class="edit-tag"><fmt:message key="admin.number_of_seat"/> :</div>
                     <input id="rangeSeat" class="slider" type="range" min="1" max="45"
-                           value="45" name="seatCount">
+                           value="45" name="seatCount" required>
                     <output for="rangeCarr" class="countRangeSeat">45</output>
 
 
@@ -322,15 +322,15 @@
                     <input type="hidden" name="checkVal" value="4">
 
                     <div class="edit-tag"><fmt:message key="admin.route_ID"/> :</div>
-                    <input type="text" name="routeId" value="">
+                    <input type="text" name="routeId" value="" required>
 
                     <div class="edit-tag"><fmt:message key="admin.date_start"/> :</div>
                     <input type="date" name="date-station"
-                           style="width: 150px">
+                           style="width: 150px" required>
 
                     <div class="edit-tag"><fmt:message key="admin.date_end"/> :</div>
                     <input type="date" name="date-station-end"
-                           style="width: 150px">
+                           style="width: 150px" required>
 
                     <button class="input-sbt" type="submit" name="changeRouteInfo" value="SaveRoutesDate">
                         <fmt:message key="admin.btn_save"/>

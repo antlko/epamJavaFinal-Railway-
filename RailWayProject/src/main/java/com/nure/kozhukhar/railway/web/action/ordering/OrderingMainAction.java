@@ -10,6 +10,7 @@ import com.nure.kozhukhar.railway.db.entity.route.Route;
 import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
@@ -19,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,30 +49,38 @@ public class OrderingMainAction extends Action {
         LOG.trace("rsb:" + session.getAttribute("userRoute"));
         RouteSearchBean route = (RouteSearchBean) session.getAttribute("userRoute");
 
-        UserCheck userCheck = new UserCheck();
-        String[] seatList = request.getParameter("checkedSeats").split(" ");
-        userCheck.setIdUser(((User) session.getAttribute("user")).getId());
-        try {
-            userCheck.setInitials(UserDao.getFullNameByUserId(
+        try (Connection connection = DBUtil.getInstance().getDataSource().getConnection();) {
+            connection.setAutoCommit(false);
+            UserCheck userCheck = new UserCheck();
+            UserDao userDao = new UserDao(connection);
+            CheckDao checkDao = new CheckDao(connection);
+
+            String[] seatList = request.getParameter("checkedSeats").split(" ");
+            userCheck.setIdUser(((User) session.getAttribute("user")).getId());
+
+            userCheck.setInitials(userDao.getFullNameByUserId(
                     ((User) session.getAttribute("user")).getId())
             );
-        } catch (DBException e) {
+            LOG.error("User check set init success " + userCheck);
+
+            userCheck.setNumCarriage(Integer.valueOf(request.getParameter("checkedCarriage")));
+            userCheck.setIdRoute(route.getIdRoute());
+
+            for (String numSeat : seatList) {
+                for (int i = 0; i < route.getStationList().size() - 1; ++i) {
+                    userCheck.setDateEnd(route.getStationList().get(i).getTimeEnd());
+                    userCheck.setIdTrain(route.getTrain().getId());
+                    userCheck.setIdStation(route.getStationList().get(i).getIdStation());
+                    userCheck.setNumSeat(Integer.parseInt(numSeat));
+                    LOG.trace("INSERT for ordering --> " + userCheck);
+                    checkDao.saveUserCheckInfo(userCheck);
+
+                }
+            }
+        } catch (DBException | ClassNotFoundException | SQLException e) {
+            LOG.error("User check set initials error");
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
-        }
-        userCheck.setNumCarriage(Integer.valueOf(request.getParameter("checkedCarriage")));
-        userCheck.setIdRoute(route.getIdRoute());
-
-        for (String numSeat : seatList) {
-            for (int i = 0; i < route.getStationList().size() - 1; ++i) {
-                userCheck.setDateEnd(route.getStationList().get(i).getTimeEnd());
-                userCheck.setIdTrain(route.getTrain().getId());
-                userCheck.setIdStation(route.getStationList().get(i).getIdStation());
-                userCheck.setNumSeat(Integer.parseInt(numSeat));
-                LOG.trace("INSERT for ordering --> " + userCheck);
-                CheckDao.saveUserCheckInfo(userCheck);
-
-            }
         }
 
         return "WEB-INF/jsp/booking/ordering.jsp";

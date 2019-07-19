@@ -14,17 +14,21 @@ import java.util.List;
 
 public class SeatDao implements Dao<Seat> {
 
-    private static final Logger LOG = Logger.getLogger(SeatDao.class);
+    private Connection conn;
 
-    public static List<SeatSearchBean> getSeatCountInfo(String cityStart, String cityEnd, Date date, Integer id) throws DBException {
-        Connection conn = null;
+    public SeatDao(Connection conn) {
+        this.conn = conn;
+    }
+
+    private final Logger LOG = Logger.getLogger(SeatDao.class);
+
+    public List<SeatSearchBean> getSeatCountInfo(String cityStart, String cityEnd, Date date, Integer id) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         List<SeatSearchBean> seatsInfoBusy = new ArrayList<>();
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement(Queries.SQL_FIND_SEAT_FREE_INFO);
             int atr = 1;
             pstmt.setString(atr++, cityStart);
@@ -46,7 +50,10 @@ public class SeatDao implements Dao<Seat> {
                 seatTemp.setSeatType(rs.getString("nameType"));
                 seatTemp.setFree(rs.getInt("newFree"));
                 LOG.trace("SeatDao getting info [" + seatTemp.getSeatType() + ", " + seatTemp.getFree() + "]");
-                seatsInfoBusy.add(seatTemp);
+
+                if (seatTemp.getFree() != 0) {
+                    seatsInfoBusy.add(seatTemp);
+                }
             }
 
             LOG.trace("Seat info test : " + seatsInfoBusy);
@@ -59,22 +66,18 @@ public class SeatDao implements Dao<Seat> {
         } finally {
             DBUtil.close(rs);
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
         return seatsInfoBusy;
     }
 
-    public static List<SeatSearchBean> getAllSeatsByCarriageType(
+    public List<SeatSearchBean> getAllSeatsByCarriageType(
             String cityStart, String cityEnd, String type, Date date, Integer idTrain) throws DBException {
-        Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-
 
         List<SeatSearchBean> seatsInfo = new ArrayList<>();
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement(Queries.SQL_FIND_FREE_SEATS_BY_TRAIN);
             int atr = 1;
             LOG.trace("Info to query : " + cityStart
@@ -107,24 +110,22 @@ public class SeatDao implements Dao<Seat> {
         } finally {
             DBUtil.close(rs);
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
         return seatsInfo;
     }
 
 
-    public static List<Integer> getAllSeatsByCarriageTypeAndNum(
-            String cityStart, String cityEnd, String type, Date date, Integer idTrain, Integer idCarriage) throws DBException {
-        Connection conn = null;
+    public List<Integer> getAllSeatsByCarriageTypeAndNum(
+            String cityStart, String cityEnd, String type, Date date, Integer idTrain, Integer idCarriage) throws DBException, ClassNotFoundException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         List<Integer> seats = new ArrayList<>();
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement(Queries.SQL_FIND_FALSE_SEATS_BY_TRAIN_AND_CARRIAGE);
 
-            Integer maxSize = TrainDao.getMaxSizeFromCarriageByTrain(idTrain, idCarriage);
+            TrainDao trainDao = new TrainDao(conn);
+            Integer maxSize = trainDao.getMaxSizeFromCarriageByTrain(idTrain, idCarriage);
 
             LOG.trace("Max size - > " + maxSize);
             if (maxSize != null) {
@@ -155,14 +156,12 @@ public class SeatDao implements Dao<Seat> {
             LOG.trace("INFO all seats : " + seats + ", maxSize -> " + maxSize);
         } catch (SQLException e) {
             DBUtil.rollback(conn);
-            e.printStackTrace();
             throw new DBException(Messages.ERR_CANNOT_GET_ALL_SEAT, e);
         } catch (DBException e) {
             throw new DBException(Messages.ERR_GET_MAX_SIZE, e);
         } finally {
             DBUtil.close(rs);
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
 
         return seats;

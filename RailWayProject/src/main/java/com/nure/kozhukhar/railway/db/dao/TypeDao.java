@@ -14,14 +14,18 @@ import java.util.List;
 
 public class TypeDao implements Dao<Type> {
 
-    public static Integer getIDTypeByName(String name) throws DBException {
-        Connection conn = null;
+    private Connection conn;
+
+    public TypeDao(Connection conn) {
+        this.conn = conn;
+    }
+
+    public Integer getIDTypeByName(String name) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         Integer typeId = null;
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("SELECT id FROM Types WHERE name = ?");
             pstmt.setString(1, name);
             rs = pstmt.executeQuery();
@@ -37,7 +41,6 @@ public class TypeDao implements Dao<Type> {
         } finally {
             DBUtil.close(rs);
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
         return typeId;
     }
@@ -49,14 +52,12 @@ public class TypeDao implements Dao<Type> {
 
     @Override
     public List<Type> getAll() throws DBException {
-        Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
 
         List<Type> types = new ArrayList<>();
         Type typeTemp = null;
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM types ORDER BY price;");
             while (rs.next()) {
@@ -75,18 +76,15 @@ public class TypeDao implements Dao<Type> {
         } finally {
             DBUtil.close(rs);
             DBUtil.close(stmt);
-            DBUtil.close(conn);
         }
         return types;
     }
 
     @Override
     public void save(Type type) throws DBException {
-        Connection conn = null;
         PreparedStatement pstmt = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("SELECT * FROM types WHERE name = ?");
             int atr = 1;
             pstmt.setString(atr, type.getName());
@@ -109,17 +107,14 @@ public class TypeDao implements Dao<Type> {
             throw new DBException(Messages.ERR_SAVE_CARR_TYPE, e);
         } finally {
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 
     @Override
     public void update(Type type, String[] params) throws DBException {
-        Connection conn = null;
         PreparedStatement pstmt = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("UPDATE types SET price = ? WHERE name = ?");
             int atr = 1;
             pstmt.setInt(atr++, type.getPrice());
@@ -133,17 +128,14 @@ public class TypeDao implements Dao<Type> {
             throw new DBException(Messages.ERR_UPDATE_CARR_TYPE, e);
         } finally {
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 
     @Override
     public void delete(Type type) throws DBException {
-        Connection conn = null;
         PreparedStatement pstmt = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("DELETE FROM types WHERE name = ?");
             pstmt.setString(1, type.getName());
             pstmt.executeUpdate();
@@ -151,11 +143,9 @@ public class TypeDao implements Dao<Type> {
 
         } catch (SQLException e) {
             DBUtil.rollback(conn);
-            e.printStackTrace();
             throw new DBException(Messages.ERR_DELETE_TYPE_OF_CARRIAGE, e);
         } finally {
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 }

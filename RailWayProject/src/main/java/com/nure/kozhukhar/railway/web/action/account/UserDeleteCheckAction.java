@@ -5,6 +5,7 @@ import com.nure.kozhukhar.railway.db.dao.CheckDao;
 import com.nure.kozhukhar.railway.db.entity.UserCheck;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
@@ -13,6 +14,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,15 +28,17 @@ public class UserDeleteCheckAction extends Action {
             throws IOException, ServletException, AppException {
 
         Integer checkInt = Integer.valueOf(request.getParameter("checkInd"));
-        List<UserCheckBean> userCheckBeans = (ArrayList<UserCheckBean>)request.getSession().getAttribute("userChecks");
+        List<UserCheckBean> userCheckBeans = (ArrayList<UserCheckBean>) request.getSession().getAttribute("userChecks");
         UserCheckBean userCheck = userCheckBeans.get(checkInt);
 
         LOG.trace("Check for delete : " + userCheck);
 
-        try {
-            CheckDao checkDao = new CheckDao();
+        try (Connection connection = DBUtil.getInstance().getDataSource().getConnection()) {
+            connection.setAutoCommit(false);
+
+            CheckDao checkDao = new CheckDao(connection);
             checkDao.delete(userCheck);
-        } catch (DBException e) {
+        } catch (DBException | ClassNotFoundException | SQLException e) {
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
         }

@@ -8,6 +8,7 @@ import com.nure.kozhukhar.railway.db.entity.route.Route;
 import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
@@ -16,6 +17,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,32 +32,33 @@ public class AdminAccountPage extends Action {
         if (request.getSession() == null) {
             return "/login";
         }
+        try (Connection connection = DBUtil.getInstance().getDataSource().getConnection()) {
+            connection.setAutoCommit(false);
 
+            CityDao cityDao = new CityDao(connection);
+            CountryDao countryDao = new CountryDao(connection);
+            StationDao stationDao = new StationDao(connection);
+            TrainDao trainDao = new TrainDao(connection);
+            TypeDao typeDao = new TypeDao(connection);
+            RouteDao routeDao = new RouteDao(connection);
 
-        CityDao cityDao = new CityDao();
-        CountryDao countryDao = new CountryDao();
-        StationDao stationDao = new StationDao();
-        TrainDao trainDao = new TrainDao();
-        TypeDao typeDao = new TypeDao();
+            List<TrainStatisticBean> trainsStat = trainDao.getTrainsStatistic();
+            LOG.trace("Train statistic : " + trainsStat);
 
-        List<TrainStatisticBean> trainsStat = TrainDao.getTrainsStatistic();
-        LOG.trace("Train statistic : " + trainsStat);
-
-        try {
             request.setAttribute("allCityInfo", cityDao.getAll());
             request.setAttribute("allCountryInfo", countryDao.getAll());
             request.setAttribute("allStationInfo", stationDao.getAll());
             request.setAttribute("allTrainInfo", trainDao.getAll());
             request.setAttribute("allTypeInfo", typeDao.getAll());
             request.setAttribute("allTrainStatInfo", trainsStat);
-            request.setAttribute("allRouteInfo", RouteDao.getAllRoute());
-        } catch (DBException e) {
+            request.setAttribute("allRouteInfo", routeDao.getAllRoute());
+
+            LOG.trace("'Station' attributes for admin panel --> " + cityDao.getAll() + ", " + countryDao.getAll());
+
+        } catch (DBException | ClassNotFoundException | SQLException e) {
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
         }
-
-        LOG.trace("'Station' attributes for admin panel --> " + cityDao.getAll() + ", " + countryDao.getAll());
-
 
         return "WEB-INF/jsp/admin/admin.jsp";
     }

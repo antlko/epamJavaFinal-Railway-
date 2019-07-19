@@ -12,15 +12,19 @@ import java.util.List;
 
 public class CountryDao implements Dao<Country> {
 
-    public static Integer findIdCountyByName(String name) throws DBException {
-        Connection conn = null;
+    private Connection conn;
+
+    public CountryDao(Connection conn) {
+        this.conn = conn;
+    }
+
+    public Integer findIdCountyByName(String name) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         Integer idCounrty = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("SELECT * FROM Countries WHERE name = ?");
 
             pstmt.setString(1, name);
@@ -38,7 +42,6 @@ public class CountryDao implements Dao<Country> {
         } finally {
             DBUtil.close(rs);
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
         return idCounrty;
     }
@@ -50,13 +53,14 @@ public class CountryDao implements Dao<Country> {
 
     @Override
     public List<Country> getAll() throws DBException {
-        Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
 
         List<Country> countryNames = new ArrayList<>();
         try {
             conn = DBUtil.getInstance().getDataSource().getConnection();
+            conn.setAutoCommit(false);
+
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM Countries ORDER BY name");
 
@@ -67,7 +71,7 @@ public class CountryDao implements Dao<Country> {
             }
             conn.commit();
 
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             DBUtil.rollback(conn);
             e.printStackTrace();
             throw new DBException(Messages.ERR_COUNTRIES_WAS_NOT_FOUND, e);
@@ -81,11 +85,9 @@ public class CountryDao implements Dao<Country> {
 
     @Override
     public void save(Country country) throws DBException {
-        Connection conn = null;
         PreparedStatement pstmt = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("INSERT INTO countries(name) VALUES(?)");
             pstmt.setString(1, country.getName());
             pstmt.executeUpdate();
@@ -93,11 +95,9 @@ public class CountryDao implements Dao<Country> {
 
         } catch (SQLException e) {
             DBUtil.rollback(conn);
-            e.printStackTrace();
             throw new DBException(Messages.ERR_COUNTRY_SAVE, e);
         } finally {
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 
@@ -108,11 +108,9 @@ public class CountryDao implements Dao<Country> {
 
     @Override
     public void delete(Country country) throws DBException {
-        Connection conn = null;
         PreparedStatement pstmt = null;
 
         try {
-            conn = DBUtil.getInstance().getDataSource().getConnection();
             pstmt = conn.prepareStatement("DELETE FROM countries WHERE name = ?");
             pstmt.setString(1, country.getName());
             pstmt.executeUpdate();
@@ -125,7 +123,6 @@ public class CountryDao implements Dao<Country> {
             throw new DBException(Messages.ERR_COUNTRY_DELETE, e);
         } finally {
             DBUtil.close(pstmt);
-            DBUtil.close(conn);
         }
     }
 }

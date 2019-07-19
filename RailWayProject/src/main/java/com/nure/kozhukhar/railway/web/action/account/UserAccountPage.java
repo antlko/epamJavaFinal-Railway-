@@ -26,13 +26,17 @@ public class UserAccountPage extends Action {
 
         HttpSession session = request.getSession();
 
-        Integer idUser = ((User)session.getAttribute("user")).getId();
+        User user = (User) session.getAttribute("user");
+        if (user == null) return "/login";
+
+        Integer idUser = user.getId();
         try {
             session.setAttribute("userChecks", CheckService.getUserTicketsById(idUser));
         } catch (DBException e) {
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
         }
+
         return "WEB-INF/jsp/user/account.jsp";
     }
 }

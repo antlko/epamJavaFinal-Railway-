@@ -27,9 +27,18 @@ public class FindTicketsAction extends Action {
             throws IOException, ServletException, AppException {
         request.setAttribute("infoBookingMessage", "");
 
+        String cityStart = "";
+        String cityEnd = "";
+
         Date date = Date.valueOf(request.getParameter("date"));
-        String cityStart = request.getParameter("cityStart");
-        String cityEnd = request.getParameter("cityEnd");
+        cityStart = request.getParameter("cityStart");
+        cityEnd = request.getParameter("cityEnd");
+
+        if ("".equals(cityStart) || "".equals(cityEnd)
+                || cityStart.equals(cityEnd) || date == null) {
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_FIND_ANY_ROUTE));
+        }
 
         LOG.trace("Booking Date : " + date);
 

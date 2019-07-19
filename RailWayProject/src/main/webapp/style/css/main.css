@@ -11,6 +11,12 @@ form {
 body {
     font-family: 'Poppins', sans-serif;
 }
+footer {
+    margin-top: 10%;
+    background-color: #99b0b0;
+    min-height: 50%;
+    color: white;
+}
 
 input[type=submit] {
     border: none;
