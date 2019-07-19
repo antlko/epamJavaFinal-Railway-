@@ -3,6 +3,7 @@ package com.nure.kozhukhar.railway.db.dao;
 
 import static org.assertj.core.api.Assertions.*;
 import com.nure.kozhukhar.railway.db.entity.Train;
+import com.nure.kozhukhar.railway.db.entity.Type;
 import com.nure.kozhukhar.railway.exception.DBException;
 import com.nure.kozhukhar.railway.util.DBUtil;
 import org.junit.After;
@@ -49,8 +50,16 @@ public class TrainDaoTest {
     @Test
     public void saveAndDeleteTrainContent() throws SQLException, DBException {
         trainDao.save(train);
+        TypeDao typeDao = new TypeDao(connection);
+        Type type = new Type();
+        type.setName("testType");
+        type.setPrice(0);
+        typeDao.save(type);
         train.setId(trainDao.getIdTrainByNumber(train.getNumber()));
-        trainDao.saveTrainContent(train.getId(),1,1,3);
+        trainDao.saveTrainContent(train.getId(),1,1,
+                typeDao.getIDTypeByName(type.getName())
+        );
+        typeDao.delete(type);
         trainDao.delete(train);
     }
 

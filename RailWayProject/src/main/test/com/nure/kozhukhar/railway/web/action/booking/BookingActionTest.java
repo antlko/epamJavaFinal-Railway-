@@ -58,7 +58,7 @@ public class BookingActionTest extends Mockito {
 
     @Test(expected = AppException.class)
     public void executeFindTickets() throws ServletException, IOException, AppException {
-        FindTicketsAction ticketsAction = new FindTicketsAction();;
+        FindTicketsAction ticketsAction = new FindTicketsAction();
 
         when(request.getParameter("date")).thenReturn(DATE);
         when(request.getParameter("cityStart")).thenReturn(TEST_CITY);
@@ -70,7 +70,7 @@ public class BookingActionTest extends Mockito {
 
     @Test
     public void executeFindCarriage() throws ServletException, IOException, AppException {
-        FindCarriageContentAction ticketsAction = new FindCarriageContentAction();;
+        FindCarriageContentAction ticketsAction = new FindCarriageContentAction();
 
         List<SeatSearchBean> searchBeanList = new ArrayList<>();
         SeatSearchBean searchBean = new SeatSearchBean();
@@ -86,7 +86,7 @@ public class BookingActionTest extends Mockito {
 
     @Test
     public void executeToStartPageBooking() throws ServletException, IOException, AppException {
-        BookingStartPageAction ticketsAction = new BookingStartPageAction();;
+        BookingStartPageAction ticketsAction = new BookingStartPageAction();
         assertThat(ticketsAction.execute(request,response))
                 .isEqualTo("WEB-INF/jsp/booking/booking.jsp");
     }

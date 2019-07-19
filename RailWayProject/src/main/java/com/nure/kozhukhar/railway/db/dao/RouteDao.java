@@ -224,6 +224,7 @@ public class RouteDao implements Dao<RouteStation> {
                 pstmt = conn.prepareStatement(Queries.SQL_FIND_ROUTE_ON_DATE_ID);
 
                 int atr = 1;
+                pstmt.setString(atr++, String.valueOf(date));
                 pstmt.setString(atr++, cityStart);
                 pstmt.setString(atr, cityEnd);
                 rs = pstmt.executeQuery();

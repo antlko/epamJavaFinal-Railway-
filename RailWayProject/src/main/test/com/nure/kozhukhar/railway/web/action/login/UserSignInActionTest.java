@@ -30,6 +30,7 @@ public class UserSignInActionTest extends Mockito {
     // Test data
     private static final String LOGIN = "testLog";
     private static final String PASSWORD = "testPas";
+    private static final String PASSWORD_ENCRYPTED = "F48A6064F99B8000AABE32F934E44EA0";
     private static final String EMAIL = "testEmail@gmail.com";
 
     @Mock
@@ -64,7 +65,7 @@ public class UserSignInActionTest extends Mockito {
 
         User user = new User();
         user.setLogin(LOGIN);
-        user.setPassword(PASSWORD);
+        user.setPassword(PASSWORD_ENCRYPTED);
         user.setEmail(EMAIL);
         userDao.save(user);
 

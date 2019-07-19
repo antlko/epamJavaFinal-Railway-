@@ -39,6 +39,7 @@ public class RouteService {
 
         try (Connection connection = DBUtil.getInstance().getDataSource().getConnection()) {
             connection.setAutoCommit(false);
+
             RouteDao routeDao = new RouteDao(connection);
             SeatDao seatDao = new SeatDao(connection);
             StationDao stationDao = new StationDao(connection);

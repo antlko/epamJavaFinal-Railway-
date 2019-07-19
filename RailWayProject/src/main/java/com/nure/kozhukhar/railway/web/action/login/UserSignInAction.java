@@ -7,6 +7,7 @@ import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
 import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.DBUtil;
+import com.nure.kozhukhar.railway.util.EncryptUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -29,18 +31,19 @@ public class UserSignInAction extends Action {
             throws IOException, ServletException, AppException {
 
         HttpSession session = request.getSession();
-        String login = request.getParameter("login");
-        String password = request.getParameter("password");
-
-        User user = null;
         try (Connection connection = DBUtil.getInstance().getDataSource().getConnection();) {
             connection.setAutoCommit(false);
 
             UserDao userDao = new UserDao(connection);
+            String login = "";
+            String password = "";
+            User user = null;
 
             try {
+                login = request.getParameter("login");
+                password = EncryptUtil.hash(request.getParameter("password"));
                 user = userDao.getByLogin(login);
-            } catch (DBException e) {
+            } catch (DBException | NoSuchAlgorithmException e) {
                 throw new AppException(LocaleMessageUtil
                         .getMessageWithLocale(request, Messages.ERR_USER_LOGIN_OR_PASSWORD));
             }

@@ -6,6 +6,7 @@ import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
 import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.DBUtil;
+import com.nure.kozhukhar.railway.util.EncryptUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 
@@ -13,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.regex.Matcher;
@@ -45,10 +47,14 @@ public class UserCreateAction extends Action {
             }
 
             UserDao userTempDao = new UserDao(connection);
+            newUser.setPassword(EncryptUtil.hash(newUser.getPassword()));
             userTempDao.save(newUser);
         } catch (DBException | ClassNotFoundException | SQLException ex) {
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, ex.getMessage()));
+        } catch (NoSuchAlgorithmException e) {
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_REGISTER_DATA_PASSWORD));
         }
 
 
