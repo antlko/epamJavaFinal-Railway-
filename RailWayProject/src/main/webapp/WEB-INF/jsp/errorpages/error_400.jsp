@@ -4,6 +4,9 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+<%--===================================================================
+              Error Page
+===================================================================--%>
 <c:if test="${empty sessionScope.localize}">
     <fmt:setLocale value="${cookie['localize'].value}"/>
 </c:if>

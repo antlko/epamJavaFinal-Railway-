@@ -1,8 +1,14 @@
+<%--===================================================================
+                         HEADER
+===================================================================--%>
 <header>
     <div class="logo-container">
         <img src="style/img/new_logo.svg" height="50" width="50"/>
         <h4 class="logo">Train-Too</h4>
     </div>
+    <%--===================================================================
+                Site naviagation block
+    ===================================================================--%>
     <nav>
         <ul class="nav-links">
             <li><a class="nav-link" href="index.jsp"><fmt:message key="header.home"/></a></li>
@@ -11,6 +17,9 @@
         </ul>
     </nav>
 
+    <%--===================================================================
+                Change language block
+    ===================================================================--%>
     <div class="cart login-js">
         <div class="lang">
             <a href="?pageLocale=ru">RU</a>

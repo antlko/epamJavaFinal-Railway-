@@ -9,6 +9,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Cookie Locale Filter
+ * <p>
+ *     Checks locale in cookies.
+ * </p>
+ *
+ * @author Anatol Kozhukhar
+ */
 @WebFilter(filterName = "CookieLocaleFilter", urlPatterns = { "/*" })
 public class CookieLocaleFilter implements Filter {
 

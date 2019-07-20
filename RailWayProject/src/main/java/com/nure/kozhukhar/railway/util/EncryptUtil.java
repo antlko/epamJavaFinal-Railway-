@@ -5,9 +5,15 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * Encrypt Util.
+ * Works with String and hashing it to the MD5
+ *
+ * @author Anatol Kozhukhar
+ */
 public class EncryptUtil {
-    private static final char[] HEX_DIGITS = { '0', '1', '2', '3', '4', '5',
-            '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+    private static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5',
+            '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
     public static String hash(String str) throws NoSuchAlgorithmException,
             UnsupportedEncodingException {

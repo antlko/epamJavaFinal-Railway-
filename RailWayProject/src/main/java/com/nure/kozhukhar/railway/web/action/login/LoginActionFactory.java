@@ -8,6 +8,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Login Action Factory
+ * <p>
+ * Holder for all actions Login controller
+ * </p>
+ *
+ * @author Anatol Kozhukhar
+ */
 public class LoginActionFactory {
 
     private static final Logger LOG = Logger.getLogger(LoginActionFactory.class);
@@ -24,6 +32,13 @@ public class LoginActionFactory {
         actions.put("noFound", new NoFoundAction());
     }
 
+    /**
+     * Returns action object with the given name.
+     *
+     * @param request
+     *            request from ServletUtil
+     * @return Command object.
+     */
     public static Action getAction(HttpServletRequest request) {
         String actionName = request.getParameter("action");
         action = actions.get(actionName);

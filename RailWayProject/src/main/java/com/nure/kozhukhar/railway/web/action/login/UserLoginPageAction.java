@@ -8,9 +8,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Show login form action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class UserLoginPageAction extends Action {
 
     private static final Logger LOG = Logger.getLogger(UserLoginPageAction.class);
+    private static final long serialVersionUID = 5359940675011570835L;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

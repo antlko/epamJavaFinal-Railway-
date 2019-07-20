@@ -19,9 +19,15 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Show carriages and seats action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class BookingSeatsAction extends Action {
 
     private static final Logger LOG = Logger.getLogger(BookingSeatsAction.class);
+    private static final long serialVersionUID = -6392267372097104297L;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

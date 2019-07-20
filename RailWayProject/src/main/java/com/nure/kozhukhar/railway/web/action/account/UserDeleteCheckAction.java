@@ -19,9 +19,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * User Delete check action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class UserDeleteCheckAction extends Action {
 
     private static final Logger LOG = Logger.getLogger(UserDeleteCheckAction.class);
+    private static final long serialVersionUID = -1217118784989852859L;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

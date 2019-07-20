@@ -17,7 +17,14 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Change type action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class TypeChangeData extends Action {
+    private static final long serialVersionUID = -3867566095412076655L;
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, AppException {

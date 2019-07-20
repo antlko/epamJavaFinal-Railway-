@@ -27,9 +27,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Ordering action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class OrderingMainAction extends Action {
 
     private static final Logger LOG = Logger.getLogger(OrderingMainAction.class);
+    private static final long serialVersionUID = 701492246609170513L;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

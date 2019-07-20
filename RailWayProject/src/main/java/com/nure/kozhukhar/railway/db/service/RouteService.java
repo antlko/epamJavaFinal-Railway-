@@ -29,21 +29,42 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
+/**
+ * Route Service
+ * <p>
+ *     This class would be used in order to show route by user query.
+ * </p>
+ *
+ * @author Anatol Kozhukhar
+ */
 public class RouteService {
 
     private static final Logger LOG = Logger.getLogger(RouteService.class);
 
+    /**
+     * This method is used for possible show to user
+     * route information
+     *
+     * @param cityStart city from
+     * @param cityEnd city destination
+     * @param date date depart
+     * @return list of route information
+     * @throws DBException
+     */
     public static List<RouteSearchBean> getRouteInfoByCityDate(String cityStart, String cityEnd, Date date) throws DBException {
 
         List<RouteSearchBean> routesBean = null;
 
+        // Getting connection by DBUtil and then transfer it to Dao constructors
         try (Connection connection = DBUtil.getInstance().getDataSource().getConnection()) {
             connection.setAutoCommit(false);
 
+            // Initialisation dao objects
             RouteDao routeDao = new RouteDao(connection);
             SeatDao seatDao = new SeatDao(connection);
             StationDao stationDao = new StationDao(connection);
 
+            // Getting routes from query by variables
             List<Route> routes = routeDao.getIdRouteOnDate(cityStart, cityEnd, date);
             routesBean = new ArrayList<>();
 
@@ -56,19 +77,20 @@ public class RouteService {
                 routeInfo.setStationList(stationDao.getAllStationByRoute(
                         cityStart, cityEnd, date, rt.getId()));
 
-                List<String> routeStations = routeDao.getAllStationsByRouteId(routeInfo.getIdRoute());
-                List<String> routeStatByQuery = new ArrayList<>();
-                for (RouteStation rts : routeInfo.getStationList()) {
-                    routeStatByQuery.add(rts.getName());
-                }
-
-                LOG.debug("Route stations list is -> " + routeStations);
                 LOG.debug("List stations in routeInfo -> " + routeInfo.getStationList());
                 if (routeInfo.getStationList().size() == 0) {
                     continue;
                 }
+                List<String> routeStations = routeDao.getAllStationsByRouteId(routeInfo.getIdRoute());
+                List<String> routeStatByQuery = new ArrayList<>();
 
+                LOG.debug("Route stations list is -> " + routeStations);
+                for (RouteStation rts : routeInfo.getStationList()) {
+                    routeStatByQuery.add(rts.getName());
+                }
 
+                // Checking if all stations is existing in right sequences
+                // in the found route
                 if (containsInList(routeStations, routeStatByQuery)) {
                     LOG.debug("List is true. Done!");
                     String from = String.valueOf(routeInfo.getStationList().get(0).getTimeEnd());
@@ -91,11 +113,23 @@ public class RouteService {
                 }
             }
         } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            throw new DBException(Messages.ERR_CANNOT_GET_ROUTE, e);
         }
         return routesBean;
     }
 
+    /**
+     * This method is used for getting information about
+     * seat by user query.
+     *
+     * @param cityStart city from
+     * @param cityEnd city destination
+     * @param date date depart
+     * @param type type of the carriage
+     * @param idTrain ID train
+     * @return list of SeatSearchBean
+     * @throws DBException
+     */
     public static List<SeatSearchBean> getSeatInfoByCarriageType(
             String cityStart, String cityEnd, Date date, String type, Integer idTrain
     ) throws DBException {
@@ -122,6 +156,12 @@ public class RouteService {
         return seatSearchBeans;
     }
 
+    /**
+     * Method for comparing sequences attributes in lists.
+     * @param str first list
+     * @param check second list
+     * @return contains or not (true/false)
+     */
     public static boolean containsInList(List<String> str, List<String> check) {
         String main = "";
         String query = "";
@@ -133,6 +173,13 @@ public class RouteService {
         return false;
     }
 
+    /**
+     * Translate list of strings to one string
+     * by using string builder.
+     *
+     * @param str list of strings
+     * @return
+     */
     private static String appendStringList(List<String> str) {
         StringBuilder elem = new StringBuilder();
         for (String st : str) {

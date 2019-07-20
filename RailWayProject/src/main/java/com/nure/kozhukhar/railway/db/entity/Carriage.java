@@ -1,6 +1,13 @@
 package com.nure.kozhukhar.railway.db.entity;
 
+/**
+ * Carriage entity
+ *
+ * @author Anatol Kozhukhar
+ */
 public class Carriage extends Entity {
+
+    private static final long serialVersionUID = 478960032870699341L;
 
     private Integer numCarriage;
 

@@ -4,6 +4,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
+<%--===================================================================
+          Checking localisation
+===================================================================--%>
 <c:if test="${empty sessionScope.localize}">
     <fmt:setLocale value="${cookie['localize'].value}"/>
 </c:if>
@@ -15,17 +18,23 @@
 <html>
 
 <c:set var="title" value="Login page" scope="page"/>
+<%--===================================================================
+                   Including HEAD
+===================================================================--%>
 <%@ include file="/WEB-INF/static/head.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <body>
-<au:AuthSecure/>
+<%--===================================================================
+                   Including HEADER
+===================================================================--%>
 <%@ include file="/WEB-INF/static/header.jsp" %>
 
 <div class="login-panel-bg">
     <div class="login-panel-content">
-        <%--<dib class="close">+</dib>--%>
         <img src="style/img/new_logo.svg" height="80" width="80" alt="">
-
+        <%--===================================================================
+                Error message field
+        ===================================================================--%>
         <h:errorValid error="${sessionScope.errorMessage}"/>
 
         <form action="login" method="POST">
@@ -42,7 +51,9 @@
         <a href="login?action=register"><fmt:message key="auth.login_message"/></a>
     </div>
 </div>
-
+<%--===================================================================
+                  Including FOOTER
+===================================================================--%>
 <%@ include file="/WEB-INF/static/footer.jsp" %>
 </body>
 </html>

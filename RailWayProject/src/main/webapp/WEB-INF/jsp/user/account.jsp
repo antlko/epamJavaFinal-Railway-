@@ -5,6 +5,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
+<%--===================================================================
+       Checking localisation
+===================================================================--%>
 <c:if test="${empty sessionScope.localize}">
     <fmt:setLocale value="${cookie['localize'].value}"/>
 </c:if>
@@ -16,19 +19,33 @@
 <html>
 
 <c:set var="title" value="Account" scope="page"/>
+<%--===================================================================
+        Including HEAD
+===================================================================--%>
 <%@ include file="/WEB-INF/static/head.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <body>
+<%--===================================================================
+       AuthSecure : page check if user in the system
+===================================================================--%>
 <au:AuthSecure/>
+<%--===================================================================
+         Including HEADER
+===================================================================--%>
 <%@ include file="/WEB-INF/static/header.jsp" %>
 
 <div class="tabs-content">
     <div class="tabs">
         <input type="radio" name="tabs" id="tabone" checked="checked">
         <label for="tabone"><fmt:message key="account.history"/></label>
-
+        <%--===================================================================
+                 Error message field
+        ===================================================================--%>
         <h:errorValid error="${sessionScope.errorMessage}"/>
 
+        <%--===================================================================
+                Output field for user tickets
+        ===================================================================--%>
         <div class="tab">
             <table>
                 <th><fmt:message key="ticket.date"/> </th>
@@ -50,6 +67,11 @@
                         <td id="cityStart">${check.cityStart}</td>
                         <td id="cityEnd">${check.cityEnd}</td>
                         <td>
+                                <%--===================================================================
+                                     Form Show user check
+                                     action   : will execute 'showCheck' action
+                                     checkInd : index of ticket in the loop
+                                ===================================================================--%>
                             <form action="account" method="get">
                                 <input type="hidden" name="action" value="showCheck" required>
                                 <input type="hidden" name="checkInd" value="${loop.index}" required>
@@ -57,6 +79,11 @@
                             </form>
                         </td>
                         <td>
+                                <%--===================================================================
+                                     Form for Deleting user check
+                                     action   : will execute 'deleteCheck' action
+                                     checkInd : index of ticket in the loop
+                                ===================================================================--%>
                             <form action="account" method="post">
                                 <input type="hidden" name="action" value="deleteCheck" required>
                                 <input type="hidden" name="checkInd" value="${loop.index}" required>
@@ -68,12 +95,18 @@
             </table>
         </div>
 
+        <%--===================================================================
+              Tab for setting customize user
+         ===================================================================--%>
         <input type="radio" name="tabs" id="tabtwo">
         <label for="tabtwo"><fmt:message key="account.profile"/></label>
         <div class="tab">
             <div class="login-panel-bg">
                 <div class="login-panel-content">
                     <h3><fmt:message key="label.welcome"/>, ${sessionScope.user.login}!</h3>
+                    <%--===================================================================
+                                  Save changed user information form
+                      ===================================================================--%>
                     <form action="account" method="post">
                         <input type="hidden" name="action" value="updatePersonal">
 
@@ -90,6 +123,9 @@
         </div>
     </div>
 </div>
+<%--===================================================================
+              Including FOOTER
+===================================================================--%>
 <%@ include file="/WEB-INF/static/footer.jsp" %>
 </body>
 <script src="style/js/qr.js" type="text/javascript"></script>

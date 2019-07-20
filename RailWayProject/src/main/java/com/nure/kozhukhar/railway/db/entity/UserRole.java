@@ -1,6 +1,13 @@
 package com.nure.kozhukhar.railway.db.entity;
 
+/**
+ * UserRole entity
+ *
+ * @author Anatol Kozhukhar
+ */
 public class UserRole extends Entity {
+
+    private static final long serialVersionUID = -7376000280649629019L;
 
     private Integer id;
 

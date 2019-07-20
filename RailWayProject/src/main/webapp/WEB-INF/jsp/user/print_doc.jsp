@@ -5,6 +5,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
+<%--===================================================================
+              Checking localisation
+===================================================================--%>
 <c:if test="${empty sessionScope.localize}">
     <fmt:setLocale value="${cookie['localize'].value}"/>
 </c:if>
@@ -17,11 +20,20 @@
 <html>
 
 <c:set var="title" value="Account" scope="page"/>
+<%--===================================================================
+              Including HEAD
+===================================================================--%>
 <%@ include file="/WEB-INF/static/head.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <body>
+<%--===================================================================
+       AuthSecure : page check if user in the system
+===================================================================--%>
 <au:AuthSecure/>
 
+<%--===================================================================
+       Error message field
+===================================================================--%>
 <h:errorValid error="${sessionScope.errorMessage}"/>
 <div class="tabs-content">
     <table>
@@ -45,6 +57,10 @@
             </tr>
     </table>
 </div>
+<%--===================================================================
+              Including FOOTER
+===================================================================--%>
+<%@ include file="/WEB-INF/static/footer.jsp" %>
 </body>
 <script src="style/js/qr.js" type="text/javascript"></script>
 </html>

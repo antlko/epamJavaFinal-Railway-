@@ -6,6 +6,11 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
 
+/**
+ * Encoding filter
+ *
+ * @author Anatol Kozhukhar
+ */
 public class EncodingFilter implements Filter {
 
     private static final Logger LOG = Logger.getLogger(EncodingFilter.class);

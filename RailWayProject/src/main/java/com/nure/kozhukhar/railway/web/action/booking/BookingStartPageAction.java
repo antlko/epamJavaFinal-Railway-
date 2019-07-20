@@ -19,9 +19,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Booking start page.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class BookingStartPageAction extends Action {
 
     private static final Logger LOG = Logger.getLogger(BookingStartPageAction.class);
+    private static final long serialVersionUID = 8633450721818540275L;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

@@ -3,8 +3,15 @@ package com.nure.kozhukhar.railway.db.entity;
 import java.sql.Date;
 import java.time.LocalDateTime;
 
+
+/**
+ * Station entity
+ *
+ * @author Anatol Kozhukhar
+ */
 public class Station extends Entity {
 
+    private static final long serialVersionUID = 2853786184111697342L;
     private Integer id;
 
     private Integer idCity;

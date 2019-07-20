@@ -20,9 +20,15 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Change station action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class StationChangeData extends Action {
 
     private static final Logger LOG = Logger.getLogger(StationChangeData.class);
+    private static final long serialVersionUID = -3551833302017356152L;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

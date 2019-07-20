@@ -22,9 +22,15 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * Check user sign in action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class UserSignInAction extends Action {
 
     private static final Logger LOG = Logger.getLogger(UserSignInAction.class);
+    private static final long serialVersionUID = 8755470787136309281L;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

@@ -10,6 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Security account filter.
+ * checks whether the user is already logged in the system.
+ *
+ * @author Anatol Kozhukhar
+ */
 @WebFilter(filterName = "AccountFilter", urlPatterns = "/account/*")
 public class AccountFilter implements Filter {
 

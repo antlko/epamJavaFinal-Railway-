@@ -4,6 +4,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
+<%--===================================================================
+              Checking for localisaton
+===================================================================--%>
 <c:if test="${empty sessionScope.localize}">
     <fmt:setLocale value="${cookie['localize'].value}"/>
 </c:if>
@@ -15,14 +18,23 @@
 <html>
 
 <c:set var="title" value="Booking" scope="page"/>
+<%--===================================================================
+              Including HEAD
+===================================================================--%>
 <%@ include file="/WEB-INF/static/head.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <body>
+<%--===================================================================
+              Including HEADER
+===================================================================--%>
 <%@ include file="/WEB-INF/static/header.jsp" %>
 <section class="content">
     <div class="block-content">
-        <h1><fmt:message key="ticket.header_name" /></h1>
+        <h1><fmt:message key="ticket.header_name"/></h1>
     </div>
+    <%--===================================================================
+                  Error Message field
+    ===================================================================--%>
     <h:errorValid error="${sessionScope.errorMessage}"/>
 
     <div class="block-centered-content">
@@ -36,7 +48,7 @@
                    value="${sessionScope.cityStart}"
                    placeholder="<fmt:message key="ticket.from" />" style="width: 250px">
 
-            <img class = "switch_img" src="style/img/reload.png"/>
+            <img class="switch_img" src="style/img/reload.png"/>
 
             <input id="cityEnd" list="cities" type="text" name="cityEnd" required
                    value="${sessionScope.cityEnd}"
@@ -48,19 +60,27 @@
             <input class="normal" type="submit"
                    value="<fmt:message key="ticket.search" />"/>
         </form>
+        <%--===================================================================
+              Data List for cities
+        ===================================================================--%>
         <datalist id="cities">
             <c:forEach var="c" items="${requestScope.listStation}">
                 <option value="${c.name}"></option>
             </c:forEach>
         </datalist>
     </div>
+
+    <%--===================================================================
+              Table which contains information about route,
+              carriage, type, free seats etc.
+    ===================================================================--%>
     <div class="block-centered-content">
         <p>${sessionScope.infoBookingMessage}</p>
     </div>
     <c:if test="${not empty sessionScope.infoRoutes}">
         <div class="block-centered-content">
             <table>
-                <th><fmt:message key="ticket.train"/> </th>
+                <th><fmt:message key="ticket.train"/></th>
                 <th><fmt:message key="ticket.from"/></th>
                 <th><fmt:message key="ticket.destination"/></th>
                 <th><fmt:message key="ticket.date"/></th>
@@ -94,6 +114,9 @@
                         <td>
                             <c:forEach var="seat" items="${route.seatList}">
                                 <p>
+                                        <%--===================================================================
+                                                      Open this type of carriage/s for ordering seats
+                                        ===================================================================--%>
                                 <form action="booking" method="GET">
 
                                     <input type="hidden" name="action" value="toOrdering">
@@ -112,6 +135,9 @@
         </div>
     </c:if>
 </section>
+<%--===================================================================
+              Including FOOTER
+===================================================================--%>
 <%@ include file="/WEB-INF/static/footer.jsp" %>
 </body>
 <script src="style/js/tooltip.js" type="text/javascript"></script>

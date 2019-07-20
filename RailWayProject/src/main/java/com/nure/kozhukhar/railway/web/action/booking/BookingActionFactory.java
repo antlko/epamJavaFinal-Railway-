@@ -8,6 +8,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Booking Action Factory
+ * <p>
+ * Holder for all actions booking controller
+ * </p>
+ *
+ * @author Anatol Kozhukhar
+ */
 public class BookingActionFactory {
 
     private static final Logger LOG = Logger.getLogger(BookingActionFactory.class);
@@ -24,6 +32,13 @@ public class BookingActionFactory {
         actions.put("seatInCarriage", new FindCarriageContentAction());
     }
 
+    /**
+     * Returns action object with the given name.
+     *
+     * @param request
+     *            request from ServletUtil
+     * @return Command object.
+     */
     public static Action getAction(HttpServletRequest request) {
         String actionName = request.getParameter("action");
         LOG.debug("Action name auth : " + actionName);

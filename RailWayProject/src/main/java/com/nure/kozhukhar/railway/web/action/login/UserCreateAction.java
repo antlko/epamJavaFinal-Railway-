@@ -20,7 +20,14 @@ import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * User registration action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class UserCreateAction extends Action {
+    private static final long serialVersionUID = 9179960028314272658L;
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, AppException {

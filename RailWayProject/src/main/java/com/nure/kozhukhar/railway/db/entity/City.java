@@ -1,6 +1,13 @@
 package com.nure.kozhukhar.railway.db.entity;
 
+/**
+ * City entity
+ *
+ * @author Anatol Kozhukhar
+ */
 public class City extends Entity {
+
+    private static final long serialVersionUID = 5307950332986911281L;
 
     private Integer id;
 

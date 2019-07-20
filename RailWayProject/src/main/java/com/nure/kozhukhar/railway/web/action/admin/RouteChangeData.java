@@ -26,9 +26,15 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Route change action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class RouteChangeData extends Action {
 
     private static final Logger LOG = Logger.getLogger(AdminAccountPage.class);
+    private static final long serialVersionUID = 2969312008058985748L;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

@@ -18,6 +18,11 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Change seats and carriages action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class CarrSeatChangeData extends Action {
 
     private static final Logger LOG = Logger.getLogger(CarrSeatChangeData.class);

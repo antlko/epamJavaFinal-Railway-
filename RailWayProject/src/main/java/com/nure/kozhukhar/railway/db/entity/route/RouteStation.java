@@ -5,7 +5,15 @@ import com.nure.kozhukhar.railway.db.entity.Entity;
 import java.sql.Date;
 import java.time.LocalDateTime;
 
+/**
+ * RouteStation entity
+ *
+ * @author Anatol Kozhukhar
+ */
+
 public class RouteStation extends Entity {
+
+    private static final long serialVersionUID = -952115418421093753L;
 
     private Integer idStation;
 

@@ -12,9 +12,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Carriage content action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class FindCarriageContentAction extends Action {
 
     private static final Logger LOG = Logger.getLogger(FindCarriageContentAction.class);
+    private static final long serialVersionUID = -7897122543357828729L;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

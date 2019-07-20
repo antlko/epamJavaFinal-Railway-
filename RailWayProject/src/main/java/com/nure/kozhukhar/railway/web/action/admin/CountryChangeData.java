@@ -18,9 +18,15 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Change country action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class CountryChangeData extends Action {
 
     private static final Logger LOG = Logger.getLogger(CountryChangeData.class);
+    private static final long serialVersionUID = -2431421771334871282L;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

@@ -5,6 +5,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
+<%--===================================================================
+              Checking for localisaton
+===================================================================--%>
 <c:if test="${empty sessionScope.localize}">
     <fmt:setLocale value="${cookie['localize'].value}"/>
 </c:if>
@@ -16,20 +19,34 @@
 <html>
 
 <c:set var="title" value="Admin" scope="page"/>
+<%--===================================================================
+              Including HEAD
+===================================================================--%>
 <%@ include file="/WEB-INF/static/head.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <body>
-<%----%>
+<%--===================================================================
+              Cheking user logged status
+===================================================================--%>
 <au:AuthSecure/>
+<%--===================================================================
+              Including HEADER
+===================================================================--%>
 <%@ include file="/WEB-INF/static/header.jsp" %>
 <section class="content">
 
     <div class="block-content">
         <h1><fmt:message key="admin.admin_panel"/></h1>
     </div>
+    <%--===================================================================
+                  Error message field
+    ===================================================================--%>
     <h:errorValid error="${sessionScope.errorMessage}"/>
     <div class="tabs-content">
         <div class="tabs">
+            <%--===================================================================
+                          Tab 1 : Change user information
+            ===================================================================--%>
             <input type="radio" name="tabs" id="tab_1" value=1
                    <c:if test="${sessionScope.tab == 1 or empty sessionScope.tab}">checked</c:if>
             />
@@ -57,6 +74,9 @@
                 </div>
             </div>
 
+            <%--===================================================================
+                     Tab 2 : Change locale information
+            ===================================================================--%>
             <input type="radio" name="tabs" id="tab_2" value=2
                    <c:if test="${sessionScope.tab == 2}">checked</c:if>
             />
@@ -143,7 +163,9 @@
                     </c:forEach>
                 </div>
             </div>
-
+            <%--===================================================================
+                      Tab 3 : Change transport information
+             ===================================================================--%>
             <input type="radio" name="tabs" id="tab_3" value=3
                    <c:if test="${sessionScope.tab == 3}">checked</c:if>
             />
@@ -261,7 +283,9 @@
                 </div>
             </div>
 
-
+            <%--===================================================================
+                  Tab 4 : Route information
+            ===================================================================--%>
             <input type="radio" name="tabs" id="tab_4" value=4
                    <c:if test="${sessionScope.tab == 4}">checked</c:if>
             />
@@ -278,7 +302,6 @@
 
                     <div id="myDIV" class="header">
                         <h2><fmt:message key="admin.add_station_to_new_route"/> :</h2>
-                        <%--<input type="" id="myInput" placeholder="Title...">--%>
                         <select name="tagTypes" id="myInput">
                             <c:forEach items="${requestScope.allStationInfo}" var="station">
                                 <option>${station.name}</option>
@@ -316,6 +339,9 @@
                     <input class="normal" type="submit" name="changeRouteInfo" value="Save">
                 </form>
                 <hr>
+                <%--===================================================================
+                      Adding route on custom date
+                  ===================================================================--%>
                 <h3><fmt:message key="admin.route_on_date"/></h3>
                 <form action="admin" method="post">
                     <input type="hidden" name="action" value="changeRoute">
@@ -338,7 +364,9 @@
                     <input class="danger" type="submit" name="changeRouteInfo" value="Delete">
                 </form>
 
-
+                <%--===================================================================
+                          Show all routes information
+                 ===================================================================--%>
                 <input class="middle sidebar-route-stat" type="submit" name="showRoute" value="Show All">
                 <br>
                 <div id="sidebar-route-stat" class="sidebar">
@@ -365,6 +393,9 @@
         </div>
     </div>
 </section>
+<%--===================================================================
+          Including FOOTER
+===================================================================--%>
 <%@ include file="/WEB-INF/static/footer.jsp" %>
 </body>
 <script src="style/js/show_button.js" type="text/javascript"></script>

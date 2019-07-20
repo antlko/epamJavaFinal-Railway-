@@ -16,9 +16,16 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * User Account Page action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class UserAccountPage extends Action {
 
     private static final Logger LOG = Logger.getLogger(UserAccountPage.class);
+    private static final long serialVersionUID = -876851366293387697L;
+
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

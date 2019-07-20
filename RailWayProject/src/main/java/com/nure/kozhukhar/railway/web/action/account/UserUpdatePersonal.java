@@ -17,9 +17,15 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * User Update action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class UserUpdatePersonal extends Action {
 
     private static final Logger LOG = Logger.getLogger(UserUpdatePersonal.class);
+    private static final long serialVersionUID = -5142199038334962721L;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

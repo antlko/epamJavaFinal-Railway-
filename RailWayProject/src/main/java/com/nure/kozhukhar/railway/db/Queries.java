@@ -1,5 +1,10 @@
 package com.nure.kozhukhar.railway.db;
 
+/**
+ * Queries class
+ *
+ * @author Anatol Kozhukhar
+ */
 public class Queries {
 
     public static final String SQL_FIND_ROUTE_ON_DATE_BY_ROUTE_ID = "" +
@@ -55,7 +60,7 @@ public class Queries {
             "\t\t\tAND RS.id_station = RD3.id_station\n" +
             "            AND RS.id_route = RD3.id_route\n" +
             "            AND RS.id_train = RD3.id_train\n" +
-            "      AND DATE(RD3.date_end) = ?"+
+            "      AND DATE(RD3.date_end) = ?" +
             "\t\t  AND RD3.time_date_end < (\n" +
             "\t\t\tSELECT RD1.time_date_end FROM routes_on_date RD1\n" +
             "\t\t\tWHERE RD1.id_route = RD3.id_route\n" +
@@ -318,7 +323,7 @@ public class Queries {
     public static final String SQL_FIND_STATIONS_BY_ROUTE_ID = "SELECT * FROM routes_station WHERE id_route = ?";
     public static final String SQL_SAVE_STATION_BY_ROUTE_ID_INSERT =
             "                    INSERT INTO routes_on_date(date_end, id_train, id_route, id_station, time_date_start, time_date_end) " +
-            "                    VALUES(?,?,?,?, ?, ?);";
+                    "                    VALUES(?,?,?,?, ?, ?);";
     public static final String SQL_SELECT_ALL_ROUTES_BY_ID = "SELECT DISTINCT id FROM routes;";
     public static final String SQL_SELECT_NAME_FROM_ROUTE_STATIONS = "SELECT name from routes_station RS INNER JOIN Stations S ON RS.id_station = S.id WHERE id_route = ? ORDER BY time_end ";
     public static final String SQL_GET_ALL_STATIONS_BY_ROUTE_ID = "SELECT * FROM routes_station RS INNER JOIN stations S ON RS.id_station = S.id WHERE id_route = ? ORDER BY time_end";

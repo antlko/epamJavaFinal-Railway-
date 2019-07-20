@@ -2,7 +2,15 @@ package com.nure.kozhukhar.railway.db.entity;
 
 import java.time.LocalDateTime;
 
+
+/**
+ * UserCheck entity
+ *
+ * @author Anatol Kozhukhar
+ */
 public class UserCheck extends Entity {
+
+    private static final long serialVersionUID = 3901424055251372800L;
 
     private Integer idUser;
 

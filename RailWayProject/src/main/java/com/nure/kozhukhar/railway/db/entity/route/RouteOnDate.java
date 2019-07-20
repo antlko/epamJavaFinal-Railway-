@@ -7,7 +7,15 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * RouteOnDate entity
+ *
+ * @author Anatol Kozhukhar
+ */
 public class RouteOnDate extends Entity {
+
+    private static final long serialVersionUID = -2687409717290088355L;
 
     private Date DateEnd;
 

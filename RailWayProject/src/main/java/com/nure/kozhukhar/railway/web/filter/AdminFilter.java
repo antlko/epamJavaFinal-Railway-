@@ -13,6 +13,12 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Security account filter.
+ * checks whether the user has ADMIN role
+ *
+ * @author Anatol Kozhukhar
+ */
 @WebFilter(filterName = "AdminFilter", urlPatterns = "/admin/*")
 public class AdminFilter implements Filter {
 

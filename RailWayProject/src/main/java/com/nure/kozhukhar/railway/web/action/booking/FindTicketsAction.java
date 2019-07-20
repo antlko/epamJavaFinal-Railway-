@@ -18,9 +18,15 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.util.List;
 
+/**
+ * Find Ticket action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class FindTicketsAction extends Action {
 
     private static final Logger LOG = Logger.getLogger(FindTicketsAction.class);
+    private static final long serialVersionUID = 4879439555532315808L;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

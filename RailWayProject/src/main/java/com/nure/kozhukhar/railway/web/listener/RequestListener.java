@@ -10,6 +10,12 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import javax.servlet.http.HttpSessionBindingEvent;
 
+/**
+ * Listener for requests.
+ * <p>
+ *     Save into logs request information.
+ * </p>
+ */
 @WebListener
 public class RequestListener implements ServletRequestListener {
 
@@ -17,13 +23,13 @@ public class RequestListener implements ServletRequestListener {
 
     public void requestDestroyed(ServletRequestEvent servletRequestEvent) {
         ServletRequest servletRequest = servletRequestEvent.getServletRequest();
-        System.out.println("ServletRequest destroyed. Remote IP="
+        LOG.debug("ServletRequest destroyed. Remote IP="
                 + servletRequest.getRemoteAddr());
     }
 
     public void requestInitialized(ServletRequestEvent servletRequestEvent) {
         ServletRequest servletRequest = servletRequestEvent.getServletRequest();
-        System.out.println("ServletRequest initialized. Remote IP="
+        LOG.debug("ServletRequest initialized. Remote IP="
                 + servletRequest.getRemoteAddr());
     }
 

@@ -12,10 +12,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Account servlet controller
+ *
+ * @author Anatol Kozhukhar
+ */
 @WebServlet(name = "AccountController", urlPatterns = "/account")
 public class AccountController extends HttpServlet {
 
     private static final Logger LOG = Logger.getLogger(LoginController.class);
+    private static final long serialVersionUID = -3458358028508441279L;
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

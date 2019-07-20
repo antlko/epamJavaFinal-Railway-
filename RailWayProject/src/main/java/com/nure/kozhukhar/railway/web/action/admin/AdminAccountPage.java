@@ -22,9 +22,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Admin page action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class AdminAccountPage extends Action {
 
     private static final Logger LOG = Logger.getLogger(AdminAccountPage.class);
+    private static final long serialVersionUID = 406837234627325838L;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

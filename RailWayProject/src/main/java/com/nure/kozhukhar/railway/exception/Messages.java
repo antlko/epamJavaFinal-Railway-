@@ -1,5 +1,15 @@
 package com.nure.kozhukhar.railway.exception;
 
+/**
+ * Messages
+ * <p>
+ *     This class provides messages from server to clients.
+ *     Messages could be contain into 'messages.properties' and
+ *     could be translated into different languages.
+ * </p>
+ *
+ * @author Anatol Kozhukhar
+ */
 public class Messages {
 
 	/**

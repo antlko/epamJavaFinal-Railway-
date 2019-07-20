@@ -9,6 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
 
+/**
+ * Abstract class for Actions
+ *
+ * @author Anatol Kozhukhar
+ */
 public abstract class Action implements Serializable {
 	private static final long serialVersionUID = 8879403039606311780L;
 

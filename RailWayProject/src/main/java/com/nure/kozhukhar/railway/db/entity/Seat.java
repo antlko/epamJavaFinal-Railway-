@@ -1,7 +1,13 @@
 package com.nure.kozhukhar.railway.db.entity;
 
+/**
+ * Seat entity
+ *
+ * @author Anatol Kozhukhar
+ */
 public class Seat extends Entity {
 
+    private static final long serialVersionUID = 5696112236552238940L;
     private Integer numCarriage;
 
     private Integer numSeat;

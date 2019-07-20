@@ -4,6 +4,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
+<%--===================================================================
+              Checking for localisaton
+===================================================================--%>
 <c:if test="${empty sessionScope.localize}">
     <fmt:setLocale value="${cookie['localize'].value}"/>
 </c:if>
@@ -15,14 +18,23 @@
 <html>
 
 <c:set var="title" value="Booking" scope="page"/>
+<%--===================================================================
+              Including HEAD
+===================================================================--%>
 <%@ include file="/WEB-INF/static/head.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <body>
+<%--===================================================================
+              Including HEADER
+===================================================================--%>
 <%@ include file="/WEB-INF/static/header.jsp" %>
 <section class="content">
     <div class="block-content">
-        <h1><fmt:message key="ticket.header_name" /></h1>
+        <h1><fmt:message key="ticket.header_name"/></h1>
     </div>
+    <%--===================================================================
+              Error message field
+    ===================================================================--%>
     <h:errorValid error="${sessionScope.errorMessage}"/>
 
     <div class="block-centered-content">
@@ -48,6 +60,9 @@
             <input class="normal" type="submit"
                    value="<fmt:message key="ticket.search" />"/>
         </form>
+        <%--===================================================================
+                      Cities data list
+        ===================================================================--%>
         <datalist id="cities">
             <c:forEach var="c" items="${requestScope.listStation}">
                 <option value="${c.name}"></option>
@@ -57,6 +72,9 @@
     <div class="block-centered-content">
         <p>${sessionScope.infoBookingMessage}</p>
     </div>
+    <%--===================================================================
+              Route information
+    ===================================================================--%>
     <c:if test="${not empty sessionScope.userRoute}">
         <div class="block-centered-content">
             <table>
@@ -91,6 +109,9 @@
         <div class="block-centered-content">
             <h2><fmt:message key="ticket.carriage"/></h2>
         </div>
+        <%--===================================================================
+              Checking carriage login and carriage information
+        ===================================================================--%>
         <div class="block-centered-content">
             <c:forEach var="carriage" items="${sessionScope.serviceCarriage}" varStatus="i">
                 <form action="booking" method="GET">
@@ -107,6 +128,9 @@
                 </form>
             </c:forEach>
         </div>
+        <%--===================================================================
+              Visualisation carriage
+        ===================================================================--%>
         <div class="block-centered-content">
             <ul style="display:none;">
                 <c:forEach var="seat" items="${sessionScope.serviceSeats}">
@@ -144,6 +168,9 @@
         </div>
     </c:if>
 </section>
+<%--===================================================================
+              Including FOOTER
+===================================================================--%>
 <%@ include file="/WEB-INF/static/footer.jsp" %>
 </body>
 <script src="style/js/seat_reservation.js" type="text/javascript"></script>

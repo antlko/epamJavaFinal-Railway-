@@ -11,6 +11,12 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import javax.servlet.http.HttpSessionBindingEvent;
 
+/**
+ * Listener for sessions.
+ * <p>
+ *     Save into logs request information.
+ * </p>
+ */
 @WebListener
 public class SessionListener implements HttpSessionListener {
 

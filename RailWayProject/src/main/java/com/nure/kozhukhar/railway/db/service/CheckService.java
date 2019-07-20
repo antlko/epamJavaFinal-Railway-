@@ -13,10 +13,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Check Service
+ * <p>
+ * This object provides services for Users Checks
+ * </p>
+ *
+ * @author Anatol Kozhukhar
+ */
 public class CheckService {
 
     private static final Logger LOG = Logger.getLogger(CheckService.class);
 
+    /**
+     * This method is used for getting User tickets information.
+     * If information is absent will show nothing. But, if there
+     * happened some exceptions will be throw new DBException.
+     *
+     * @param idUser ID User
+     * @return list of UserCheckBean
+     * @throws DBException
+     */
     public static List<UserCheckBean> getUserTicketsById(Integer idUser) throws DBException {
 
         List<UserCheckBean> checksInfo = null;
@@ -44,8 +61,9 @@ public class CheckService {
                 check.setIdUser(idUser);
                 checksInfo.add(check);
             }
-        } catch (ClassNotFoundException | NullPointerException |SQLException e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | NullPointerException | SQLException e) {
+            LOG.error(e);
+            throw new DBException("Something went wrong!", e);
         }
 
         LOG.debug("Check beans info --> " + checksInfo);

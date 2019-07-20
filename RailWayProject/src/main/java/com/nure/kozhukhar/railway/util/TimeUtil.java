@@ -7,6 +7,17 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Properties;
 
+/**
+ * Time util.
+ * <p>
+ * It set time Zone and transform
+ * some time to time with timezone.
+ *
+ * Time zone saved in application.properties
+ * </p>
+ *
+ * @author Anatol Kozhukhar
+ */
 public final class TimeUtil {
 
     private static String timeZone;
@@ -21,10 +32,6 @@ public final class TimeUtil {
             e.printStackTrace();
         }
         timeZone = appProps.getProperty("timezone");
-    }
-
-    public static String getTimeZone() {
-        return timeZone;
     }
 
     public static LocalDateTime getDateTimeWithTimeZone(LocalDateTime dateTime) {

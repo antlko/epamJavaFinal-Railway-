@@ -1,5 +1,10 @@
 package com.nure.kozhukhar.railway.db;
 
+/**
+ * Enumeration class user roles
+ *
+ * @author Anatol Kozhukhar
+ */
 public enum Role {
 
     ADMIN("ADMIN"),

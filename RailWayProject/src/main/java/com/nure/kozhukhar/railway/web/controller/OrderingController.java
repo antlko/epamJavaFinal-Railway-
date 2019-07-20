@@ -13,10 +13,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Ordering servlet controller
+ *
+ * @author Anatol Kozhukhar
+ */
 @WebServlet(name = "OrderingController", urlPatterns = "/ordering")
 public class OrderingController extends HttpServlet {
 
     private static final Logger LOG = Logger.getLogger(OrderingController.class);
+    private static final long serialVersionUID = -3834588540249753980L;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

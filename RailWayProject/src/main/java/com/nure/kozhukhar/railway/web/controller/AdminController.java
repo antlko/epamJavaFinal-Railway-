@@ -13,10 +13,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Admin servlet controller
+ *
+ * @author Anatol Kozhukhar
+ */
 @WebServlet(name = "AdminController", urlPatterns = "/admin")
 public class AdminController extends HttpServlet {
 
     private static final Logger LOG = Logger.getLogger(LoginController.class);
+    private static final long serialVersionUID = 2214037066889039843L;
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

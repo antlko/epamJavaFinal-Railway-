@@ -15,7 +15,14 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Change user action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class UserChangeData extends Action {
+    private static final long serialVersionUID = 2157016170904898520L;
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, AppException {

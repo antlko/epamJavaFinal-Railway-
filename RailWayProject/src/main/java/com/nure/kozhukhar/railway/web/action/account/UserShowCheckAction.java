@@ -13,6 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * User Show Check action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class UserShowCheckAction extends Action {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

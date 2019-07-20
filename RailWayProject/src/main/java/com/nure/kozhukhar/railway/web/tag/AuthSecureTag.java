@@ -7,8 +7,15 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
 
+/**
+ * Authentication tag
+ * <p>
+ *     Custom tag which allows after logout
+ *     always checking in system user or not.
+ *     Security page be revalidate after redirect to them.
+ * </p>
+ */
 public class AuthSecureTag extends SimpleTagSupport {
-
 
     @Override
     public void doTag() throws JspException, IOException {
@@ -18,12 +25,6 @@ public class AuthSecureTag extends SimpleTagSupport {
 
         // HTTP 1.1.
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-
-        // HTTP 1.0
-        response.setHeader("Pragma","no-cache");
-
-        //Proxies
-        response.setHeader("Expires", "0");
 
         if(request.getSession().getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/login");

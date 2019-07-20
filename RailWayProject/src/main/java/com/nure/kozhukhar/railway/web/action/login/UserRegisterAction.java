@@ -9,7 +9,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Show register form action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class UserRegisterAction extends Action {
+
+    private static final long serialVersionUID = -9146332268734031302L;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

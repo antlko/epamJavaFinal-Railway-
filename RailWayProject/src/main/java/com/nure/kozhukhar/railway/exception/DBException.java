@@ -3,7 +3,7 @@ package com.nure.kozhukhar.railway.exception;
 /**
  * An exception that provides information on a database access error.
  * 
- * @author D.Kolesnikov
+ * @author Anatol Kozhukhar
  * 
  */
 public class DBException extends AppException {

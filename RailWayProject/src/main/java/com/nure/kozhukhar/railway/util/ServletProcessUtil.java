@@ -17,10 +17,20 @@ import java.util.Properties;
 
 import static java.util.Arrays.asList;
 
+/**
+ * Servlet Util. This class provides
+ * processing users queries to the controllers and redirect
+ * to other pages or show error page.
+ *
+ * @author Kozhukhar Anatol
+ */
 public class ServletProcessUtil {
 
     private static final Logger LOG = Logger.getLogger(ServletProcessUtil.class);
 
+    /**
+     * List of controllers
+     */
     private static final List<String> controllers = new ArrayList<>();
 
     static {
@@ -35,6 +45,16 @@ public class ServletProcessUtil {
         controllers.addAll(asList(appProps.getProperty("pages").split(",")));
     }
 
+    /**
+     * Processing users actions
+     *
+     * @param request
+     * @param response
+     * @param errorPath path to the page if error has happened
+     * @param action user action
+     * @throws ServletException
+     * @throws IOException
+     */
     public static void process(HttpServletRequest request,
                                HttpServletResponse response,
                                String errorPath,

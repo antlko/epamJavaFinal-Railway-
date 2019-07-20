@@ -15,9 +15,15 @@
 <html>
 
 <c:set var="title" value="Main page" scope="page"/>
+<%--===================================================================
+        Loading HEADER.jsp
+===================================================================--%>
 <%@ include file="/WEB-INF/static/head.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <body>
+<%--===================================================================
+        Loading HEADER.jsp
+===================================================================--%>
 <%@ include file="/WEB-INF/static/header.jsp" %>
 
 <main>
@@ -29,6 +35,9 @@
                     <fmt:message key="label.message_preview"/>
                 </p>
             </div>
+            <%--===================================================================
+                          Buttons Log-In or Sign-In to thw system
+             ===================================================================--%>
             <div class="cta">
                 <form action="login" method="get">
                     <input type="hidden" name="action" value="register">
@@ -49,7 +58,9 @@
         </div>
     </section>
 </main>
-
+<%--===================================================================
+              Load FOOTER.jsp
+===================================================================--%>
 <%@ include file="/WEB-INF/static/footer.jsp" %>
 </body>
 </html>

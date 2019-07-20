@@ -20,9 +20,15 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Change city action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class CityChangeData extends Action {
 
     private static final Logger LOG = Logger.getLogger(CityChangeData.class);
+    private static final long serialVersionUID = -2297544768451048116L;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

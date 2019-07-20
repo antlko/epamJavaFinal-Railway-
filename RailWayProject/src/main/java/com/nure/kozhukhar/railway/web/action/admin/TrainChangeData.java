@@ -18,7 +18,14 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Change train action.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class TrainChangeData extends Action {
+    private static final long serialVersionUID = -6444747338078726266L;
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, AppException {

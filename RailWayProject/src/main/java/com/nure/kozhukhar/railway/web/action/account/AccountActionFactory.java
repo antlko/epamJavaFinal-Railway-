@@ -9,6 +9,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Account Action Factory
+ * <p>
+ * Holder for all actions account controller
+ * </p>
+ *
+ * @author Anatol Kozhukhar
+ */
 public class AccountActionFactory {
 
     private static final Logger LOG = Logger.getLogger(AccountActionFactory.class);
@@ -27,14 +35,21 @@ public class AccountActionFactory {
         actions.put("showCheck", new UserShowCheckAction());
     }
 
+    /**
+     * Returns action object with the given name.
+     *
+     * @param request
+     *            request from ServletUtil
+     * @return Command object.
+     */
     public static Action getAction(HttpServletRequest request) {
         String actionName = request.getParameter("action");
         LOG.debug("Action name auth : " + actionName);
         action = actions.get(actionName);
-        if(action == null) {
+        if (action == null) {
             return actions.get("account");
         }
-        if(!actions.containsKey(actionName)) {
+        if (!actions.containsKey(actionName)) {
             return actions.get("noFound");
         }
         return action;

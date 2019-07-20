@@ -13,10 +13,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Booking servlet controller
+ *
+ * @author Anatol Kozhukhar
+ */
 @WebServlet(name = "BookingController", urlPatterns = "/booking")
 public class BookingController extends HttpServlet {
 
     private static final Logger LOG = Logger.getLogger(LoginController.class);
+    private static final long serialVersionUID = -8730681283449626002L;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
