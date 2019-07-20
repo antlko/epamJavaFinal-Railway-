@@ -13,23 +13,43 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO Object which operate Cities information from DB.
+ * Have a {@link CityDao} constructor with connection parameter.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class CityDao implements Dao<City> {
 
-    private static final Logger LOG = Logger.getLogger(CheckDao.class);
+    private static final Logger LOG = Logger.getLogger(CityDao.class);
 
     private Connection conn;
 
+    /**
+     * Connection is important for execution queries and
+     * manipulation data from the DB.
+     *
+     * @param conn is used for set connection parameter
+     */
     public CityDao(Connection conn) {
         this.conn = conn;
     }
 
+    /**
+     * This method search City by name parameter and
+     * return City ID.
+     *
+     * @param name City name
+     * @return ID City
+     * @throws DBException
+     */
     public Integer getIdCityByName(String name) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-
         Integer idCity = null;
+
         try {
-            pstmt = conn.prepareStatement("SELECT id FROM cities WHERE name = ?");
+            pstmt = conn.prepareStatement(Queries.SQL_GET_ID_CITY_BY_NAME);
 
             pstmt.setString(1, name);
             rs = pstmt.executeQuery();
@@ -41,7 +61,7 @@ public class CityDao implements Dao<City> {
 
         } catch (SQLException e) {
             DBUtil.rollback(conn);
-            e.printStackTrace();
+            LOG.error(Messages.ERR_GET_CITY_BY_ID, e);
             throw new DBException(Messages.ERR_GET_CITY_BY_ID, e);
         } finally {
             DBUtil.close(rs);
@@ -56,6 +76,12 @@ public class CityDao implements Dao<City> {
         return null;
     }
 
+    /**
+     * This method return all cities from DB
+     *
+     * @return list of Cities
+     * @throws DBException
+     */
     @Override
     public List<City> getAll() throws DBException {
         Statement stmt = null;
@@ -64,7 +90,7 @@ public class CityDao implements Dao<City> {
         List<City> cityNames = new ArrayList<>();
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM Cities ORDER BY name");
+            rs = stmt.executeQuery(Queries.SQL_GET_ALL_CITIES);
             while (rs.next()) {
                 City cityTemp = new City();
                 cityTemp.setName(rs.getString("name"));
@@ -74,7 +100,7 @@ public class CityDao implements Dao<City> {
 
         } catch (SQLException e) {
             DBUtil.rollback(conn);
-            e.printStackTrace();
+            LOG.error(Messages.ERR_GET_CITY_LIST, e);
             throw new DBException(Messages.ERR_GET_CITY_LIST, e);
         } finally {
             DBUtil.close(rs);
@@ -84,12 +110,18 @@ public class CityDao implements Dao<City> {
         return cityNames;
     }
 
+    /**
+     * This method save new city to DB
+     *
+     * @param city City object
+     * @throws DBException
+     */
     @Override
     public void save(City city) throws DBException {
         PreparedStatement pstmt = null;
 
         try {
-            pstmt = conn.prepareStatement("INSERT INTO cities(name,id_country) VALUES(?,?)");
+            pstmt = conn.prepareStatement(Queries.SQL_SAVE_NEW_CITY);
             int atr = 1;
             pstmt.setString(atr++, city.getName());
             pstmt.setInt(atr, city.getIdCountry());
@@ -110,19 +142,25 @@ public class CityDao implements Dao<City> {
 
     }
 
+    /**
+     * This method delete city from db
+     *
+     * @param city City object
+     * @throws DBException
+     */
     @Override
     public void delete(City city) throws DBException {
         PreparedStatement pstmt = null;
 
         try {
-            pstmt = conn.prepareStatement("DELETE FROM cities WHERE name = ?");
+            pstmt = conn.prepareStatement(Queries.SQL_DELETE_CITY_FROM_DB);
             pstmt.setString(1, city.getName());
             pstmt.executeUpdate();
             conn.commit();
 
         } catch (SQLException e) {
             DBUtil.rollback(conn);
-            e.printStackTrace();
+            LOG.error(Messages.ERR_DELETE_CITY, e);
             throw new DBException(Messages.ERR_DELETE_CITY, e);
         } finally {
             DBUtil.close(pstmt);

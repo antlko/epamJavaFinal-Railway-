@@ -4,6 +4,11 @@ import com.nure.kozhukhar.railway.db.entity.Seat;
 
 import java.util.List;
 
+/**
+ * Provide carriage, seats information for desired route.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class SeatSearchBean {
 
     private String seatType;

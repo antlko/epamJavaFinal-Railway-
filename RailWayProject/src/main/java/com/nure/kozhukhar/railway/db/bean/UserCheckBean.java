@@ -6,6 +6,11 @@ import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Provide information that is responsible for user-purchased route
+ *
+ * @author Anatol Kozhukhar
+ */
 public class UserCheckBean {
 
     private String userInitial;

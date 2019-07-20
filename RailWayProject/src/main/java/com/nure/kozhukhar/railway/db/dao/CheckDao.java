@@ -14,22 +14,39 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO Object getting User Check information from route.
+ * Have a {@link CheckDao} constructor with connection parameter.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class CheckDao implements Dao {
 
     private Connection conn;
 
+    /**
+     * Connection is important for execution queries and
+     * manipulation data from the DB.
+     *
+     * @param conn is used for set connection parameter
+     */
     public CheckDao(Connection conn) {
         this.conn = conn;
     }
 
     private static final Logger LOG = Logger.getLogger(CheckDao.class);
 
+    /**
+     * This method save information about user route.
+     *
+     * @param userCheck object, which have a set of values prepared for inserting.
+     * @throws DBException
+     */
     public void saveUserCheckInfo(UserCheck userCheck) throws DBException {
         PreparedStatement pstmt = null;
 
         try {
-            pstmt = conn.prepareStatement("INSERT INTO user_check (id_user, date_end, id_train,num_carriage,num_seat,id_station,id_route,initials) \n" +
-                    "VALUES(?,?,?,?,?,?,?,?);");
+            pstmt = conn.prepareStatement(Queries.SQL_SAVE_NEW_USER_CHECK);
 
             String date = Timestamp.valueOf(userCheck.getDateEnd()).toString().split("\\.")[0];
 
@@ -47,12 +64,19 @@ public class CheckDao implements Dao {
 
         } catch (SQLException e) {
             DBUtil.rollback(conn);
+            LOG.error(Messages.ERR_CANNOT_SAVE_USER_CHECK, e);
             throw new DBException(Messages.ERR_CANNOT_SAVE_USER_CHECK, e);
         } finally {
             DBUtil.close(pstmt);
         }
     }
 
+    /**
+     *
+     * @param idUser ID User in DB
+     * @return all info about bought routes
+     * @throws DBException
+     */
     public List<UserCheck> getAllCheckByUserId(Integer idUser) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -76,7 +100,7 @@ public class CheckDao implements Dao {
 
         } catch (SQLException | NullPointerException e) {
             DBUtil.rollback(conn);
-            e.printStackTrace();
+            LOG.error(Messages.ERR_CANNOT_GET_CHECK_BY_USER, e);
             throw new DBException(Messages.ERR_CANNOT_GET_CHECK_BY_USER, e);
         } finally {
             DBUtil.close(rs);
@@ -85,6 +109,16 @@ public class CheckDao implements Dao {
         return userChecks;
     }
 
+    /**
+     * This method is used for getting info about stations and time
+     *
+     * @param idUser ID User
+     * @param idTrain ID Train
+     * @param numCarriage Carriage number
+     * @param numSeat Seat number
+     * @return Return bean UserCheckBean
+     * @throws DBException
+     */
     public UserCheckBean getAllCarriageInfoByTags(Integer idUser, Integer idTrain, Integer numCarriage, Integer numSeat) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -117,7 +151,7 @@ public class CheckDao implements Dao {
 
         } catch (SQLException e) {
             DBUtil.rollback(conn);
-            e.printStackTrace();
+            LOG.error(Messages.ERR_CANNOT_GET_CARRIAGE_INFO, e);
             throw new DBException(Messages.ERR_CANNOT_GET_CARRIAGE_INFO, e);
         } finally {
             DBUtil.close(rs);
@@ -152,6 +186,12 @@ public class CheckDao implements Dao {
 
     }
 
+    /**
+     * This method delete info about user Check
+     *
+     * @param o object of UserCheckBean
+     * @throws DBException
+     */
     @Override
     public void delete(Object o) throws DBException {
         PreparedStatement pstmt = null;
@@ -173,7 +213,7 @@ public class CheckDao implements Dao {
 
             } catch (SQLException | NullPointerException e) {
                 DBUtil.rollback(conn);
-                e.printStackTrace();
+                LOG.error(Messages.ERR_CANNOT_DELETE_USER_CHECK, e);
                 throw new DBException(Messages.ERR_CANNOT_DELETE_USER_CHECK, e);
             } finally {
                 DBUtil.close(rs);

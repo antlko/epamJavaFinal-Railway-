@@ -12,16 +12,38 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO Object which operate Seat information from DB
+ * Have a {@link SeatDao} constructor with connection parameter.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class SeatDao implements Dao<Seat> {
+
+    private final Logger LOG = Logger.getLogger(SeatDao.class);
 
     private Connection conn;
 
+    /**
+     * Connection is important for execution queries and
+     * manipulation data from the DB.
+     *
+     * @param conn is used for set connection parameter
+     */
     public SeatDao(Connection conn) {
         this.conn = conn;
     }
 
-    private final Logger LOG = Logger.getLogger(SeatDao.class);
-
+    /**
+     *  This method is used for getting seats statistic by next parameters:
+     *
+     * @param cityStart City from
+     * @param cityEnd City destination
+     * @param date date from
+     * @param id ID Route
+     * @return list of SeatSearchBean which contains info about free seats
+     * @throws DBException
+     */
     public List<SeatSearchBean> getSeatCountInfo(String cityStart, String cityEnd, Date date, Integer id) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -70,6 +92,18 @@ public class SeatDao implements Dao<Seat> {
         return seatsInfoBusy;
     }
 
+    /**
+     * This method is used for getting all seats by carriage type
+     * (It works when user press on the carriage typed button)
+     *
+     * @param cityStart city from
+     * @param cityEnd city destination
+     * @param type carriage type
+     * @param date date from
+     * @param idTrain ID train
+     * @return list of SeatSearchBean
+     * @throws DBException
+     */
     public List<SeatSearchBean> getAllSeatsByCarriageType(
             String cityStart, String cityEnd, String type, Date date, Integer idTrain) throws DBException {
         PreparedStatement pstmt = null;
@@ -114,7 +148,21 @@ public class SeatDao implements Dao<Seat> {
         return seatsInfo;
     }
 
-
+    /**
+     * This method get all seats by carriage type and individual
+     * number of carriage. It helps show all free seats which ready
+     * to buy.
+     *
+     * @param cityStart city from
+     * @param cityEnd city destination
+     * @param type type of carriage
+     * @param date date depart
+     * @param idTrain ID train
+     * @param idCarriage ID carriage
+     * @return List of seat numbers
+     * @throws DBException
+     * @throws ClassNotFoundException
+     */
     public List<Integer> getAllSeatsByCarriageTypeAndNum(
             String cityStart, String cityEnd, String type, Date date, Integer idTrain, Integer idCarriage) throws DBException, ClassNotFoundException {
         PreparedStatement pstmt = null;

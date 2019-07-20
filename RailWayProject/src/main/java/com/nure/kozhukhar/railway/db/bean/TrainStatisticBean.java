@@ -1,5 +1,10 @@
 package com.nure.kozhukhar.railway.db.bean;
 
+/**
+ * Provide carriage information by train number.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class TrainStatisticBean {
 
     private Integer trainNumber;

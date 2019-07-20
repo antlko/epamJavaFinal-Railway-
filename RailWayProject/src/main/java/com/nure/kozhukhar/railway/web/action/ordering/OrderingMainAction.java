@@ -51,6 +51,7 @@ public class OrderingMainAction extends Action {
 
         try (Connection connection = DBUtil.getInstance().getDataSource().getConnection();) {
             connection.setAutoCommit(false);
+
             UserCheck userCheck = new UserCheck();
             UserDao userDao = new UserDao(connection);
             CheckDao checkDao = new CheckDao(connection);

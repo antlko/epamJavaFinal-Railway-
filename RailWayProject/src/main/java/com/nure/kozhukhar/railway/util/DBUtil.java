@@ -19,16 +19,36 @@ import java.sql.Statement;
 
 import static java.util.Arrays.asList;
 
+
+/**
+ * DB Util. Works with MYSQL DB.
+ * <p>
+ * This class using singleton pattern.
+ * Method {@link #getInstance} is synchronized.
+ *</p>
+ * @author Anatol Kozhukhar
+ */
 public class DBUtil {
 
     private static final Logger LOG = Logger.getLogger(DBUtil.class);
 
+    /**
+     * Connection type which loading from application.properties.
+     * There exist two type of connection :
+     * <ol>
+     * <li>JNDI using (loading with context info).</li>
+     * <li>MysqlConnectionPoolDataSource connection.</li>
+     * </ol>
+     */
     private static String connectionType;
 
     private static DBUtil instance;
 
     private DataSource ds;
 
+    /*
+      Static field for loading connection type from application.properties
+     */
     static {
         Properties appProps = new Properties();
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -42,6 +62,17 @@ public class DBUtil {
                 .trim().replaceAll("\\D+", "");
     }
 
+    /**
+     * Instance (DBUtil) contains data source information and
+     * connection type information which can set in application.properties.
+     *  <br>
+     *  <h3>Instance creating :</h3>
+     * {@code new DBUtil(connectionType)}
+     *
+     * @return DBUtil instance
+     * @throws DBException
+     * @throws ClassNotFoundException
+     */
     public static synchronized DBUtil getInstance() throws DBException, ClassNotFoundException {
         if (instance == null) {
             instance = new DBUtil(connectionType);
@@ -49,6 +80,12 @@ public class DBUtil {
         return instance;
     }
 
+    /**
+     * Constructor of singleton class DBUtil.
+     *
+     * @param type Connection type {@link #connectionType}
+     * @throws DBException
+     */
     private DBUtil(String type) throws DBException {
         if (!"".equals(type) && Integer.valueOf(type) == 1) {
             try {
@@ -76,6 +113,14 @@ public class DBUtil {
         }
     }
 
+    /**
+     * When you using this method you can get DataSource with connection
+     * information. Before using this
+     * method you must configure the Date Source and the Connections Pool in
+     * your WEB_APP_ROOT/META-INF/context.xml file.
+     *
+     * @return dataSource
+     */
     public DataSource getDataSource() {
         return ds;
     }

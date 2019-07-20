@@ -7,6 +7,12 @@ import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
 
 import java.util.List;
 
+
+/**
+ * Provide route information for desired route.
+ *
+ * @author Anatol Kozhukhar
+ */
 public class RouteSearchBean extends Entity {
 
     private Integer idRoute;

@@ -119,6 +119,7 @@ public class AdminDataTest extends Mockito {
     @After
     public void tearDown() throws Exception {
         trainDao.delete(train);
+        typeDao.delete(type);
     }
 
 
