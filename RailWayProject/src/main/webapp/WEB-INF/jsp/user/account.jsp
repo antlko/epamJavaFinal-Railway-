@@ -35,20 +35,19 @@
 <%@ include file="/WEB-INF/static/header.jsp" %>
 
 <div class="tabs-content">
+    <%--===================================================================
+              Error message field
+     ===================================================================--%>
+    <h:errorValid error="${sessionScope.errorMessage}"/>
     <div class="tabs">
         <input type="radio" name="tabs" id="tabone" checked="checked">
         <label for="tabone"><fmt:message key="account.history"/></label>
-        <%--===================================================================
-                 Error message field
-        ===================================================================--%>
-        <h:errorValid error="${sessionScope.errorMessage}"/>
-
         <%--===================================================================
                 Output field for user tickets
         ===================================================================--%>
         <div class="tab">
             <table>
-                <th><fmt:message key="ticket.date"/> </th>
+                <th><fmt:message key="ticket.date"/></th>
                 <th><fmt:message key="ticket.full_name"/></th>
                 <th><fmt:message key="ticket.train"/></th>
                 <th><fmt:message key="ticket.carriage"/></th>
@@ -116,6 +115,10 @@
                         <input type="text" name="Name" value="${sessionScope.user.name}" required>
                         <div class="edit-tag"><fmt:message key="auth.email"/> :</div>
                         <input type="text" name="Email" value="${sessionScope.user.email}">
+                        <div class="edit-tag">New password :</div>
+                        <input type="text" name="Password">
+                        <div class="edit-tag">PIN</div>
+                        <input type="text" name="Pin">
                         <input class="normal" type="submit" value="<fmt:message key="account.save"/>">
                     </form>
                 </div>

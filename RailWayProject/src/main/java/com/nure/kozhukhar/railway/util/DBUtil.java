@@ -28,7 +28,7 @@ import static java.util.Arrays.asList;
  *</p>
  * @author Anatol Kozhukhar
  */
-public class DBUtil {
+public final class DBUtil {
 
     private static final Logger LOG = Logger.getLogger(DBUtil.class);
 

@@ -22,6 +22,15 @@ public class User extends Entity {
 
     private String surname;
 
+    private String pinCode;
+
+    public String getPinCode() {
+        return pinCode;
+    }
+
+    public void setPinCode(String pinCode) {
+        this.pinCode = pinCode;
+    }
 
     public Integer getId() {
         return id;
@@ -76,9 +85,11 @@ public class User extends Entity {
         return "User{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
+                ", pinCode=" + pinCode +
                 '}';
     }
 }

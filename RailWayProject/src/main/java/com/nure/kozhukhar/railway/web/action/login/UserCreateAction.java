@@ -8,6 +8,7 @@ import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.EncryptUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
+import com.nure.kozhukhar.railway.util.MailUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
 
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +36,7 @@ public class UserCreateAction extends Action {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, AppException {
 
+        Random random = new Random();
 
         try (Connection connection = DBUtil.getInstance().getDataSource().getConnection();) {
             connection.setAutoCommit(false);
@@ -56,6 +59,10 @@ public class UserCreateAction extends Action {
             }
 
             UserDao userTempDao = new UserDao(connection);
+
+            String pin = String.format("%04d", random.nextInt(10000));
+            newUser.setPinCode(EncryptUtil.hash(pin));
+            MailUtil.sendWelcomeMail(Integer.parseInt(pin), newUser.getEmail());
             newUser.setPassword(EncryptUtil.hash(newUser.getPassword()));
             userTempDao.save(newUser);
         } catch (DBException ex) {

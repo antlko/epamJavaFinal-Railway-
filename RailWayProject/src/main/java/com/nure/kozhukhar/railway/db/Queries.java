@@ -359,9 +359,9 @@ public class Queries {
     public static final String SQL_GET_FULL_NAME_BY_USER_ID = "SELECT * FROM users WHERE id = ?";
     public static final String SQL_SELECT_USER_AND_ROLE = "SELECT * FROM user_roles WHERE id = ? AND role = ?";
     public static final String SQL_SAVE_USER_ROLE_BY_LOGIN = "INSERT INTO user_roles(id,role) VALUES(?,?)";
-    public static final String SQL_SAVE_NEW_USER_TO_DB = "INSERT INTO users(login,password,email,name,surname) VALUES(?,?,?,?,?)";
+    public static final String SQL_SAVE_NEW_USER_TO_DB = "INSERT INTO users(login,password,email,name,surname,pin_code) VALUES(?,?,?,?,?,?)";
     public static final String SQL_SAVE_USER_ROLE = "INSERT INTO user_roles(id,role) VALUES(?,?)";
-    public static final String SQL_UPDATE_USER = "UPDATE users SET name = ?,surname = ?, email = ? WHERE login = ?";
+    public static final String SQL_UPDATE_USER = "UPDATE users SET name = ?,surname = ?, email = ?, password = ? WHERE login = ?";
     public static final String SQL_DELETE_FROM_USER_ROLES = "DELETE FROM user_roles WHERE id = ?";
     public static final String SQL_DELETE_USER = "DELETE FROM users WHERE login= ?";
     public static final String SQL_DELETE_ALL_ROUTES = "DELETE FROM user_roles WHERE id = ?";

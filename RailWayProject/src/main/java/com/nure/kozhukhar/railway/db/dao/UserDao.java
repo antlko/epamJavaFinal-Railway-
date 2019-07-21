@@ -58,6 +58,8 @@ public class UserDao implements Dao<User> {
                 user.setEmail(rs.getString("email"));
                 user.setName(rs.getString("name"));
                 user.setSurname(rs.getString("surname"));
+                user.setSurname(rs.getString("surname"));
+                user.setPinCode(rs.getString("pin_code"));
             }
             conn.commit();
             if (user.getId() == null) {
@@ -206,7 +208,8 @@ public class UserDao implements Dao<User> {
             pstmt.setString(atr++, user.getPassword());
             pstmt.setString(atr++, user.getEmail());
             pstmt.setString(atr++, user.getName());
-            pstmt.setString(atr, user.getSurname());
+            pstmt.setString(atr++, user.getSurname());
+            pstmt.setString(atr, user.getPinCode());
             pstmt.executeUpdate();
             atr = 1;
             pstmt = conn.prepareStatement(Queries.SQL_SAVE_USER_ROLE);
@@ -239,6 +242,7 @@ public class UserDao implements Dao<User> {
             pstmt.setString(atr++, user.getName());
             pstmt.setString(atr++, user.getSurname());
             pstmt.setString(atr++, user.getEmail());
+            pstmt.setString(atr++, user.getPassword());
             pstmt.setString(atr, user.getLogin());
             pstmt.executeUpdate();
             conn.commit();

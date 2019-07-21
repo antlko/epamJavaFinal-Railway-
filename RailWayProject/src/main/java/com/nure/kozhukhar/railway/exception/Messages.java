@@ -102,9 +102,10 @@ public class Messages {
 	public static final String ERR_CANNOT_FIND_SEAT = "Cannot find any seats and carriages!";
 	public static final String ERR_UNKNOWN_ERROR = "Unknown error!";
 	public static final String ERR_USER_CREATE_UNKNOWN = "Unknown user create error!";
+	public static final String ERR_PIN_CODE_WRONG = "Pin code is wrong!";
 
 
-	private Messages() {
+    private Messages() {
 
 	}
 

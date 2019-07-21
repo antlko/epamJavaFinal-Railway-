@@ -6,6 +6,7 @@ import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
 import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.DBUtil;
+import com.nure.kozhukhar.railway.util.EncryptUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
@@ -40,6 +41,7 @@ public class UserUpdatePersonal extends Action {
         newUser.setName(request.getParameter("Name"));
         newUser.setSurname(request.getParameter("Surname"));
         newUser.setEmail(request.getParameter("Email"));
+        newUser.setPinCode(request.getParameter("Pin"));
         newUser.setLogin(oldUser.getLogin());
         newUser.setId(oldUser.getId());
 
@@ -47,8 +49,15 @@ public class UserUpdatePersonal extends Action {
             connection.setAutoCommit(false);
 
             UserDao userTempDao = new UserDao(connection);
-            userTempDao.update(newUser, null);
-
+            if (EncryptUtil.hash(newUser.getPinCode())
+                    .equals(userTempDao.getByLogin(oldUser.getLogin()).getPinCode())
+            ) {
+                newUser.setPassword(EncryptUtil.hash(request.getParameter("Password")));
+                userTempDao.update(newUser, null);
+            } else {
+                throw new AppException(LocaleMessageUtil
+                        .getMessageWithLocale(request, Messages.ERR_PIN_CODE_WRONG));
+            }
         } catch (DBException e) {
             LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
