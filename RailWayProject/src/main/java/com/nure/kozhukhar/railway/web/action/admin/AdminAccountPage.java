@@ -8,6 +8,7 @@ import com.nure.kozhukhar.railway.db.entity.route.Route;
 import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
@@ -61,9 +62,15 @@ public class AdminAccountPage extends Action {
 
             LOG.trace("'Station' attributes for admin panel --> " + cityDao.getAll() + ", " + countryDao.getAll());
 
-        } catch (DBException | ClassNotFoundException | SQLException e) {
+        } catch (DBException e) {
+            LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
+        } catch (Exception e) {
+            LOG.error(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_SAVE_NEW_ROUTE), e);
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_SAVE_NEW_ROUTE));
         }
 
         return "WEB-INF/jsp/admin/admin.jsp";

@@ -50,6 +50,8 @@ public class UserSignInAction extends Action {
                 password = EncryptUtil.hash(request.getParameter("password"));
                 user = userDao.getByLogin(login);
             } catch (DBException | NoSuchAlgorithmException e) {
+                LOG.error(LocaleMessageUtil
+                        .getMessageWithLocale(request, Messages.ERR_USER_LOGIN_OR_PASSWORD));
                 throw new AppException(LocaleMessageUtil
                         .getMessageWithLocale(request, Messages.ERR_USER_LOGIN_OR_PASSWORD));
             }
@@ -58,6 +60,8 @@ public class UserSignInAction extends Action {
             LOG.debug("User query : " + user);
 
             if ((!login.equals(user.getLogin()) || !password.equals(user.getPassword()))) {
+                LOG.error(LocaleMessageUtil
+                        .getMessageWithLocale(request, Messages.ERR_USER_LOGIN_OR_PASSWORD));
                 throw new AppException(LocaleMessageUtil
                         .getMessageWithLocale(request, Messages.ERR_USER_LOGIN_OR_PASSWORD));
             }
@@ -76,9 +80,15 @@ public class UserSignInAction extends Action {
             session.setAttribute("user", user);
 
             LOG.debug("User in session" + session.getAttribute("user"));
-        } catch (DBException | ClassNotFoundException | SQLException e) {
+        } catch (DBException e) {
+            LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
+        } catch (Exception e) {
+            LOG.error(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_USER_CREATE_UNKNOWN), e);
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_USER_CREATE_UNKNOWN));
         }
 
         return "/account";

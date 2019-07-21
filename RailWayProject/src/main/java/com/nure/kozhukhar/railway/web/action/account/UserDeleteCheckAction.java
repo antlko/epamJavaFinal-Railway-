@@ -5,6 +5,7 @@ import com.nure.kozhukhar.railway.db.dao.CheckDao;
 import com.nure.kozhukhar.railway.db.entity.UserCheck;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
@@ -44,9 +45,15 @@ public class UserDeleteCheckAction extends Action {
 
             CheckDao checkDao = new CheckDao(connection);
             checkDao.delete(userCheck);
-        } catch (DBException | ClassNotFoundException | SQLException e) {
+        } catch (DBException e) {
+            LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
+        } catch (Exception e) {
+            LOG.error(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_DELETE_USER_CHECK), e);
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_DELETE_USER_CHECK));
         }
 
 

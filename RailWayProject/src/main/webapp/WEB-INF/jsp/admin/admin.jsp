@@ -207,7 +207,7 @@
                     <input type="text" name="typeName" required>
 
                     <div class="edit-tag"><fmt:message key="admin.carr_price"/> :</div>
-                    <input type="text" name="typePrice" required>
+                    <input type="text" name="typePrice">
 
                     <input class="normal" type="submit" name="changeTypeInfo" value="Save">
                     <input class="danger" type="submit" name="changeTypeInfo" value="Delete">
@@ -352,11 +352,11 @@
 
                     <div class="edit-tag"><fmt:message key="admin.date_start"/> :</div>
                     <input type="date" name="date-station"
-                           style="width: 150px" required>
+                           style="width: 150px">
 
                     <div class="edit-tag"><fmt:message key="admin.date_end"/> :</div>
                     <input type="date" name="date-station-end"
-                           style="width: 150px" required>
+                           style="width: 150px">
 
                     <button class="input-sbt" type="submit" name="changeRouteInfo" value="SaveRoutesDate">
                         <fmt:message key="admin.btn_save"/>

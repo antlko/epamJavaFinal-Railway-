@@ -68,8 +68,14 @@ public class FindTicketsAction extends Action {
                         .getMessageWithLocale(request, Messages.ERR_CANNOT_FIND_ANY_ROUTE));
             }
         } catch (DBException e) {
+            LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
+        } catch (Exception e) {
+            LOG.error(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_UNKNOWN_ERROR), e);
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_UNKNOWN_ERROR));
         }
 
         return "/booking";

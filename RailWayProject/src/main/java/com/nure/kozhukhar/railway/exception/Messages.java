@@ -89,6 +89,20 @@ public class Messages {
 	 */
 	public static final String ERR_CANNOT_FIND_ANY_ROUTE = "error.cannot_find_any_route";
 
+	public static final String ERR_TYPE_FIELD = "Error type filed. Check input data!";
+	public static final String ERR_CANNOT_SAVE_NEW_ROUTE = "Error! Cannot save new route!";
+	public static final String ERR_CANNOT_OPEN_ACCOUNT_PAGE = "Error! Cannot open account page";
+	public static final String ERR_CANNOT_SHOW_DOCUMENT = "Cannot show document!";
+	public static final String ERR_CANNOT_UPDATE_USER = "Cannot update user!";
+	public static final String ERR_CANNOT_CHANGE_SEAT_DATA = "Seat data cannot be changed!";
+	public static final String ERR_CANNOT_SAVE_CITY = "City was not saved!";
+	public static final String ERR_CANNOT_SAVE_TRAIN = "Train was not saved!";
+	public static final String ERR_CANNOT_SAVE_TYPE = "Type was not saved!";
+	public static final String ERR_CANNOT_SAVE_USER_DATA = "User Data was not saved!";
+	public static final String ERR_CANNOT_FIND_SEAT = "Cannot find any seats and carriages!";
+	public static final String ERR_UNKNOWN_ERROR = "Unknown error!";
+	public static final String ERR_USER_CREATE_UNKNOWN = "Unknown user create error!";
+
 
 	private Messages() {
 

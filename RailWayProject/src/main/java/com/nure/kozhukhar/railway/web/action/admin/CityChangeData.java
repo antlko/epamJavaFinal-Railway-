@@ -7,6 +7,7 @@ import com.nure.kozhukhar.railway.db.entity.City;
 import com.nure.kozhukhar.railway.db.entity.Country;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
@@ -54,9 +55,15 @@ public class CityChangeData extends Action {
                 city.setName(request.getParameter("cityName"));
                 cityDao.delete(city);
             }
-        } catch (DBException | ClassNotFoundException | SQLException e) {
+        } catch (DBException e) {
+            LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
+        } catch (Exception e) {
+            LOG.error(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_SAVE_CITY), e);
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_SAVE_CITY));
         }
 
         String checkedVal = request.getParameter("checkVal");

@@ -6,6 +6,7 @@ import com.nure.kozhukhar.railway.db.entity.Train;
 import com.nure.kozhukhar.railway.db.entity.Type;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
@@ -26,6 +27,7 @@ import java.sql.SQLException;
 public class CarrSeatChangeData extends Action {
 
     private static final Logger LOG = Logger.getLogger(CarrSeatChangeData.class);
+    private static final long serialVersionUID = -8940581616147479038L;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -60,9 +62,15 @@ public class CarrSeatChangeData extends Action {
             if ("Delete".equals(request.getParameter("changeTrainInfo"))) {
                 trainDao.deleteAllTrainContent(train.getId());
             }
-        } catch (DBException | ClassNotFoundException | SQLException e) {
+        } catch (DBException e) {
+            LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
+        } catch (Exception e) {
+            LOG.error(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_CHANGE_SEAT_DATA), e);
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_CHANGE_SEAT_DATA));
         }
 
         String checkedVal = request.getParameter("checkVal");

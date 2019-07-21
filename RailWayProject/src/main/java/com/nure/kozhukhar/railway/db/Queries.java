@@ -307,8 +307,8 @@ public class Queries {
             ") as seats FROM carriages CR, trains T\n" +
             "WHERE CR.id_train = T.id";
 
-    public static final String SQL_SAVE_NEW_USER_CHECK = "INSERT INTO user_check (id_user, date_end, id_train,num_carriage,num_seat,id_station,id_route,initials) \\n\" +\n" +
-            "                    \"VALUES(?,?,?,?,?,?,?,?);";
+    public static final String SQL_SAVE_NEW_USER_CHECK = "INSERT INTO user_check (id_user, date_end, id_train,num_carriage,num_seat,id_station,id_route,initials) " +
+            "                    VALUES(?,?,?,?,?,?,?,?);";
     public static final String SQL_GET_ID_CITY_BY_NAME = "SELECT id FROM cities WHERE name = ?";
 
     public static final String SQL_GET_ALL_CITIES = "SELECT * FROM Cities ORDER BY name";
@@ -358,10 +358,11 @@ public class Queries {
     public static final String GET_USER_ROLES_BY_LOGIN = "SELECT role FROM users U INNER JOIN user_roles UR ON U.id = UR.id WHERE login = ?;";
     public static final String SQL_GET_FULL_NAME_BY_USER_ID = "SELECT * FROM users WHERE id = ?";
     public static final String SQL_SELECT_USER_AND_ROLE = "SELECT * FROM user_roles WHERE id = ? AND role = ?";
-    public static final String SQL_SAVE_USER_ROUTE_BY_LOGIN = "INSERT INTO user_roles(id,role) VALUES(?,?)";
+    public static final String SQL_SAVE_USER_ROLE_BY_LOGIN = "INSERT INTO user_roles(id,role) VALUES(?,?)";
     public static final String SQL_SAVE_NEW_USER_TO_DB = "INSERT INTO users(login,password,email,name,surname) VALUES(?,?,?,?,?)";
     public static final String SQL_SAVE_USER_ROLE = "INSERT INTO user_roles(id,role) VALUES(?,?)";
     public static final String SQL_UPDATE_USER = "UPDATE users SET name = ?,surname = ?, email = ? WHERE login = ?";
     public static final String SQL_DELETE_FROM_USER_ROLES = "DELETE FROM user_roles WHERE id = ?";
     public static final String SQL_DELETE_USER = "DELETE FROM users WHERE login= ?";
+    public static final String SQL_DELETE_ALL_ROUTES = "DELETE FROM user_roles WHERE id = ?";
 }

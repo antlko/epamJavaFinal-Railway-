@@ -6,6 +6,7 @@ import com.nure.kozhukhar.railway.db.entity.Type;
 import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
@@ -33,7 +34,7 @@ import java.util.regex.Pattern;
  */
 public class RouteChangeData extends Action {
 
-    private static final Logger LOG = Logger.getLogger(AdminAccountPage.class);
+    private static final Logger LOG = Logger.getLogger(RouteChangeData.class);
     private static final long serialVersionUID = 2969312008058985748L;
 
     @Override
@@ -107,9 +108,15 @@ public class RouteChangeData extends Action {
                 routeStation.setIdRoute(Integer.valueOf(request.getParameter("routeId")));
                 routeDao.delete(routeStation);
             }
-        } catch (DBException | ClassNotFoundException | SQLException e) {
+        } catch (DBException e) {
+            LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
+        } catch (Exception e) {
+            LOG.error(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_SAVE_NEW_ROUTE), e);
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_SAVE_NEW_ROUTE));
         }
 
         String checkedVal = request.getParameter("checkVal");

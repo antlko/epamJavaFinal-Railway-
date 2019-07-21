@@ -7,6 +7,7 @@ import com.nure.kozhukhar.railway.db.entity.City;
 import com.nure.kozhukhar.railway.db.entity.Station;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
@@ -55,9 +56,15 @@ public class StationChangeData extends Action {
                 station.setName(request.getParameter("stationName"));
                 stationsDao.delete(station);
             }
-        } catch (DBException | ClassNotFoundException | SQLException | NullPointerException e) {
+        } catch (DBException e) {
+            LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
+        } catch (Exception e) {
+            LOG.error(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_SAVE_STATION), e);
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_SAVE_STATION));
         }
 
         String checkedVal = request.getParameter("checkVal");

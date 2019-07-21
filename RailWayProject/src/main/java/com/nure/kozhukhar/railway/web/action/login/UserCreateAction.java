@@ -9,6 +9,7 @@ import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.EncryptUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ import java.util.regex.Pattern;
  * @author Anatol Kozhukhar
  */
 public class UserCreateAction extends Action {
+    private static final Logger LOG = Logger.getLogger(UserCreateAction.class);
     private static final long serialVersionUID = 9179960028314272658L;
 
     @Override
@@ -56,12 +58,19 @@ public class UserCreateAction extends Action {
             UserDao userTempDao = new UserDao(connection);
             newUser.setPassword(EncryptUtil.hash(newUser.getPassword()));
             userTempDao.save(newUser);
-        } catch (DBException | ClassNotFoundException | SQLException ex) {
+        } catch (DBException ex) {
+            LOG.error(ex.getMessage(), ex);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, ex.getMessage()));
         } catch (NoSuchAlgorithmException e) {
+            LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, Messages.ERR_REGISTER_DATA_PASSWORD));
+        } catch (Exception ex) {
+            LOG.error(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_USER_CREATE_UNKNOWN), ex);
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_USER_CREATE_UNKNOWN));
         }
 
 

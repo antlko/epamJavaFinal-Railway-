@@ -160,7 +160,11 @@ public class UserDao implements Dao<User> {
             rs = pstmt.executeQuery();
             if (!rs.next()) {
                 atr = 1;
-                pstmt = conn.prepareStatement(Queries.SQL_SAVE_USER_ROUTE_BY_LOGIN);
+                pstmt = conn.prepareStatement(Queries.SQL_DELETE_ALL_ROUTES);
+                pstmt.setInt(1,userId);
+                pstmt.executeUpdate();
+
+                pstmt = conn.prepareStatement(Queries.SQL_SAVE_USER_ROLE_BY_LOGIN);
                 pstmt.setInt(atr++, userId);
                 pstmt.setString(atr, role);
                 pstmt.executeUpdate();

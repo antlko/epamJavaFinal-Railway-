@@ -246,7 +246,7 @@ public class AdminDataTest extends Mockito {
     /***
      * StationChangeData action
      */
-    @Test(expected = NullPointerException.class)
+    @Test(expected = AppException.class)
     public void stationChangeDataSave() throws ServletException, IOException, AppException {
         StationChangeData adminChangeData = new StationChangeData();
 

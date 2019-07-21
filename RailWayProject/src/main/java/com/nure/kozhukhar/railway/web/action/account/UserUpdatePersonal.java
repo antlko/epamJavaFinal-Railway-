@@ -4,6 +4,7 @@ import com.nure.kozhukhar.railway.db.dao.UserDao;
 import com.nure.kozhukhar.railway.db.entity.User;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
@@ -48,9 +49,15 @@ public class UserUpdatePersonal extends Action {
             UserDao userTempDao = new UserDao(connection);
             userTempDao.update(newUser, null);
 
-        } catch (DBException | ClassNotFoundException | SQLException e) {
+        } catch (DBException e) {
+            LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
+        } catch (Exception e) {
+            LOG.error(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_UPDATE_USER), e);
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_UPDATE_USER));
         }
         LOG.trace("New User data : " + newUser);
 

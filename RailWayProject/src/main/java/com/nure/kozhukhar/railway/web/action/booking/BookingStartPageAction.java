@@ -4,6 +4,7 @@ import com.nure.kozhukhar.railway.db.dao.StationDao;
 import com.nure.kozhukhar.railway.db.entity.Station;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
@@ -16,7 +17,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,9 +47,15 @@ public class BookingStartPageAction extends Action {
                 request.setAttribute("listStation", stationList);
                 LOG.trace("list size : " + stationList.size() + " : " + stationList);
             }
-        } catch (DBException | ClassNotFoundException | SQLException e) {
+        } catch (DBException e) {
+            LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
+        } catch (Exception e) {
+            LOG.error(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_UNKNOWN_ERROR), e);
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_UNKNOWN_ERROR));
         }
 
         return "WEB-INF/jsp/booking/booking.jsp";

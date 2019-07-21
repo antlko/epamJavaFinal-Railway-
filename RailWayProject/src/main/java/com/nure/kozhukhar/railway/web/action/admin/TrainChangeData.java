@@ -7,9 +7,12 @@ import com.nure.kozhukhar.railway.db.entity.Station;
 import com.nure.kozhukhar.railway.db.entity.Train;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.DBUtil;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
+import com.nure.kozhukhar.railway.web.action.login.UserSignInAction;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +27,7 @@ import java.sql.SQLException;
  * @author Anatol Kozhukhar
  */
 public class TrainChangeData extends Action {
+    private static final Logger LOG = Logger.getLogger(TrainChangeData.class);
     private static final long serialVersionUID = -6444747338078726266L;
 
     @Override
@@ -44,9 +48,15 @@ public class TrainChangeData extends Action {
             if ("Delete".equals(request.getParameter("changeTrainInfo"))) {
                 trainDao.delete(train);
             }
-        } catch (DBException | ClassNotFoundException | SQLException e) {
+        } catch (DBException e) {
+            LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
+        } catch (Exception e) {
+            LOG.error(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_SAVE_TRAIN), e);
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_SAVE_TRAIN));
         }
 
         String checkedVal = request.getParameter("checkVal");

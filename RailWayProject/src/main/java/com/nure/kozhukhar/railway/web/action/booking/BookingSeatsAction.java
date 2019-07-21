@@ -6,6 +6,7 @@ import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
 import com.nure.kozhukhar.railway.db.service.RouteService;
 import com.nure.kozhukhar.railway.exception.AppException;
 import com.nure.kozhukhar.railway.exception.DBException;
+import com.nure.kozhukhar.railway.exception.Messages;
 import com.nure.kozhukhar.railway.util.LocaleMessageUtil;
 import com.nure.kozhukhar.railway.web.action.Action;
 import org.apache.log4j.Logger;
@@ -66,8 +67,14 @@ public class BookingSeatsAction extends Action {
                 session.setAttribute("userRoute", rsb);
             }
         } catch (DBException e) {
+            LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
+        } catch (Exception e) {
+            LOG.error(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_FIND_SEAT), e);
+            throw new AppException(LocaleMessageUtil
+                    .getMessageWithLocale(request, Messages.ERR_CANNOT_FIND_SEAT));
         }
 
         return "WEB-INF/jsp/booking/seat_info.jsp";
