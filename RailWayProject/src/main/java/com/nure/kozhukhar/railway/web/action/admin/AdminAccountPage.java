@@ -62,7 +62,7 @@ public class AdminAccountPage extends Action {
 
             LOG.trace("'Station' attributes for admin panel --> " + cityDao.getAll() + ", " + countryDao.getAll());
 
-        } catch (DBException e) {
+        } catch (AppException e) {
             LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));

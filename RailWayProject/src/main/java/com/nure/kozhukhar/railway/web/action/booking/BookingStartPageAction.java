@@ -47,7 +47,7 @@ public class BookingStartPageAction extends Action {
                 request.setAttribute("listStation", stationList);
                 LOG.trace("list size : " + stationList.size() + " : " + stationList);
             }
-        } catch (DBException e) {
+        } catch (AppException e) {
             LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));

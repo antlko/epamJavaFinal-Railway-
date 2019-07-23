@@ -47,7 +47,7 @@ public class CountryChangeData extends Action {
                 country.setName(request.getParameter("countryName"));
                 countryDao.delete(country);
             }
-        } catch (DBException ex) {
+        } catch (AppException ex) {
             LOG.error(ex.getMessage(), ex);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, ex.getMessage()));

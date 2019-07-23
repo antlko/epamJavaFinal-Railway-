@@ -67,7 +67,7 @@ public class FindTicketsAction extends Action {
                 throw new AppException(LocaleMessageUtil
                         .getMessageWithLocale(request, Messages.ERR_CANNOT_FIND_ANY_ROUTE));
             }
-        } catch (DBException e) {
+        } catch (AppException e) {
             LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));

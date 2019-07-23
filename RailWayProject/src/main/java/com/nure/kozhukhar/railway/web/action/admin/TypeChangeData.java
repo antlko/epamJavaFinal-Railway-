@@ -52,7 +52,7 @@ public class TypeChangeData extends Action {
             if ("Delete".equals(request.getParameter("changeTypeInfo"))) {
                 typeDao.delete(type);
             }
-        } catch (DBException e) {
+        } catch (AppException e) {
             LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));

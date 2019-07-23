@@ -34,7 +34,7 @@ public class UserShowCheckAction extends Action {
             request.setAttribute("checkInfo", CheckService.getUserTicketsById(idUser).get(
                     Integer.valueOf(request.getParameter("checkInd"))
             ));
-        } catch (DBException e) {
+        } catch (AppException e) {
             LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));

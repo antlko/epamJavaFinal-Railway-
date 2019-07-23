@@ -45,7 +45,7 @@ public class UserDeleteCheckAction extends Action {
 
             CheckDao checkDao = new CheckDao(connection);
             checkDao.delete(userCheck);
-        } catch (DBException e) {
+        } catch (AppException e) {
             LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));

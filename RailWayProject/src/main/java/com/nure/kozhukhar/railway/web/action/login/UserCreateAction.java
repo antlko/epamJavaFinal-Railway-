@@ -65,7 +65,7 @@ public class UserCreateAction extends Action {
             MailUtil.sendWelcomeMail(Integer.parseInt(pin), newUser.getEmail());
             newUser.setPassword(EncryptUtil.hash(newUser.getPassword()));
             userTempDao.save(newUser);
-        } catch (DBException ex) {
+        } catch (AppException ex) {
             LOG.error(ex.getMessage(), ex);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, ex.getMessage()));

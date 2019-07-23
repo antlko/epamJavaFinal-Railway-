@@ -62,7 +62,7 @@ public class CarrSeatChangeData extends Action {
             if ("Delete".equals(request.getParameter("changeTrainInfo"))) {
                 trainDao.deleteAllTrainContent(train.getId());
             }
-        } catch (DBException e) {
+        } catch (AppException e) {
             LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));

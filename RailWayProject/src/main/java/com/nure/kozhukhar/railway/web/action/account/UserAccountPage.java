@@ -40,7 +40,7 @@ public class UserAccountPage extends Action {
         Integer idUser = user.getId();
         try {
             session.setAttribute("userChecks", CheckService.getUserTicketsById(idUser));
-        } catch (DBException e) {
+        } catch (AppException e) {
             LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));

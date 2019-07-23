@@ -41,6 +41,7 @@ public class UserDataTest extends Mockito {
     private static final String LOGIN = "testLog";
     private static final String PASSWORD = "testPas";
     private static final String EMAIL = "testEmail@gmail.com";
+    private static final String PIN_CODE = "0000";
 
     @Mock
     HttpServletRequest request;
@@ -66,6 +67,7 @@ public class UserDataTest extends Mockito {
         user.setLogin(LOGIN);
         user.setPassword(PASSWORD);
         user.setEmail(EMAIL);
+        user.setPinCode(PIN_CODE);
 
         userDao.save(user);
     }
@@ -75,7 +77,7 @@ public class UserDataTest extends Mockito {
         userDao.delete(user);
     }
 
-    @Test
+    @Test(expected = AppException.class)
     public void userUpdatePersonal() throws ServletException, IOException, AppException {
         UserUpdatePersonal userChangeData = new UserUpdatePersonal();
 
@@ -83,6 +85,7 @@ public class UserDataTest extends Mockito {
         when(request.getParameter("Name")).thenReturn(user.getName());
         when(request.getParameter("Surname")).thenReturn(user.getSurname());
         when(request.getParameter("Email")).thenReturn(user.getEmail());
+        when(request.getParameter("Pin")).thenReturn(user.getPinCode());
 
         assertThat(userChangeData.execute(request, response))
                 .isEqualTo("/account");

@@ -84,7 +84,7 @@ public class OrderingMainAction extends Action {
 
                 }
             }
-        } catch (DBException | ClassNotFoundException | SQLException e) {
+        } catch (AppException | ClassNotFoundException | SQLException e) {
             LOG.error("User check set initials error");
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));

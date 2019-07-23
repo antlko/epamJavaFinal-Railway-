@@ -56,7 +56,7 @@ public class StationChangeData extends Action {
                 station.setName(request.getParameter("stationName"));
                 stationsDao.delete(station);
             }
-        } catch (DBException e) {
+        } catch (AppException e) {
             LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));

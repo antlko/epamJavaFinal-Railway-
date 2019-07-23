@@ -80,7 +80,7 @@ public class UserSignInAction extends Action {
             session.setAttribute("user", user);
 
             LOG.debug("User in session" + session.getAttribute("user"));
-        } catch (DBException e) {
+        } catch (AppException e) {
             LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));

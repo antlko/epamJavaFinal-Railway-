@@ -55,10 +55,9 @@ public class UserUpdatePersonal extends Action {
                 newUser.setPassword(EncryptUtil.hash(request.getParameter("Password")));
                 userTempDao.update(newUser, null);
             } else {
-                throw new AppException(LocaleMessageUtil
-                        .getMessageWithLocale(request, Messages.ERR_PIN_CODE_WRONG));
+                throw new AppException();
             }
-        } catch (DBException e) {
+        } catch (AppException e) {
             LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));

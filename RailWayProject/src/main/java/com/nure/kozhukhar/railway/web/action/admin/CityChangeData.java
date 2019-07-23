@@ -55,7 +55,7 @@ public class CityChangeData extends Action {
                 city.setName(request.getParameter("cityName"));
                 cityDao.delete(city);
             }
-        } catch (DBException e) {
+        } catch (AppException e) {
             LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));

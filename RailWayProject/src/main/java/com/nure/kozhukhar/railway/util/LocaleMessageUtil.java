@@ -46,7 +46,7 @@ public class LocaleMessageUtil {
                 rb = ResourceBundle.getBundle("messages", Locale.forLanguageTag("en"));
                 output = rb.getString(localeMessage);
             }
-        } catch (MissingResourceException e) {
+        } catch (Exception e) {
             LOG.debug("RS Bundle error - > " + e);
             return localeMessage;
         }

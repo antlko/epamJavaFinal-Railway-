@@ -66,7 +66,7 @@ public class BookingSeatsAction extends Action {
                 session.setAttribute("serviceSeats", seatBeanList.get(0).getListSeat());
                 session.setAttribute("userRoute", rsb);
             }
-        } catch (DBException e) {
+        } catch (AppException e) {
             LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));

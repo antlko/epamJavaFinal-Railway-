@@ -48,7 +48,7 @@ public class TrainChangeData extends Action {
             if ("Delete".equals(request.getParameter("changeTrainInfo"))) {
                 trainDao.delete(train);
             }
-        } catch (DBException e) {
+        } catch (AppException e) {
             LOG.error(e.getMessage(), e);
             throw new AppException(LocaleMessageUtil
                     .getMessageWithLocale(request, e.getMessage()));
