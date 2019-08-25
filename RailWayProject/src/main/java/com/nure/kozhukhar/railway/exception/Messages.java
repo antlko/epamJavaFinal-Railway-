@@ -103,9 +103,12 @@ public class Messages {
 	public static final String ERR_UNKNOWN_ERROR = "Unknown error!";
 	public static final String ERR_USER_CREATE_UNKNOWN = "Unknown user create error!";
 	public static final String ERR_PIN_CODE_WRONG = "Pin code is wrong!";
+	public static final String ERR_CANNOT_SHOW_USER_INFO = "Cannot show user info";
+	public static final String ERR_FIND_BY_EMAIL = "Cannot find user ny email";
+	public static final String ERR_EMAIL_ALREADY_EXISTS = "This email is exist in system.";
 
 
-    private Messages() {
+	private Messages() {
 
 	}
 

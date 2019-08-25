@@ -59,6 +59,7 @@ public class AdminAccountPage extends Action {
             request.setAttribute("allTypeInfo", typeDao.getAll());
             request.setAttribute("allTrainStatInfo", trainsStat);
             request.setAttribute("allRouteInfo", routeDao.getAllRoute());
+            request.setAttribute("userStatistic", routeDao.getAllUserInfo());
 
             LOG.trace("'Station' attributes for admin panel --> " + cityDao.getAll() + ", " + countryDao.getAll());
 

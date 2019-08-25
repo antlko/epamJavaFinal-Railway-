@@ -11,6 +11,6 @@ public class MailUtilTest {
 
     @Test
     public void testMail() throws MessagingException {
-        MailUtil.sendWelcomeMail(1212,"cozak.2011@mail.ru");
+//        MailUtil.sendWelcomeMail(1212,"cozak.2011@mail.ru");
     }
 }

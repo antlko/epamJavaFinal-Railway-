@@ -36,6 +36,7 @@ public class UserDao implements Dao<User> {
 
     /**
      * This method is used for for getting user by login
+     *
      * @param login user Login
      * @return object of User
      * @throws DBException
@@ -79,6 +80,7 @@ public class UserDao implements Dao<User> {
 
     /**
      * This method is used for getting users role by login
+     *
      * @param login user Login
      * @return list of roles
      * @throws DBException
@@ -112,6 +114,7 @@ public class UserDao implements Dao<User> {
 
     /**
      * This method is used for getting full user name by ID user
+     *
      * @param idUser ID user
      * @return Full name [name surname]
      * @throws DBException
@@ -145,6 +148,7 @@ public class UserDao implements Dao<User> {
 
     /**
      * This method is used for saving new role to user
+     *
      * @param user object of User
      * @param role object of Role
      * @throws DBException
@@ -163,7 +167,7 @@ public class UserDao implements Dao<User> {
             if (!rs.next()) {
                 atr = 1;
                 pstmt = conn.prepareStatement(Queries.SQL_DELETE_ALL_ROUTES);
-                pstmt.setInt(1,userId);
+                pstmt.setInt(1, userId);
                 pstmt.executeUpdate();
 
                 pstmt = conn.prepareStatement(Queries.SQL_SAVE_USER_ROLE_BY_LOGIN);
@@ -195,6 +199,7 @@ public class UserDao implements Dao<User> {
 
     /**
      * This method is used for save new User to DB
+     *
      * @param user object of User
      * @throws DBException
      */
@@ -229,7 +234,8 @@ public class UserDao implements Dao<User> {
 
     /**
      * This method is used for updating user
-     * @param user object of User
+     *
+     * @param user   object of User
      * @param params other parameters
      * @throws DBException
      */
@@ -258,6 +264,7 @@ public class UserDao implements Dao<User> {
 
     /**
      * This method is used for deleting user
+     *
      * @param user object of user
      * @throws DBException
      */
@@ -283,5 +290,32 @@ public class UserDao implements Dao<User> {
         } finally {
             DBUtil.close(pstmt);
         }
+    }
+
+    public Integer countWithEmail(String email) throws DBException {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int countUser = 0;
+
+        try {
+            pstmt = conn.prepareStatement(Queries.SQL_FIND_USER_BY_EMAIL);
+            pstmt.setString(1, email);
+
+             rs = pstmt.executeQuery();
+            if (rs.next()) {
+                countUser = rs.getInt("cnt");
+            }
+
+            conn.commit();
+
+        } catch (SQLException e) {
+            DBUtil.rollback(conn);
+            LOG.error(Messages.ERR_FIND_BY_EMAIL, e);
+            throw new DBException(Messages.ERR_FIND_BY_EMAIL, e);
+        } finally {
+            DBUtil.close(rs);
+            DBUtil.close(pstmt);
+        }
+        return countUser;
     }
 }

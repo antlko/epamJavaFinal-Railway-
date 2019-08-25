@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -41,7 +42,10 @@ public class RouteChangeData extends Action {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, AppException {
 
-        try (Connection connection = DBUtil.getInstance().getDataSource().getConnection()) {
+        Connection connection = null;
+
+        try {
+            connection = DBUtil.getInstance().getDataSource().getConnection();
             RouteDao routeDao = new RouteDao(connection);
             connection.setAutoCommit(false);
 

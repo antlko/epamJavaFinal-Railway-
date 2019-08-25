@@ -72,6 +72,16 @@
                         </form>
                     </div>
                 </div>
+                <table style="margin-top: 50px;">
+                    <th>User Login</th>
+                    <th>Tickets</th>
+                    <c:forEach items="${requestScope.userStatistic}" var="user">
+                        <tr>
+                            <td>${user.login}</td>
+                            <td>${user.countTicket}</td>
+                        </tr>
+                    </c:forEach>
+                </table>
             </div>
 
             <%--===================================================================

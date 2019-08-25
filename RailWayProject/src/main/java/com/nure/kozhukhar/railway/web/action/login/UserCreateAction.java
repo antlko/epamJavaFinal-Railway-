@@ -40,6 +40,8 @@ public class UserCreateAction extends Action {
 
         try (Connection connection = DBUtil.getInstance().getDataSource().getConnection();) {
             connection.setAutoCommit(false);
+            UserDao userTempDao = new UserDao(connection);
+
             User newUser = new User();
             newUser.setLogin(request.getParameter("login"));
             newUser.setPassword(request.getParameter("password"));
@@ -53,12 +55,14 @@ public class UserCreateAction extends Action {
                 throw new AppException(LocaleMessageUtil
                         .getMessageWithLocale(request, Messages.ERR_REGISTER_DATA_PASSWORD));
             }
+            if (!isExistEmail(userTempDao, newUser.getEmail())) {
+                throw new AppException(LocaleMessageUtil
+                        .getMessageWithLocale(request, Messages.ERR_EMAIL_ALREADY_EXISTS));
+            }
             if (!isValidEmail(newUser.getEmail())) {
                 throw new AppException(LocaleMessageUtil
                         .getMessageWithLocale(request, Messages.ERR_REGISTER_DATA_EMAIL));
             }
-
-            UserDao userTempDao = new UserDao(connection);
 
             String pin = String.format("%04d", random.nextInt(10000));
             newUser.setPinCode(EncryptUtil.hash(pin));
@@ -89,4 +93,9 @@ public class UserCreateAction extends Action {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
+
+    private static boolean isExistEmail(UserDao userDao, String email) throws DBException {
+        return userDao.countWithEmail(email) == 0;
+    }
 }
+

@@ -365,4 +365,17 @@ public class Queries {
     public static final String SQL_DELETE_FROM_USER_ROLES = "DELETE FROM user_roles WHERE id = ?";
     public static final String SQL_DELETE_USER = "DELETE FROM users WHERE login= ?";
     public static final String SQL_DELETE_ALL_ROUTES = "DELETE FROM user_roles WHERE id = ?";
+    public static final String SQL_SELECT_ALL_USER_INFO = "SELECT U.login, (\n" +
+            "\tSELECT Count(*) FROM (\n" +
+            "\t\t\tSELECT DISTINCT initials, id_train, number, num_carriage, num_seat\n" +
+            "            FROM user_check UCH, stations S, trains T\n" +
+            "            WHERE UCH.id_station = S.id \n" +
+            "            AND T.id = UCH.id_train\n" +
+            "\t\t\tAND id_user = U.id\n" +
+            "            ORDER BY id_train, num_carriage, num_seat, date_end \n" +
+            "            ) G\n" +
+            ") as countTicket \n" +
+            "FROM users U\n" +
+            "ORDER BY countTicket desc";
+    public static final String SQL_FIND_USER_BY_EMAIL = "SELECT Count(*) as cnt FROM users WHERE email = ? ";
 }

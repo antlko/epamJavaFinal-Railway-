@@ -209,7 +209,6 @@ public class TrainDao implements Dao<Train> {
                 idTrain = rs.getInt("id");
             }
             conn.commit();
-
         } catch (SQLException e) {
             DBUtil.rollback(conn);
             LOG.error(Messages.ERR_GET_TRAIN, e);

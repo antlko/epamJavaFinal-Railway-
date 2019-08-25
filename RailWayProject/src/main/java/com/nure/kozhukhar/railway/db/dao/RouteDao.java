@@ -2,6 +2,7 @@ package com.nure.kozhukhar.railway.db.dao;
 
 import com.nure.kozhukhar.railway.db.Queries;
 import com.nure.kozhukhar.railway.db.bean.RouteSearchBean;
+import com.nure.kozhukhar.railway.db.bean.UserStatisticBean;
 import com.nure.kozhukhar.railway.db.entity.*;
 import com.nure.kozhukhar.railway.db.entity.route.Route;
 import com.nure.kozhukhar.railway.db.entity.route.RouteStation;
@@ -62,7 +63,6 @@ public class RouteDao implements Dao<RouteStation> {
                 idStation = rs.getInt("id");
             }
             conn.commit();
-
         } catch (SQLException e) {
             DBUtil.rollback(conn);
             LOG.error(Messages.ERR_GET_STATION, e);
@@ -436,6 +436,7 @@ public class RouteDao implements Dao<RouteStation> {
             pstmt.setString(atr++, dateStart);
             pstmt.setString(atr++, dateEnd);
             pstmt.setInt(atr, routeStation.getPrice());
+
             pstmt.executeUpdate();
             conn.commit();
 
@@ -479,5 +480,33 @@ public class RouteDao implements Dao<RouteStation> {
         } finally {
             DBUtil.close(pstmt);
         }
+    }
+
+    public List<UserStatisticBean> getAllUserInfo() throws DBException {
+        Statement stmt = null;
+
+        List<UserStatisticBean> usBeanList = new ArrayList<>();
+
+        try {
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(Queries.SQL_SELECT_ALL_USER_INFO);
+
+            while (rs.next()) {
+                UserStatisticBean usTemp = new UserStatisticBean();
+                usTemp.setLogin(rs.getString("login"));
+                usTemp.setCountTicket(rs.getString("countTicket"));
+                usBeanList.add(usTemp);
+            }
+
+            conn.commit();
+        } catch (SQLException e) {
+            DBUtil.rollback(conn);
+            e.printStackTrace();
+            LOG.error(Messages.ERR_CANNOT_SHOW_USER_INFO, e);
+            throw new DBException(Messages.ERR_CANNOT_SHOW_USER_INFO, e);
+        } finally {
+            DBUtil.close(stmt);
+        }
+        return usBeanList;
     }
 }

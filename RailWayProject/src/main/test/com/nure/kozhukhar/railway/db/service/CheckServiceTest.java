@@ -1,6 +1,7 @@
 package com.nure.kozhukhar.railway.db.service;
 
 import com.nure.kozhukhar.railway.db.bean.UserCheckBean;
+import com.nure.kozhukhar.railway.db.dao.UserDao;
 import com.nure.kozhukhar.railway.exception.DBException;
 import com.nure.kozhukhar.railway.util.DBUtil;
 import org.junit.After;
@@ -25,7 +26,8 @@ public class CheckServiceTest extends Mockito {
 
     private Connection connection = DBUtil.getInstance().getDataSource().getConnection();
 
-    private CheckService checkService;
+    @Mock
+    private UserDao userDao;
 
     public CheckServiceTest() throws SQLException, DBException, ClassNotFoundException {
     }
